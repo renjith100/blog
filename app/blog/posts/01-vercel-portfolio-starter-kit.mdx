@@ -1,0 +1,177 @@
+---
+title: "Vercel Portfolio Starter Kit: Modern Blog with Next.js 14, MDX"
+publishedAt: "2025-01-25"
+summary: "A comprehensive guide to building a personal blog using Next.js 14, MDX, and Vercel deployment. Learn how to create a modern, fast, and SEO-friendly blog platform."
+---
+
+In this comprehensive guide, I'll walk you through how to build a modern blog platform using Next.js 14, MDX, and Vercel using [The Vercel Portfolio Starter Kit](https://vercel.com/templates/next.js/portfolio-starter-kit). This blog platform is perfect for developers looking to create their portfolio website or technical blog. We'll explore the codebase structure, key features, and how everything works together.
+
+## Table of Contents
+
+1. [Project Overview](#project-overview)
+2. [Tech Stack](#tech-stack)
+3. [Project Structure](#project-structure)
+4. [Key Features](#key-features)
+5. [Implementation Details](#implementation-details)
+6. [Deployment](#deployment)
+7. [How to Use This Template](#how-to-use)
+
+## Project Overview
+
+[The Vercel Portfolio Starter Kit](https://vercel.com/templates/next.js/portfolio-starter-kit) blogging platform is built with modern web technologies and best practices in mind. It features:
+- Static site generation for blazing-fast performance
+- MDX support for writing blog posts with JSX components
+- Clean and minimalist design
+- RSS feed generation
+- SEO optimization with meta tags and sitemap
+- Type safety with TypeScript
+
+## Tech Stack
+
+- **Next.js 14**: The React framework for production
+- **TypeScript**: For type safety and better developer experience
+- **MDX**: For writing content with JSX components
+- **Tailwind CSS**: For styling
+- **Vercel**: For deployment and hosting
+
+## Project Structure
+
+Let's break down the key directories and files in our project:
+
+```
+blog/
+├── app/
+│   ├── blog/
+│   │   ├── [slug]/
+│   │   ├── posts/
+│   │   ├── page.tsx
+│   │   └── utils.ts
+│   ├── components/
+│   ├── global.css
+│   ├── layout.tsx
+│   └── page.tsx
+├── public/
+└── package.json
+```
+
+### Key Directories Explained
+
+- `app/`: The main application directory using Next.js 14 App Router
+- `app/blog/`: Contains blog-related components and posts
+- `app/blog/posts/`: Where all MDX blog posts are stored
+- `app/components/`: Reusable React components
+- `app/global.css`: Global styles using Tailwind CSS
+
+## Key Features
+
+### 1. MDX Blog Posts
+
+The blog uses MDX for writing posts, which allows you to:
+- Write content in Markdown
+- Include React components in your posts
+- Add custom frontmatter for metadata
+- Style content using Tailwind CSS
+
+### 2. Dynamic Routing
+
+The `app/blog/[slug]` directory handles dynamic routing for blog posts. When you create a new MDX file in the `posts` directory, it automatically becomes available as a new route.
+
+### 3. SEO Optimization
+
+The blog includes several SEO features:
+- Dynamic meta tags for each page
+- Automatic sitemap generation
+- RSS feed
+- OpenGraph images, title, and description
+
+### 4. Performance
+`
+The blog is optimized for performance through:
+- Static site generation
+- Image optimization
+- CSS optimization with Tailwind
+- Efficient code splitting
+
+## Implementation Details
+
+### Blog Post Structure
+
+Each blog post is an MDX file with frontmatter. Here's an example:
+
+```mdx
+---
+title: "Your Blog Title"
+publishedAt: "2025-01-25"
+summary: "A brief summary of your blog post"
+---
+
+# Your Content Here
+
+Write your content using Markdown and JSX components.
+```
+
+### Reading Blog Posts
+
+The `utils.ts` file in the blog directory handles:
+- Reading MDX files
+- Parsing frontmatter
+- Sorting posts by date
+- Generating RSS feed
+
+### Layout and Styling
+
+The blog uses a clean, minimalist design implemented with Tailwind CSS. The main layout is defined in `app/layout.tsx` and includes:
+- Navigation
+- Footer
+- Global styles
+- Meta tags
+
+## Deployment
+
+The blog is designed to be deployed on Vercel, which offers:
+- Automatic deployments
+- Edge caching
+- Analytics
+- Environment variables management
+
+To deploy your own version:
+
+1. Fork the repository
+2. Connect it to your Vercel account
+3. Configure your deployment settings
+4. Push your changes
+
+## How to Use This Template
+
+To use this blog template for your own portfolio:
+
+1. Execute create-next-app with pnpm to bootstrap the example:
+   ```bash
+   pnpm create next-app --example https://github.com/vercel/examples/tree/main/solutions/blog blog
+   ```
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+3. Start the development server:
+   ```bash
+   pnpm dev
+   ```
+4. Create your blog posts in the `app/blog/posts` directory
+5. Customize the styling and components to match your preferences
+6. Deploy to Vercel
+
+### Customization Tips
+
+1. **Styling**: Modify `global.css` and component styles to match your brand
+2. **Components**: Add or modify components in the `components` directory
+3. **Content**: Update the main page content in `app/page.tsx`
+4. **Meta**: Update site metadata in `layout.tsx`
+
+## Conclusion
+
+This blog platform provides a solid foundation for building your personal blog or portfolio. It combines the power of Next.js, the flexibility of MDX, and the ease of deployment with Vercel. The type-safe nature of TypeScript and the utility-first approach of Tailwind CSS make it maintainable and extensible.
+
+Feel free to explore the code, make modifications, and create your own unique blog experience. Happy coding!
+
+for a Deeper dive into the Vercel Portfolio Starter Kit, check out this blog post. [Vercel Portfolio Starter Kit: Modern Blog with Next.js 14, MDX](/blog/02-deeper-dive-vercel-portfolio-starter-kit).
