@@ -25,6 +25,9 @@ export const metadata: Metadata = {
     template: '%s | Renjith Abraham',
   },
   description: 'Renjith Abraham\'s Portfolio.',
+  icons: {
+    icon: '/favicon.ico',
+  },
   openGraph: {
     title: 'Renjith Abraham',
     description: 'Renjith Abraham\'s Portfolio.',
