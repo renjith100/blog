@@ -9,17 +9,17 @@
     --foreground: black;
     
     /* UI element colors */
-    --nav-text: #737373;        /* neutral-500 */
-    --nav-text-hover: #262626;  /* neutral-800 */
-    --nav-bg-hover: #f5f5f5;    /* neutral-100 */
+    --nav-text: 'neutral-500';        /* #737373 */
+    --nav-text-hover: 'neutral-800';  /* #262626 */
+    --nav-bg-hover: 'neutral-100';    /* #f5f5f5 */
     
     /* Blog post colors */
-    --date-text: #525252;       /* neutral-600 */
-    --title-text: #171717;      /* neutral-900 */
+    --date-text: 'neutral-600';       /* #525252 */
+    --title-text: 'neutral-900';      /* #171717 */
     
     /* Footer colors */
-    --footer-text: #525252;     /* neutral-600 */
-    --footer-hover: #262626;    /* neutral-800 */
+    --footer-text: 'neutral-600';     /* #525252 */
+    --footer-hover: 'neutral-800';    /* #262626 */     
     
     /* Syntax highlighting - light */
     --sh-class: #2d5e9d;
@@ -39,17 +39,17 @@
     --foreground: white;
     
     /* UI element colors */
-    --nav-text: #a3a3a3;        /* neutral-400 */
-    --nav-text-hover: #e5e5e5;  /* neutral-200 */
-    --nav-bg-hover: #262626;    /* neutral-800 */
+    --nav-text: 'neutral-400';        /* #a3a3a3 */
+    --nav-text-hover: 'neutral-200';  /* #e5e5e5 */
+    --nav-bg-hover: 'neutral-800';    /* #262626 */
     
     /* Blog post colors */
-    --date-text: #a3a3a3;       /* neutral-400 */
-    --title-text: #f5f5f5;      /* neutral-100 */
+    --date-text: 'neutral-400';       /* #a3a3a3 */
+    --title-text: 'neutral-100';      /* #f5f5f5 */
     
     /* Footer colors */
-    --footer-text: #d4d4d4;     /* neutral-300 */
-    --footer-hover: #f5f5f5;    /* neutral-100 */
+    --footer-text: 'neutral-300';     /* #d4d4d4 */
+    --footer-hover: 'neutral-100';    /* #f5f5f5 */
     
     /* Syntax highlighting - dark */
     --sh-class: #4c97f8;
