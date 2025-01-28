@@ -92,9 +92,6 @@
   html {
     color-scheme: dark;
   }
-  body {
-    @apply dark;
-  }
 }
 
 html {
