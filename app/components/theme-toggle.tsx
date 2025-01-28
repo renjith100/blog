@@ -29,10 +29,9 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none"
+      className="nav-link rounded-md p-2"
       aria-label="Toggle theme"
     >
-      {/* Use resolvedTheme to determine which icon to show */}
       {resolvedTheme === 'dark' ? (
         <FiSun className="h-5 w-5" />
       ) : (
