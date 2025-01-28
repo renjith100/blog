@@ -20,10 +20,10 @@ import { BlogPosts } from 'app/components/posts'
 export default function Page() {
   return (
     <section>
-      <h1 className="mb-8 text-2xl font-semibold tracking-tighter">
+      <h1 className="mb-8 text-2xl font-semibold tracking-tighter text-neutral-900 dark:text-neutral-100">
         My Portfolio
       </h1>
-      <p className="mb-4">
+      <p className="mb-4 text-neutral-800 dark:text-neutral-200">
         {`Hello! I'm Renjith, an experienced developer with a passion for crafting clean, efficient, and impactful software. With expertise in TypeScript, Node.js, and modern web technologies like Angular and Next.js, I thrive on building applications that solve real-world problems. I’m deeply curious about the intersection of AI and technology, constantly exploring innovative ways to enhance productivity and create meaningful user experiences. Beyond coding, I’m a lifelong learner with interests in quantum physics, creative problem-solving, and leaving a positive mark through my work. Let’s connect and create something amazing together!`}
       </p>
       <div className="my-8">
