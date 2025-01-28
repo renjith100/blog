@@ -9,7 +9,7 @@ module.exports = {
   ],
 
   // darkMode: Configures how dark mode works
-  darkMode: 'media',  // 'media' means it follows system preferences
+  darkMode: 'class',  // 'media' means it follows system preferences
                       // 'class' would let you toggle manually with a class
 
   // theme: Customizes your design tokens
