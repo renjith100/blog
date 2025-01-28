@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 @layer base {
+  /* Reserve space for scrollbar to prevent layout shift */
+  html {
+    scrollbar-gutter: stable;
+  }
+
   :root {
     /* Base theme colors */
     --background: white;
