@@ -8,7 +8,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import Footer from './components/footer'
 import { baseUrl } from './sitemap'
 import { ThemeProvider } from './providers/theme-provider'
-
+import { CSPostHogProvider } from './providers/posthog-provider'
 /**
  * Default metadata configuration for the entire application
  * Provides SEO and OpenGraph settings used across all pages
@@ -93,6 +93,7 @@ export default function RootLayout({
         GeistMono.variable
       )}
     >
+      <CSPostHogProvider>
       <body className="antialiased">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="max-w-xl mx-4 mt-8 lg:mx-auto">
@@ -106,6 +107,7 @@ export default function RootLayout({
           </div>
         </ThemeProvider>
       </body>
+      </CSPostHogProvider>
     </html>
   )
 }
