@@ -1,7 +1,7 @@
 ---
 title: "Reverse Proxies. Why are they everywhere?"
 publishedAt: "2025-02-07"
-summary: "Reverse proxies enhance web architectures by acting as intermediaries between clients and backend servers, boosting security through IP masking, optimizing performance via load balancing and caching, and centralizing management tasks."
+summary: "Reverse proxies are a cornerstone of modern web architecture, offering a powerful combination of security, performance optimization, and simplified management. By acting as an configurable intermediary between clients and servers, they provide the flexibility and control needed to build robust, scalable web applications."
 ---
 
 While adding PostHog analytics to this blog, I discovered an interesting feature: PostHog supports a reverse proxy setup that routes analytics requests through your own site instead of sending them directly to PostHog servers. This clever approach prevents analytics requests from being blocked by browser security plugins or site blockers, as the requests appear to be posted to your own domain before being forwarded internally to PostHog servers, unknown to the browsers
@@ -68,4 +68,4 @@ posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
 From PostHog Documentation: https://posthog.com/docs/advanced/proxy/nextjs
 
 ## Summary
-Reverse proxies are a cornerstone of modern web architecture, offering a powerful combination of security, performance optimization, and simplified management. By acting as an intelligent intermediary between clients and servers, they provide the flexibility and control needed to build robust, scalable web applications. Finally, as seen from the PostHog implementation, they help to hide internal server details to the external world.
+Reverse proxies are a cornerstone of modern web architecture, offering a powerful combination of security, performance optimization, and simplified management. By acting as an configurable intermediary between clients and servers, they provide the flexibility and control needed to build robust, scalable web applications. Finally, as seen from the PostHog implementation, they help to hide internal server details to the external world.
