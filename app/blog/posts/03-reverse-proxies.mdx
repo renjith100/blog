@@ -1,0 +1,71 @@
+---
+title: "Reverse Proxies. Why are they everywhere?"
+publishedAt: "2025-02-07"
+summary: "Reverse proxies are a cornerstone of modern web architecture, offering a powerful combination of security, performance optimization, and simplified management. By acting as an configurable intermediary between clients and servers, they provide the flexibility and control needed to build robust, scalable web applications."
+---
+
+While adding PostHog analytics to this blog, I discovered an interesting feature: PostHog supports a reverse proxy setup that routes analytics requests through your own site instead of sending them directly to PostHog servers. This clever approach prevents analytics requests from being blocked by browser security plugins or site blockers, as the requests appear to be posted to your own domain before being forwarded internally to PostHog servers, unknown to the browsers
+## What are Reverse Proxies?
+A reverse proxy is a server that acts as a gateway between the client and the actual server. It is used to provide a layer of security and performance optimization for the client. 
+
+By intercepting incoming client requests, the reverse proxy effectively hides the origin server’s details, reducing the potential attack surface and shielding sensitive infrastructure.
+
+Additionally, reverse proxies can distribute requests across multiple backend servers and cache frequently accessed content, which improves response times and overall user experience. This centralized point of control also simplifies management and scaling, making reverse proxies a vital component of modern web architectures.
+## Why do We see Reverse Proxies at many places?
+Reverse proxies offer a host of benefits that improve security, performance, and manageability of web applications. Here are some key reasons why many developers, IT professionals, and system administrators love them:
+
+### Enhanced Security
+A reverse proxy sits between the public internet and your origin servers, hiding the true details (such as IP addresses) of your backend systems. This “masking” reduces your attack surface, making it harder for malicious actors to target your servers directly. Additionally, many reverse proxies include features like DDoS protection and traffic filtering, which add extra layers of defense 
+
+### Load Balancing and High Availability
+Reverse proxies can distribute incoming traffic across multiple backend servers. This load balancing ensures that no single server becomes overwhelmed, which not only improves response times but also helps maintain uptime in case one server fails. Essentially, they enable your infrastructure to scale more efficiently by managing and rerouting traffic intelligently 
+
+### Performance Optimization
+By caching frequently requested content and offloading resource-intensive tasks like SSL/TLS encryption, reverse proxies can dramatically reduce the load on your origin servers. This caching and offloading lead to faster response times and lower latency for end users. They often incorporate web acceleration techniques that compress and optimize content on the fly
+
+### Simplified Management
+With a reverse proxy handling all external requests, you get a single point of entry into your system. This centralization simplifies tasks like certificate management, monitoring, and enforcing access controls. It also makes it easier to roll out changes or add new services without reconfiguring multiple firewall or server settings.
+
+### Flexibility in Deployment
+Reverse proxies are a key part of modern architectures—especially with the rise of microservices and containerized environments (like Docker). They allow you to route requests based on URL paths, hostnames, or other criteria, which provides incredible flexibility in how you design and scale your application infrastructure.
+
+## Setting up Reverse Proxy for PostHog Analytics
+Implementing a reverse proxy for PostHog in a Next.js application is straightforward using Next.js rewrites. Here's how to set it up:
+
+First, modify your `next.config.js` file to add the rewrites configuration
+
+```javascript
+// next.config.js
+const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: "/ingest/static/:path*",
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+      },
+      {
+        source: "/ingest/:path*",
+        destination: "https://us.i.posthog.com/:path*",
+      },
+      {
+        source: "/ingest/decide",
+        destination: "https://us.i.posthog.com/decide",
+      },
+    ];
+  },
+  // This is required to support PostHog trailing slash API requests
+  skipTrailingSlashRedirect: true, 
+}
+module.exports = nextConfig
+```
+Then configure the PostHog client to send requests via your rewrite.
+
+```javascript
+posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
+  api_host: "/ingest"
+})
+```
+From PostHog Documentation: https://posthog.com/docs/advanced/proxy/nextjs
+
+## Summary
+Reverse proxies are a cornerstone of modern web architecture, offering a powerful combination of security, performance optimization, and simplified management. By acting as an configurable intermediary between clients and servers, they provide the flexibility and control needed to build robust, scalable web applications. Finally, as seen from the PostHog implementation, they help to hide internal server details to the external world.
