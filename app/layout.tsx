@@ -9,6 +9,8 @@ import Footer from './components/footer'
 import { baseUrl } from './sitemap'
 import { ThemeProvider } from './providers/theme-provider'
 import { CSPostHogProvider } from './providers/posthog-provider'
+import ClientTopScrollProgressBar from './components/ClientTopScrollProgressBar'
+
 /**
  * Default metadata configuration for the entire application
  * Provides SEO and OpenGraph settings used across all pages
@@ -88,6 +90,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cx(
         GeistSans.variable,
         GeistMono.variable
@@ -95,6 +98,7 @@ export default function RootLayout({
     >
       <CSPostHogProvider>
       <body className="antialiased">
+        <ClientTopScrollProgressBar />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="max-w-xl mx-4 mt-8 lg:mx-auto">
             <main className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">

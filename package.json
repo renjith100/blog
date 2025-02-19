@@ -12,10 +12,11 @@
     "@vercel/analytics": "^1.1.3",
     "@vercel/speed-insights": "^1.0.9",
     "autoprefixer": "^10.4.20",
-    "geist": "1.2.2",
-    "next": "canary",
+    "geist": "^1.3.1",
+    "next": "14.2.0",
     "next-mdx-remote": "^4.4.1",
     "next-themes": "^0.4.4",
+    "nextjs-top-scroll-progress-bar": "^0.0.4",
     "postcss": "^8.4.35",
     "posthog-js": "^1.215.4",
     "react": "18.2.0",
@@ -23,7 +24,6 @@
     "react-icons": "^5.4.0",
     "sugar-high": "^0.6.0",
     "tailwindcss": "^3.4.17",
-    "typescript": "5.3.3",
-    "next-scroll-progress-bar": "file:../../next-scroll-progress-bar"
+    "typescript": "5.3.3"
   }
 }
