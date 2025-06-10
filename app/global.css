@@ -29,6 +29,11 @@
         @apply font-mono text-lg;
     }
 
+    /* Base h1 styling */
+    h1 {
+        @apply mb-8 text-2xl font-semibold tracking-tighter text-neutral-900 dark:text-neutral-100;
+    }
+
     :root {
         /* Base theme colors */
         --background: white;
