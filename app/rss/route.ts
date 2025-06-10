@@ -5,15 +5,15 @@ import { getBlogPosts } from 'app/blog/utils'
  * RSS Feed Generator Route
  * Generates an RSS 2.0 feed of all blog posts
  * Accessible at /rss
- * 
+ *
  * The feed includes:
  * - Post title
  * - Post URL
  * - Post summary
  * - Publication date
- * 
+ *
  * Posts are sorted by publication date (newest first)
- * 
+ *
  * @returns Response with XML content type
  */
 export async function GET() {
@@ -46,9 +46,9 @@ export async function GET() {
   const rssFeed = `<?xml version="1.0" encoding="UTF-8" ?>
   <rss version="2.0">
     <channel>
-        <title>My Portfolio</title>
+        <title>Renjith Abraham's Portfolio</title>
         <link>${baseUrl}</link>
-        <description>This is my portfolio RSS feed</description>
+        <description>This is Renjith Abraham's portfolio RSS feed</description>
         ${itemsXml}
     </channel>
   </rss>`

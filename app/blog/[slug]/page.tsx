@@ -6,7 +6,7 @@ import { baseUrl } from 'app/sitemap'
 /**
  * Generates static paths for all blog posts at build time
  * This is a Next.js function that pre-renders all blog post pages
- * 
+ *
  * @returns Array of objects containing slug parameters for each post
  */
 export async function generateStaticParams() {
@@ -23,7 +23,7 @@ export async function generateStaticParams() {
  * - Page title and description
  * - OpenGraph metadata for social sharing
  * - Twitter card metadata
- * 
+ *
  * @param params - Contains the slug parameter from the URL
  * @returns Metadata object for the post
  */
@@ -72,12 +72,12 @@ export function generateMetadata({ params }) {
 /**
  * Blog post page component
  * Renders an individual blog post using the CustomMDX component
- * 
+ *
  * Features:
  * - Displays formatted publication date
  * - Renders MDX content with custom components
  * - Handles 404 for non-existent posts
- * 
+ *
  * @param params - Contains the slug parameter from the URL
  * @returns React component for the blog post page
  */
@@ -112,9 +112,7 @@ export default function Blog({ params }) {
           }),
         }}
       />
-      <h1 className="title font-semibold text-4xl tracking-tighter">
-        {post.metadata.title}
-      </h1>
+      <h1 className="title">{post.metadata.title}</h1>
       <div className="flex justify-between items-center mt-2 mb-8 text-sm">
         <p className="text-sm text-neutral-600 dark:text-neutral-400">
           {formatDate(post.metadata.publishedAt)}
