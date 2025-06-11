@@ -69,6 +69,37 @@
   }
 }
 
+@layer components {
+  /* Reusable paragraph styles */
+  .paragraph-main {
+    @apply text-2xl leading-relaxed text-neutral-800 dark:text-neutral-200;
+  }
+
+  .paragraph-blog {
+    @apply text-2xl leading-relaxed text-neutral-800 dark:text-neutral-200 my-4;
+  }
+
+  .paragraph-meta {
+    @apply text-sm text-neutral-600 dark:text-neutral-400;
+  }
+
+  .paragraph-date {
+    @apply text-xl tabular-nums text-neutral-600 dark:text-neutral-400;
+  }
+
+  .paragraph-preview {
+    @apply text-xl text-neutral-800 dark:text-neutral-200;
+  }
+
+  .paragraph-footer {
+    @apply text-sm text-[var(--footer-text)] hover:text-[var(--footer-hover)] transition-all;
+  }
+
+  .paragraph-icon-label {
+    @apply ml-2 h-7 text-neutral-800 dark:text-neutral-200;
+  }
+}
+
 /* Navigation styles */
 .nav-link {
   @apply text-[var(--nav-text)] hover:text-[var(--nav-text-hover)] hover:bg-[var(--nav-bg-hover)] transition-all;
@@ -155,7 +186,7 @@ html {
 
 /* Adjusted prose styles for better readability */
 .prose p {
-  @apply my-4 text-2xl leading-relaxed text-neutral-800 dark:text-neutral-200;
+  @apply paragraph-blog;
 }
 
 .prose h1 {
