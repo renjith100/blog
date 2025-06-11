@@ -27,7 +27,7 @@ export default function Page() {
   return (
     <section>
       <h1>My Portfolio</h1>
-      <p className="mb-4 text-xl leading-relaxed text-neutral-800 dark:text-neutral-200">
+      <p className="mb-4 paragraph-main">
         Hello! I'm Renjith, an experienced developer with a passion for crafting
         clean, efficient, and impactful software. With expertise in TypeScript,
         Node.js, and modern web technologies like Angular and Next.js, I thrive

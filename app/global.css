@@ -6,11 +6,12 @@
   /* Reserve space for scrollbar to prevent layout shift */
   html {
     scrollbar-gutter: stable;
+    min-width: 360px;
   }
 
   /* Apply base font to body with increased base size */
   body {
-    @apply font-base bg-[var(--background)] text-[var(--foreground)] text-xl;
+    @apply font-base bg-[var(--background)] text-[var(--foreground)] text-2xl;
   }
 
   /* Apply display font to headings */
@@ -34,10 +35,17 @@
     @apply mb-8 text-5xl font-semibold tracking-tighter text-neutral-900 dark:text-neutral-100;
   }
 
+  /* Theme variables */
   :root {
-    /* Base theme colors */
     --background: white;
     --foreground: black;
+    --nav-text: #404040;
+    --nav-text-hover: #171717;
+    --nav-bg-hover: #f5f5f5;
+    --footer-text: #404040;
+    --footer-hover: #171717;
+    --date-text: #525252;
+    --title-text: #171717;
 
     /* Syntax highlighting - light */
     --sh-class: #2d5e9d;
@@ -55,6 +63,13 @@
     /* Base theme colors */
     --background: #111010;
     --foreground: white;
+    --nav-text: #a3a3a3;
+    --nav-text-hover: #e5e5e5;
+    --nav-bg-hover: #1f1f1f;
+    --footer-text: #a3a3a3;
+    --footer-hover: #e5e5e5;
+    --date-text: #a3a3a3;
+    --title-text: #e5e5e5;
 
     /* Syntax highlighting - dark */
     --sh-class: #4c97f8;
@@ -66,6 +81,109 @@
     --sh-jsxliterals: #6266d1;
     --sh-property: #f69d50;
     --sh-entity: #f69d50;
+  }
+}
+
+@layer components {
+  /* Reusable paragraph styles */
+  .paragraph-main {
+    @apply text-2xl leading-relaxed text-neutral-800 dark:text-neutral-200;
+  }
+
+  .paragraph-blog {
+    @apply text-2xl leading-relaxed text-neutral-800 dark:text-neutral-200 my-4;
+  }
+
+  .paragraph-meta {
+    @apply text-sm text-neutral-600 dark:text-neutral-400;
+  }
+
+  .paragraph-date {
+    @apply text-xl tabular-nums text-neutral-600 dark:text-neutral-400;
+  }
+
+  .paragraph-preview {
+    @apply text-xl text-neutral-800 dark:text-neutral-200;
+  }
+
+  .paragraph-footer {
+    @apply text-sm text-[var(--footer-text)] hover:text-[var(--footer-hover)] transition-all;
+  }
+
+  .paragraph-icon-label {
+    @apply ml-2 h-7 text-neutral-800 dark:text-neutral-200;
+  }
+
+  /* Layout components */
+  .blog-list-layout-container {
+    @apply flex flex-col space-y-1 mb-4;
+  }
+
+  .layout-row {
+    @apply w-full flex flex-col md:flex-row space-x-0 md:space-x-2;
+  }
+
+  .layout-sidebar {
+    @apply lg:sticky lg:top-20;
+  }
+
+  /* Navigation components */
+  .nav-container {
+    @apply -ml-[8px] mb-16 tracking-tight;
+  }
+
+  .nav-menu {
+    @apply flex flex-row items-start justify-between relative px-0 pb-0 md:overflow-auto scroll-pr-6;
+  }
+
+  .nav-group {
+    @apply flex flex-row space-x-0;
+  }
+
+  .nav-item {
+    @apply nav-link flex align-middle relative py-1 px-2 m-1 rounded-md;
+  }
+
+  /* Footer components */
+  .footer-container {
+    @apply mb-16;
+  }
+
+  .footer-list {
+    @apply text-sm mt-8 flex flex-col space-x-0 space-y-2 md:flex-row md:space-x-4 md:space-y-0;
+  }
+
+  .footer-item {
+    @apply footer-link flex items-center;
+  }
+
+  /* Image components */
+  .image-rounded {
+    @apply rounded-lg;
+  }
+
+  /* Icon components */
+  .icon-base {
+    @apply h-5 w-5;
+  }
+
+  /* Blog components */
+  .blog-title {
+    @apply text-5xl font-semibold tracking-tight;
+    text-wrap: balance;
+  }
+
+  .blog-meta-container {
+    @apply flex justify-between items-center mt-2 mb-8;
+  }
+
+  .blog-content {
+    @apply prose max-w-none;
+  }
+
+  /* Code components */
+  .code-inline {
+    @apply font-mono text-sm;
   }
 }
 
@@ -94,14 +212,9 @@
   }
 }
 
-html {
-  min-width: 360px;
-}
-
 /* Additional Tailwind utility classes */
 :selection {
-  background-color: #47a3f3;
-  color: #fefefe;
+  @apply bg-blue-500 text-white;
 }
 
 .prose .anchor {
@@ -149,13 +262,12 @@ html {
 }
 
 .prose img {
-  /* Don't apply styles to next/image */
   @apply m-0;
 }
 
 /* Adjusted prose styles for better readability */
 .prose p {
-  @apply my-4 text-xl leading-relaxed text-neutral-800 dark:text-neutral-200;
+  @apply paragraph-blog;
 }
 
 .prose h1 {
@@ -210,10 +322,7 @@ input[type='email'] {
 }
 
 table {
-  display: block;
-  max-width: fit-content;
-  overflow-x: auto;
-  white-space: nowrap;
+  @apply block max-w-fit overflow-x-auto whitespace-nowrap;
 }
 
 .title {

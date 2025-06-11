@@ -17,43 +17,43 @@ function ArrowIcon() {
 
 export default function Footer() {
   return (
-    <footer className="mb-16">
-      <ul className="font-sm mt-8 flex flex-col space-x-0 space-y-2 md:flex-row md:space-x-4 md:space-y-0">
+    <footer className="footer-container">
+      <ul className="footer-list">
         <li>
           <a
-            className="footer-link flex items-center"
-            rel="noopener noreferrer"
+            href="/feed.xml"
+            className="footer-item"
             target="_blank"
-            href="/rss"
+            rel="noopener noreferrer"
           >
             <ArrowIcon />
-            <p className="ml-2 h-7">rss</p>
+            <p className="paragraph-icon-label">rss</p>
           </a>
         </li>
         <li>
           <a
-            className="footer-link flex items-center"
-            rel="noopener noreferrer"
-            target="_blank"
             href="https://github.com/renjith100"
+            className="footer-item"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <ArrowIcon />
-            <p className="ml-2 h-7">github</p>
+            <p className="paragraph-icon-label">github</p>
           </a>
         </li>
         <li>
           <a
-            className="footer-link flex items-center"
-            rel="noopener noreferrer"
+            href="https://github.com/renjiths100/blog"
+            className="footer-item"
             target="_blank"
-            href="https://github.com/renjith100/blog"
+            rel="noopener noreferrer"
           >
             <ArrowIcon />
-            <p className="ml-2 h-7">view source</p>
+            <p className="paragraph-icon-label">view source</p>
           </a>
         </li>
       </ul>
-      <p className="mt-8 text-sm footer-link">
+      <p className="mt-8 paragraph-footer">
         {new Date().getFullYear()} MIT Licensed
       </p>
     </footer>
