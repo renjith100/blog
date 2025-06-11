@@ -17,36 +17,24 @@ function ArrowIcon() {
 
 export default function Footer() {
   return (
-    <footer className="mb-16">
-      <ul className="font-sm mt-8 flex flex-col space-x-0 space-y-2 md:flex-row md:space-x-4 md:space-y-0">
+    <footer className="footer-container">
+      <ul className="footer-list">
         <li>
-          <a
-            className="footer-link flex items-center"
-            rel="noopener noreferrer"
-            target="_blank"
-            href="/rss"
-          >
+          <a href="/feed.xml" className="footer-item">
             <ArrowIcon />
             <p className="paragraph-icon-label">rss</p>
           </a>
         </li>
         <li>
-          <a
-            className="footer-link flex items-center"
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://github.com/renjith100"
-          >
+          <a href="https://github.com/renjithspace" className="footer-item">
             <ArrowIcon />
             <p className="paragraph-icon-label">github</p>
           </a>
         </li>
         <li>
           <a
-            className="footer-link flex items-center"
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://github.com/renjith100/blog"
+            href="https://github.com/renjithspace/blog"
+            className="footer-item"
           >
             <ArrowIcon />
             <p className="paragraph-icon-label">view source</p>

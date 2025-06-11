@@ -112,13 +112,13 @@ export default function Blog({ params }) {
           }),
         }}
       />
-      <h1 className="title">{post.metadata.title}</h1>
-      <div className="flex justify-between items-center mt-2 mb-8 text-sm">
+      <h1 className="blog-title">{post.metadata.title}</h1>
+      <div className="blog-meta-container">
         <p className="paragraph-meta">
           {formatDate(post.metadata.publishedAt)}
         </p>
       </div>
-      <article className="prose">
+      <article className="blog-content">
         <CustomMDX source={post.content} />
       </article>
     </section>

@@ -27,16 +27,13 @@ export function ThemeToggle() {
   }
 
   return (
-    <button
-      onClick={toggleTheme}
-      className="nav-link rounded-md p-2"
-      aria-label="Toggle theme"
-    >
-      {resolvedTheme === 'dark' ? (
-        <FiSun className="h-5 w-5" />
-      ) : (
-        <FiMoon className="h-5 w-5" />
-      )}
+    <button className="nav-item" onClick={toggleTheme}>
+      {mounted &&
+        (theme === 'dark' ? (
+          <FiSun className="icon-base" />
+        ) : (
+          <FiMoon className="icon-base" />
+        ))}
     </button>
   )
 }
