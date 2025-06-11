@@ -21,7 +21,7 @@ export default function Footer() {
       <ul className="footer-list">
         <li>
           <a
-            href="/feed.xml"
+            href="/rss"
             className="footer-item"
             target="_blank"
             rel="noopener noreferrer"
@@ -43,7 +43,7 @@ export default function Footer() {
         </li>
         <li>
           <a
-            href="https://github.com/renjiths100/blog"
+            href="https://github.com/renjith100/blog"
             className="footer-item"
             target="_blank"
             rel="noopener noreferrer"
