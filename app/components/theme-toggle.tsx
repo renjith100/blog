@@ -26,7 +26,7 @@ export function ThemeToggle() {
     }
   }
 
-  const isDark = theme === 'dark'
+  const isDark = resolvedTheme === 'dark'
   const currentTheme = isDark ? 'dark' : 'light'
   const nextTheme = isDark ? 'light' : 'dark'
 

@@ -20,21 +20,33 @@ export default function Footer() {
     <footer className="footer-container">
       <ul className="footer-list">
         <li>
-          <a href="/feed.xml" className="footer-item">
+          <a
+            href="/feed.xml"
+            className="footer-item"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <ArrowIcon />
             <p className="paragraph-icon-label">rss</p>
           </a>
         </li>
         <li>
-          <a href="https://github.com/renjithspace" className="footer-item">
+          <a
+            href="https://github.com/renjith100"
+            className="footer-item"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <ArrowIcon />
             <p className="paragraph-icon-label">github</p>
           </a>
         </li>
         <li>
           <a
-            href="https://github.com/renjithspace/blog"
+            href="https://github.com/renjiths100/blog"
             className="footer-item"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <ArrowIcon />
             <p className="paragraph-icon-label">view source</p>

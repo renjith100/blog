@@ -114,9 +114,13 @@ export default function Blog({ params }) {
       />
       <h1 className="blog-title">{post.metadata.title}</h1>
       <div className="blog-meta-container">
-        <p className="paragraph-meta">
+        <time
+          className="paragraph-meta"
+          dateTime={post.metadata.publishedAt}
+          suppressHydrationWarning
+        >
           {formatDate(post.metadata.publishedAt)}
-        </p>
+        </time>
       </div>
       <article className="blog-content">
         <CustomMDX source={post.content} />
