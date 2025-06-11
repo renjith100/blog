@@ -26,13 +26,23 @@ export function ThemeToggle() {
     }
   }
 
+  const isDark = theme === 'dark'
+  const currentTheme = isDark ? 'dark' : 'light'
+  const nextTheme = isDark ? 'light' : 'dark'
+
   return (
-    <button className="nav-item" onClick={toggleTheme}>
+    <button
+      className="nav-item"
+      onClick={toggleTheme}
+      type="button"
+      aria-label={`Switch to ${nextTheme} theme (currently ${currentTheme})`}
+      title={`Switch to ${nextTheme} theme`}
+    >
       {mounted &&
-        (theme === 'dark' ? (
-          <FiSun className="icon-base" />
+        (isDark ? (
+          <FiSun className="icon-base" aria-hidden="true" />
         ) : (
-          <FiMoon className="icon-base" />
+          <FiMoon className="icon-base" aria-hidden="true" />
         ))}
     </button>
   )
