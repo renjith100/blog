@@ -93,6 +93,7 @@ export default function Blog({ params }) {
 			<script
 				type="application/ld+json"
 				suppressHydrationWarning
+				// biome-ignore lint/security/noDangerouslySetInnerHtml: This content is from my own md files
 				dangerouslySetInnerHTML={{
 					__html: JSON.stringify({
 						"@context": "https://schema.org",
