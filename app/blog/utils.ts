@@ -105,8 +105,8 @@ export function getBlogPosts() {
  * @returns Formatted date string
  *
  * Examples:
- * formatDate("2025-01-25") => "January 25, 2025"
- * formatDate("2025-01-25", true) => "January 25, 2025 (2d ago)"
+ * formatDate("2025-01-25") => "Jan 25, 2025"
+ * formatDate("2025-01-25", true) => "Jan 25, 2025 (2d ago)"
  */
 export function formatDate(date: string, includeRelative = false) {
 	const currentDate = new Date();
@@ -133,7 +133,7 @@ export function formatDate(date: string, includeRelative = false) {
 
 	const fullDate = targetDate.toLocaleString("en-us", {
 		month: "short",
-		day: "numeric",
+		day: "2-digit",
 		year: "numeric",
 	});
 

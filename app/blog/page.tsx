@@ -1,4 +1,4 @@
-import { BlogPosts } from "app/components/posts";
+import { ListBlogPosts } from "app/components/list-blog-posts";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,7 +10,7 @@ export default function Page() {
 	return (
 		<section>
 			<h1>My Blog</h1>
-			<BlogPosts />
+			<ListBlogPosts />
 		</section>
 	);
 }
