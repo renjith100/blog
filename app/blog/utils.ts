@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 /**
  * Type definition for blog post metadata.
@@ -29,7 +29,12 @@ type Metadata = {
 function parseFrontmatter(fileContent: string) {
 	const frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
 	const match = frontmatterRegex.exec(fileContent);
-	const frontMatterBlock = match![1];
+
+	if (!match) {
+		return { metadata: {} as Metadata, content: fileContent };
+	}
+
+	const frontMatterBlock = match[1];
 	const content = fileContent.replace(frontmatterRegex, "").trim();
 	const frontMatterLines = frontMatterBlock.trim().split("\n");
 	const metadata: Partial<Metadata> = {};
