@@ -30,9 +30,14 @@
     @apply font-mono text-lg;
   }
 
-  /* Base h1 styling */
+  /* Base h1 and h2 styling with sky color */
+  h1,
+  h2 {
+    color: var(--heading-color);
+  }
+
   h1 {
-    @apply mb-8 text-5xl font-semibold tracking-tighter text-neutral-900 dark:text-neutral-100;
+    @apply mb-8 text-5xl font-semibold tracking-tighter;
   }
 
   /* Theme variables */
@@ -44,8 +49,12 @@
     --nav-bg-hover: #f5f5f5;
     --footer-text: #404040;
     --footer-hover: #171717;
-    --date-text: #525252;
-    --title-text: #171717;
+
+    /* Sky color palette for headings and links */
+    --heading-color: #0ea5e9;              /* sky-500 */
+    --link-color: #0ea5e9;                 /* sky-500 */
+    --link-hover-color: #0284c7;           /* sky-600 */
+    --link-glow: rgba(14, 165, 233, 0.35); /* sky-500 with opacity */
 
     /* Syntax highlighting - light */
     --sh-class: #2d5e9d;
@@ -68,8 +77,12 @@
     --nav-bg-hover: #1f1f1f;
     --footer-text: #a3a3a3;
     --footer-hover: #e5e5e5;
-    --date-text: #a3a3a3;
-    --title-text: #e5e5e5;
+
+    /* Sky color palette for headings and links (lighter for dark mode) */
+    --heading-color: #38bdf8;              /* sky-400 */
+    --link-color: #38bdf8;                 /* sky-400 */
+    --link-hover-color: #7dd3fc;           /* sky-300 */
+    --link-glow: rgba(56, 189, 248, 0.4);  /* sky-400 with opacity */
 
     /* Syntax highlighting - dark */
     --sh-class: #4c97f8;
@@ -189,21 +202,37 @@
 
 /* Navigation styles */
 .nav-link {
-  @apply text-[var(--nav-text)] hover:text-[var(--nav-text-hover)] hover:bg-[var(--nav-bg-hover)] transition-all;
+  color: var(--link-color);
+  @apply hover:bg-[var(--nav-bg-hover)] transition-all;
+}
+
+.nav-link:hover {
+  color: var(--link-hover-color);
+  text-shadow: 0 0 8px var(--link-glow);
 }
 
 /* Blog post styles */
-.post-date {
-  @apply text-[var(--date-text)];
+.post-date,
+.post-title {
+  color: var(--link-color);
+  @apply transition-all;
 }
 
-.post-title {
-  @apply text-[var(--title-text)];
+.post-date:hover,
+.post-title:hover {
+  color: var(--link-hover-color);
+  text-shadow: 0 0 8px var(--link-glow);
 }
 
 /* Footer styles */
 .footer-link {
-  @apply text-[var(--footer-text)] hover:text-[var(--footer-hover)] transition-all;
+  color: var(--link-color);
+  @apply transition-all;
+}
+
+.footer-link:hover {
+  color: var(--link-hover-color);
+  text-shadow: 0 0 8px var(--link-glow);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -231,7 +260,15 @@
 }
 
 .prose a {
-  @apply underline transition-all decoration-neutral-400 dark:decoration-neutral-600 underline-offset-2 decoration-[0.1em];
+  color: var(--link-color);
+  @apply underline transition-all underline-offset-2 decoration-[0.1em];
+  text-decoration-color: var(--link-color);
+}
+
+.prose a:hover {
+  color: var(--link-hover-color);
+  text-decoration-color: var(--link-hover-color);
+  text-shadow: 0 0 8px var(--link-glow);
 }
 
 .prose .anchor:after {
