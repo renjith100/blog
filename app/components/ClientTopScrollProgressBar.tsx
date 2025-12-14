@@ -1,12 +1,15 @@
-'use client'
+"use client";
 
-import { TopScrollProgressBar } from 'nextjs-top-scroll-progress-bar'
+import { TopScrollProgressBar } from "nextjs-top-scroll-progress-bar";
 
 interface TopScrollProgressBarProps {
-  height?: number;
-  color?: string;
+	height?: number;
+	color?: string;
 }
 
-export default function ClientTopScrollProgressBar({ height, color }: TopScrollProgressBarProps) {
-  return <TopScrollProgressBar height={height} color={color}/>
+export default function ClientTopScrollProgressBar({
+	height,
+	color,
+}: TopScrollProgressBarProps) {
+	return <TopScrollProgressBar height={height} color={color} />;
 }
