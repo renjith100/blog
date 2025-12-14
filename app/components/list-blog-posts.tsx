@@ -16,7 +16,11 @@ export function ListBlogPosts() {
 					return 1;
 				})
 				.map((post) => (
-					<Link key={post.slug} href={`/blog/${post.slug}`}>
+					<Link
+						key={post.slug}
+						href={`/blog/${post.slug}`}
+						className="block mb-4 md:mb-0"
+					>
 						<div className="layout-row">
 							<div className="w-full flex flex-col md:flex-row space-x-0 md:space-x-2">
 								<p className="post-date w-[160px] text-xl tabular-nums">
