@@ -31,7 +31,14 @@ function parseFrontmatter(fileContent: string) {
 	const match = frontmatterRegex.exec(fileContent);
 
 	if (!match) {
-		return { metadata: {} as Metadata, content: fileContent };
+		return {
+			metadata: {
+				title: "FontMatter Error",
+				publishedAt: new Date().toISOString(),
+				summary: "FontMatter Error",
+			},
+			content: fileContent,
+		};
 	}
 
 	const frontMatterBlock = match[1];
@@ -46,7 +53,15 @@ function parseFrontmatter(fileContent: string) {
 		metadata[key.trim() as keyof Metadata] = value;
 	});
 
-	return { metadata: metadata as Metadata, content };
+	return {
+		metadata: {
+			title: metadata.title || "Untitled",
+			publishedAt: metadata.publishedAt || new Date().toISOString(),
+			summary: metadata.summary || "",
+			image: metadata.image,
+		},
+		content,
+	};
 }
 
 /**
