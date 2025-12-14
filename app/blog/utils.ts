@@ -133,7 +133,7 @@ export function formatDate(date: string, includeRelative = false) {
 
 	const fullDate = targetDate.toLocaleString("en-us", {
 		month: "short",
-		day: "numeric",
+		day: "2-digit",
 		year: "numeric",
 	});
 

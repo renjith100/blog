@@ -1,4 +1,4 @@
-import { BlogPosts } from "app/components/posts";
+import { ListBlogPosts } from "app/components/list-blog-posts";
 import type { Metadata } from "next";
 
 /**
@@ -40,7 +40,7 @@ export default function Page() {
 				together!
 			</p>
 			<div className="my-8">
-				<BlogPosts />
+				<ListBlogPosts />
 			</div>
 		</section>
 	);
