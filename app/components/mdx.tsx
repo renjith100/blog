@@ -12,13 +12,13 @@ import { highlight } from "sugar-high";
  * @returns React component for a styled table
  */
 function Table({ data }) {
-	const headers = data.headers.map((header, index) => (
-		<th key={index}>{header}</th>
-	));
+	const headers = data.headers.map((header) => <th key={header}>{header}</th>);
 	const rows = data.rows.map((row, index) => (
+		// biome-ignore lint/suspicious/noArrayIndexKey: Rows don't always have a unique natural key
 		<tr key={index}>
 			{row.map((cell, cellIndex) => (
-				<td key={cellIndex}>{cell}</td>
+				// biome-ignore lint/suspicious/noArrayIndexKey: Cells don't always have a unique natural key
+				<td key={`${index}-${cellIndex}`}>{cell}</td>
 			))}
 		</tr>
 	));
@@ -83,6 +83,7 @@ function Code({ children, ...props }) {
 	return (
 		<code
 			className="font-mono text-sm"
+			// biome-ignore lint/security/noDangerouslySetInnerHtml: MDX/code blocks are developer-controlled and trusted content
 			dangerouslySetInnerHTML={{ __html: codeHTML }}
 			{...props}
 		/>
