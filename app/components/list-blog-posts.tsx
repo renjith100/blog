@@ -19,7 +19,7 @@ export function ListBlogPosts() {
 					<Link
 						key={post.slug}
 						href={`/blog/${post.slug}`}
-						className="block mb-4 md:mb-0"
+						className="block mb-4 md:mb-0 blog-list-item"
 					>
 						<div className="layout-row">
 							<div className="w-full flex flex-col md:flex-row space-x-0 md:space-x-2">
