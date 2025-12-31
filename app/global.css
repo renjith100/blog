@@ -218,8 +218,8 @@
 	@apply transition-all;
 }
 
-.post-date:hover,
-.post-title:hover {
+.blog-list-item:hover .post-date,
+.blog-list-item:hover .post-title {
 	color: var(--link-hover-color);
 	text-shadow: 0 0 8px var(--link-glow);
 }
