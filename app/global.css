@@ -365,3 +365,8 @@ table {
 .title {
 	text-wrap: balance;
 }
+
+/* Invert Credly badge iframe in dark mode for better contrast */
+.dark .credly-badge-container iframe {
+	filter: invert(1) hue-rotate(180deg);
+}
