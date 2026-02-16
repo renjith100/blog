@@ -27,8 +27,9 @@ export async function generateStaticParams() {
  * @param params - Contains the slug parameter from the URL
  * @returns Metadata object for the post
  */
-export function generateMetadata({ params }) {
-	const post = getBlogPosts().find((post) => post.slug === params.slug);
+export async function generateMetadata({ params }) {
+	const { slug } = await params;
+	const post = getBlogPosts().find((post) => post.slug === slug);
 	if (!post) {
 		return;
 	}
@@ -81,8 +82,9 @@ export function generateMetadata({ params }) {
  * @param params - Contains the slug parameter from the URL
  * @returns React component for the blog post page
  */
-export default function Blog({ params }) {
-	const post = getBlogPosts().find((post) => post.slug === params.slug);
+export default async function Blog({ params }) {
+	const { slug } = await params;
+	const post = getBlogPosts().find((post) => post.slug === slug);
 
 	if (!post) {
 		notFound();
