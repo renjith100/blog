@@ -1,3 +1,4 @@
+import { CredlyBadge } from "app/components/credly-badge";
 import { ListBlogPosts } from "app/components/list-blog-posts";
 import type { Metadata } from "next";
 
@@ -39,6 +40,10 @@ export default function Page() {
 				mark through my work. Let's connect and create something amazing
 				together!
 			</p>
+			<div className="my-8">
+				<h2>Certifications</h2>
+				<CredlyBadge badgeId="592ca986-ae30-4118-b9f2-f87d21499c37" />
+			</div>
 			<div className="my-8">
 				<ListBlogPosts />
 			</div>
