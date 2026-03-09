@@ -1,7 +1,7 @@
 ---
 title: 'Lessons Learned Publishing My First React npm Package'
 publishedAt: '2026-03-10'
-summary: 'Well, I learned more lessons learned than I expected'
+summary: 'Well, I learned more lessons than I expected'
 ---
 
 A year ago I built and published nextjs-top-scroll-progress-bar — a small React component that shows a progress bar at the top of the page as the user scrolls. Simple idea. Much harder to ship correctly than I expected.
@@ -9,12 +9,12 @@ A year ago I built and published nextjs-top-scroll-progress-bar — a small Reac
 Recently I revisited it to fix a major usability issue and learned even more. Here's everything I wish I knew from the start.
 
 ## Why I Built It
-I wanted a scroll progress bar in a Next.js project. The existing packages either had too many dependencies, weren't TypeScript-friendly, or didn't work with the App Router. So I built my own and decided to publish it.
+I needed a scroll progress bar, didn't love the options I found, and decided building one myself was more interesting than installing someone else's. So I built it and published it
 
 The component itself took an afternoon. Getting the package right took much longer.
 
 ## Lesson 1: You Have to Ship Three Files, Not One
-When I first published, I naively thought I'd compile my TypeScript to JavaScript and ship that. Then I started seeing the.
+When I first published, I naively thought I'd compile my TypeScript to JavaScript and ship that.Then I started seeing the problems with that approach.
 
 The problem: npm packages are consumed in different environments, and each environment expects a different module format. You can't ship just one and expect it to work everywhere.
 
@@ -56,9 +56,10 @@ The fix is to declare React as a peerDependency:
 }
 ```
 And tell your bundler to treat it as external — don't include it in the output:
-
-
+```json
 external: ['react', 'react-dom']
+```
+
 This way your package uses whatever React version the consuming app already has.
 
 ## Lesson 3: The 'use client' Problem Nobody Warns You About
@@ -147,7 +148,7 @@ npm install /path/to/package.tgz
 ```
 This is the closest simulation of the real install experience.
 
-Option 2: npm link 
+### Option 2: npm link 
 npm link symlinks the package into your Next.js project. Faster for iteration since you just rebuild and the changes are immediately available without reinstalling.
 
 Always check the output files in dist/ directly after building. In my case: does dist/index.esm.js start with 'use client';? A quick head -2 dist/index.esm.js answers that.
