@@ -13,8 +13,8 @@ Here's the analogy that makes it click.
 
 Imagine you have a special padlock — one where you hold the only key in existence. But this padlock has a superpower: you can make unlimited copies of the padlock itself, and hand them out to anyone you like.
 
-	- The padlock = your public key
-	- The key that opens it = your private key
+- The padlock = your public key
+- The key that opens it = your private key
 
 You distribute padlocks freely. You give one to your server. You give one to your colleague. You nail one to your front door if you like. It doesn't matter — a padlock without the key is useless.
 
@@ -39,7 +39,7 @@ The server uses your public key to verify the signature. It can confirm — with
 Your private key never left your machine. Not a single byte of it traveled across the network. The server verified your identity purely through the signature — the mathematical proof that you hold the key.
 
 ## Why This Is Brilliant
-he public key is truly public. You can paste it on your website, email it to strangers, put it in a GitHub profile. It reveals absolutely nothing about your private key. There is no mathematical way to reverse-engineer the private key from the public key — that's the whole point of asymmetric cryptography.
+The public key is truly public. You can paste it on your website, email it to strangers, put it in a GitHub profile. It reveals absolutely nothing about your private key. There is no mathematical way to reverse-engineer the private key from the public key — that's the whole point of asymmetric cryptography.
 
 The challenge is always different. Every login attempt generates a fresh random challenge. Even if someone recorded your last authentication session, they can't replay it. The signature is only valid for that one specific challenge.
 
