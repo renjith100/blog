@@ -9,12 +9,12 @@ A year ago I built and published nextjs-top-scroll-progress-bar — a small Reac
 Recently I revisited it to fix a major usability issue and learned even more. Here's everything I wish I knew from the start.
 
 ## Why I Built It
-I needed a scroll progress bar, didn't love the options I found, and decided building one myself was more interesting than installing someone else's. So I built it and published it
+I needed a scroll progress bar, didn't love the options I found, and decided building one myself was more interesting than installing someone else's. So I built it and published it.
 
 The component itself took an afternoon. Getting the package right took much longer.
 
 ## Lesson 1: You Have to Ship Three Files, Not One
-When I first published, I naively thought I'd compile my TypeScript to JavaScript and ship that.Then I started seeing the problems with that approach.
+When I first published, I naively thought I'd compile my TypeScript to JavaScript and ship that. Then I started seeing the problems with that approach.
 
 The problem: npm packages are consumed in different environments, and each environment expects a different module format. You can't ship just one and expect it to work everywhere.
 
@@ -142,7 +142,7 @@ Small things. Easy to miss. Real bugs for real users.
 npm publish is not reversible in a meaningful way — you can unpublish within 72 hours, but it causes problems for anyone who already installed that version. Test locally first.
 
 ### Option 1: npm pack
- npm pack creates a .tgz tarball identical to what npm would publish. Install it in a local Next.js project with:
+npm pack creates a .tgz tarball identical to what npm would publish. Install it in a local Next.js project with:
 ```
 npm install /path/to/package.tgz
 ```
