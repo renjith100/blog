@@ -1,0 +1,157 @@
+---
+title: 'Lessons Learned Publishing My First React npm Package'
+publishedAt: '2026-03-10'
+summary: 'Well, I learned more lessons learned than I expected'
+---
+
+A year ago I built and published nextjs-top-scroll-progress-bar — a small React component that shows a progress bar at the top of the page as the user scrolls. Simple idea. Much harder to ship correctly than I expected.
+
+Recently I revisited it to fix a major usability issue and learned even more. Here's everything I wish I knew from the start.
+
+## Why I Built It
+I wanted a scroll progress bar in a Next.js project. The existing packages either had too many dependencies, weren't TypeScript-friendly, or didn't work with the App Router. So I built my own and decided to publish it.
+
+The component itself took an afternoon. Getting the package right took much longer.
+
+## Lesson 1: You Have to Ship Three Files, Not One
+When I first published, I naively thought I'd compile my TypeScript to JavaScript and ship that. Then I started seeing the.
+
+The problem: npm packages are consumed in different environments, and each environment expects a different module format. You can't ship just one and expect it to work everywhere.
+
+Here's what you actually need:
+
+### CommonJS (dist/index.cjs.js) 
+- for older tooling, Jest, and Node.js environments that use require():
+```typescript
+const { TopScrollProgressBar } = require('nextjs-top-scroll-progress-bar')
+```
+### ES Module (dist/index.esm.js) 
+- for modern bundlers like webpack and Vite that use import. 
+This format enables tree-shaking, meaning unused exports get stripped from the user's final bundle:
+
+```typescript
+import { TopScrollProgressBar } from 'nextjs-top-scroll-progress-bar'
+```
+### TypeScript declarations (dist/index.d.ts)
+- not JavaScript at all. This tells TypeScript editors what props the component accepts, what types they are, and what it returns. Without this, TypeScript users get any types and zero autocomplete.
+
+Then in package.json, you point each consumer to the right file:
+
+```json
+"main": "dist/index.cjs.js",
+"module": "dist/index.esm.js",
+"types": "dist/index.d.ts"
+```
+The bundler reads package.json and automatically picks the best format for its environment. To be more precise: it's the bundler on the consumer's side reading the package's own package.json that ships with the installed module — not their bundler config. Webpack, Vite, and Next.js all know to prefer module (ESM) over main (CJS) when available. Node.js itself only reads main (or exports in newer setups). You ship all three so no one is left out.
+I used Rollup to generate all three from a single source file. One input, three outputs.
+
+## Lesson 2: React Isn't Your Dependency — It's the User's
+Early on I made the mistake of bundling React into my package output. This means every user who installs your package gets a second copy of React inside it — which can cause subtle bugs and inflated bundle sizes.
+
+The fix is to declare React as a peerDependency:
+
+```json
+"peerDependencies": {
+  "react": ">=16.8.0"
+}
+```
+And tell your bundler to treat it as external — don't include it in the output:
+
+
+external: ['react', 'react-dom']
+This way your package uses whatever React version the consuming app already has.
+
+## Lesson 3: The 'use client' Problem Nobody Warns You About
+This was the biggest lesson from my recent update, and it's specific to Next.js App Router.
+
+My component uses useState and useEffect — React hooks that only work in client components. When Next.js introduced the App Router in version 13, it made server components the default. Any component that uses browser APIs or hooks needs to be explicitly marked as a client component with 'use client' at the top of the file.
+
+The original version of this package didn't have that directive. So every App Router user had to create a wrapper:
+
+```
+// app/components/ClientTopScrollProgressBar.tsx
+'use client'
+import { TopScrollProgressBar } from 'nextjs-top-scroll-progress-bar'
+
+export default function ClientTopScrollProgressBar(props) {
+  return <TopScrollProgressBar {...props} />
+}
+```
+That's unnecessary friction. The fix should live in the package itself.
+
+So I added 'use client' to the top of my component source file. Problem solved, right?
+
+Not quite.
+
+## Lesson 4: Rollup Strips 'use client'
+Here's something that caught me off guard. When Rollup bundles your source file, it processes the Abstract Syntax Tree (AST). The 'use client' string literal is just an expression statement — it has no side effects, so Rollup treats it as dead code and removes it from the output.
+
+You can actually see Rollup warn you about this during the build:
+
+
+(!) Module level directives cause errors when bundled,
+"use client" in "src/TopScrollProgressBar.tsx" was ignored.
+The source file has the directive. The dist/ file doesn't. Users importing from the package still get no 'use client' — the same bug as before.
+
+The fix is to use Rollup's banner option, which injects a string at the very top of the output file as a post-processing step, after Rollup finishes bundling:
+
+```json
+output: [
+  {
+    file: 'dist/index.esm.js',
+    format: 'esm',
+    banner: "'use client';",
+  }
+]
+```
+Now dist/index.esm.js starts with 'use client'; regardless of what Rollup does with the source. The warning about the directive being stripped is expected and can be safely ignored — the banner handles it instead.
+
+A more surgical alternative is rollup-plugin-preserve-directives, which teaches Rollup to treat 'use client' as a preserved directive. For a package that exports only client components, the banner approach is simpler and works just as well.
+
+## Lesson 5: Edge Cases in Scroll Calculation
+The scroll progress calculation looks simple:
+
+```typescript
+const progress = (window.scrollY / scrollHeight) * 100
+```
+But there's a silent bug: if the page content is shorter than the viewport (no scrollable area), scrollHeight is 0 and you get a division by zero — which produces NaN in JavaScript, not a crash, but a broken progress bar.
+
+The fix is a one-line guard:
+
+```typescript
+if (scrollHeight === 0) {
+  setProgress(0)
+  return
+}
+```
+Also: if a user lands on a page that's already scrolled (browser back/forward navigation restores scroll position), the progress bar starts at 0 and only updates on the first scroll event. Fix this by calling the scroll handler once on mount:
+
+```typescript
+useEffect(() => {
+  const handleScroll = () => { /* ... */ }
+
+  handleScroll() // Set initial position immediately
+  window.addEventListener('scroll', handleScroll, { passive: true })
+  return () => window.removeEventListener('scroll', handleScroll)
+}, [])
+```
+Small things. Easy to miss. Real bugs for real users.
+
+## Lesson 6: Test Locally Before Publishing
+npm publish is not reversible in a meaningful way — you can unpublish within 72 hours, but it causes problems for anyone who already installed that version. Test locally first.
+
+### Option 1: npm pack
+ npm pack creates a .tgz tarball identical to what npm would publish. Install it in a local Next.js project with:
+```
+npm install /path/to/package.tgz
+```
+This is the closest simulation of the real install experience.
+
+Option 2: npm link 
+npm link symlinks the package into your Next.js project. Faster for iteration since you just rebuild and the changes are immediately available without reinstalling.
+
+Always check the output files in dist/ directly after building. In my case: does dist/index.esm.js start with 'use client';? A quick head -2 dist/index.esm.js answers that.
+
+- The component itself is 40 lines. The packaging is where the real work is.
+- The package is nextjs-top-scroll-progress-bar on npm. Source is on GitHub.
+
