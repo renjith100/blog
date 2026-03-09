@@ -98,7 +98,7 @@ The source file has the directive. The dist/ file doesn't. Users importing from 
 
 The fix is to use Rollup's banner option, which injects a string at the very top of the output file as a post-processing step, after Rollup finishes bundling:
 
-```json
+```js
 output: [
   {
     file: 'dist/index.esm.js',
