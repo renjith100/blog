@@ -358,9 +358,41 @@ input[type="email"] {
 	appearance: none;
 }
 
-table {
-	@apply block max-w-fit overflow-x-auto whitespace-nowrap;
+/* Prose table styles */
+.prose table {
+	border: 1px solid;
+	@apply block w-full my-8 text-base border-collapse overflow-x-auto rounded-lg border-neutral-200 dark:border-neutral-800;
 }
+
+.prose thead {
+	border-bottom: 2px solid;
+	@apply bg-sky-50 dark:bg-sky-950/40 border-sky-200 dark:border-sky-800;
+}
+
+.prose thead th {
+	@apply text-left font-semibold text-sky-700 dark:text-sky-300 px-4 py-3 text-sm tracking-wide uppercase;
+}
+
+.prose tbody tr {
+	@apply border-b border-neutral-100 dark:border-neutral-800/60 transition-colors;
+}
+
+.prose tbody tr:last-child {
+	@apply border-b-0;
+}
+
+.prose tbody tr:hover {
+	@apply bg-neutral-50 dark:bg-neutral-800/30;
+}
+
+.prose tbody td {
+	@apply text-left px-4 py-3 text-neutral-700 dark:text-neutral-300 align-top;
+}
+
+.prose tbody td code {
+	@apply bg-neutral-100 dark:bg-neutral-800 text-sky-700 dark:text-sky-300 rounded px-1.5 py-0.5 text-sm font-mono;
+}
+
 
 .title {
 	text-wrap: balance;

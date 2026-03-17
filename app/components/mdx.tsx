@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import React from "react";
+import remarkGfm from "remark-gfm";
 import { highlight } from "sugar-high";
 
 /**
@@ -158,6 +159,7 @@ export function CustomMDX(props) {
 	return (
 		<MDXRemote
 			{...props}
+			options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
 			components={{ ...components, ...(props.components || {}) }}
 		/>
 	);
