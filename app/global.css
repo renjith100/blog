@@ -360,8 +360,11 @@ input[type="email"] {
 
 /* Prose table styles */
 .prose table {
+	display: table;
 	border: 1px solid;
-	@apply block w-full my-8 text-base border-collapse overflow-x-auto rounded-lg border-neutral-200 dark:border-neutral-800;
+	border-spacing: 0;
+	border-collapse: separate;
+	@apply w-full my-8 text-base rounded-lg border-neutral-200 dark:border-neutral-800;
 }
 
 .prose thead {
@@ -371,6 +374,22 @@ input[type="email"] {
 
 .prose thead th {
 	@apply text-left font-semibold text-sky-700 dark:text-sky-300 px-4 py-3 text-sm tracking-wide uppercase;
+}
+
+.prose thead th:first-child {
+	@apply rounded-tl-lg;
+}
+
+.prose thead th:last-child {
+	@apply rounded-tr-lg;
+}
+
+.prose tbody tr:last-child td:first-child {
+	@apply rounded-bl-lg;
+}
+
+.prose tbody tr:last-child td:last-child {
+	@apply rounded-br-lg;
 }
 
 .prose tbody tr {
