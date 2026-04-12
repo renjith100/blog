@@ -68,8 +68,17 @@ function CustomLink(props) {
  * @param props - Standard Next.js Image component props
  * @returns Styled Image component
  */
-function RoundedImage(props) {
-	return <Image alt={props.alt} className="rounded-lg" {...props} />;
+function RoundedImage({ alt, caption, ...props }) {
+	return (
+		<figure className="my-8 flex flex-col items-center justify-center">
+			<Image alt={alt} className="rounded-lg" {...props} />
+			{caption && (
+				<figcaption className="mt-3 text-lg text-center text-neutral-700 dark:text-neutral-200 font-semibold">
+					{caption}
+				</figcaption>
+			)}
+		</figure>
+	);
 }
 
 /**
