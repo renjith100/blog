@@ -302,6 +302,10 @@
 	@apply m-0;
 }
 
+.prose blockquote {
+    @apply border-l-4 border-neutral-300 dark:border-neutral-700 pl-4 my-4 italic text-neutral-600 dark:text-neutral-400;
+}
+
 /* Adjusted prose styles for better readability */
 .prose p {
 	@apply paragraph-blog;
@@ -324,7 +328,11 @@
 }
 
 .prose strong {
-	@apply font-medium;
+	@apply font-semibold;
+}
+
+.prose blockquote strong {
+	@apply font-bold not-italic text-neutral-800 dark:text-neutral-200;
 }
 
 .prose ul {
