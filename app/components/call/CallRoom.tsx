@@ -11,7 +11,7 @@ import {
 } from "@livekit/components-react";
 import "@livekit/components-styles";
 import { ConnectionState, RoomEvent } from "livekit-client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function CallRoom({
 	serverUrl,
@@ -41,10 +41,9 @@ export default function CallRoom({
 
 function CallStage() {
 	const { state, audioTrack } = useVoiceAssistant();
-	const { localParticipant } = useLocalParticipant();
+	const { localParticipant, isMicrophoneEnabled } = useLocalParticipant();
 	const room = useRoomContext();
 	const connection = useConnectionState();
-	const [muted, setMuted] = useState(false);
 
 	// End the visitor's call when the last remote leaves — e.g. the host hangs
 	// up on the phone, or the agent ends a screened-out call. ParticipantDisconnected
@@ -69,9 +68,7 @@ function CallStage() {
 				: "Connected";
 
 	const toggleMute = () => {
-		const next = !muted;
-		setMuted(next);
-		void localParticipant.setMicrophoneEnabled(!next);
+		void localParticipant.setMicrophoneEnabled(!isMicrophoneEnabled);
 	};
 
 	return (
@@ -85,7 +82,7 @@ function CallStage() {
 			<p className="call-status">{status}</p>
 			<div className="call-controls">
 				<button type="button" onClick={toggleMute}>
-					{muted ? "Unmute" : "Mute"}
+					{isMicrophoneEnabled ? "Mute" : "Unmute"}
 				</button>
 				<button
 					type="button"
