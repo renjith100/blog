@@ -10,8 +10,8 @@ import {
 	useVoiceAssistant,
 } from "@livekit/components-react";
 import "@livekit/components-styles";
-import { ConnectionState } from "livekit-client";
-import { useState } from "react";
+import { ConnectionState, RoomEvent } from "livekit-client";
+import { useEffect, useState } from "react";
 
 export default function CallRoom({
 	serverUrl,
@@ -45,6 +45,19 @@ function CallStage() {
 	const room = useRoomContext();
 	const connection = useConnectionState();
 	const [muted, setMuted] = useState(false);
+
+	// End the visitor's call when the last remote leaves — e.g. the host hangs
+	// up on the phone, or the agent ends a screened-out call. ParticipantDisconnected
+	// only fires after someone was present, so it won't trip while we wait for the agent.
+	useEffect(() => {
+		const onRemoteLeft = () => {
+			if (room.remoteParticipants.size === 0) void room.disconnect();
+		};
+		room.on(RoomEvent.ParticipantDisconnected, onRemoteLeft);
+		return () => {
+			room.off(RoomEvent.ParticipantDisconnected, onRemoteLeft);
+		};
+	}, [room]);
 
 	// Drive connecting/connected off the room connection (reliable); use the
 	// agent state only for the "talking" flourish.
