@@ -8,6 +8,15 @@ const navItems = {
 	"/blog": {
 		name: "blog",
 	},
+	// Only advertise /call where the backend URL is configured, so preview/local
+	// deployments without it don't show a dead primary-nav route.
+	...(process.env.NEXT_PUBLIC_BACKEND_URL
+		? {
+				"/call": {
+					name: "call",
+				},
+			}
+		: {}),
 };
 
 export function Navbar() {
