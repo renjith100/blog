@@ -4,11 +4,13 @@ import {
 	BarVisualizer,
 	LiveKitRoom,
 	RoomAudioRenderer,
+	useConnectionState,
 	useLocalParticipant,
 	useRoomContext,
 	useVoiceAssistant,
 } from "@livekit/components-react";
 import "@livekit/components-styles";
+import { ConnectionState } from "livekit-client";
 import { useState } from "react";
 
 export default function CallRoom({
@@ -41,10 +43,13 @@ function CallStage() {
 	const { state, audioTrack } = useVoiceAssistant();
 	const { localParticipant } = useLocalParticipant();
 	const room = useRoomContext();
+	const connection = useConnectionState();
 	const [muted, setMuted] = useState(false);
 
+	// Drive connecting/connected off the room connection (reliable); use the
+	// agent state only for the "talking" flourish.
 	const status =
-		state === "connecting" || state === "initializing"
+		connection !== ConnectionState.Connected
 			? "Connecting…"
 			: state === "listening" || state === "thinking" || state === "speaking"
 				? "Talking to assistant"
