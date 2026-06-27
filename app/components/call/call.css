@@ -1,50 +1,32 @@
-.call-stage {
+/* ── Idle / intro ───────────────────────────────────────── */
+.call-intro {
 	display: flex;
 	flex-direction: column;
-	gap: 1.25rem;
-	align-items: center;
-	padding: 2rem 0;
-}
-
-.call-visualizer {
-	--lk-va-bar-gap: 6px;
-	--lk-accent-bg: #1d4ed8;
-	width: 100%;
-	max-width: 28rem;
-	height: 9rem;
-}
-
-.call-status {
-	font-family: var(--font-display, inherit);
-	opacity: 0.8;
-}
-
-.call-controls {
-	display: flex;
 	gap: 0.75rem;
-}
-
-.call-controls button {
-	padding: 0.5rem 1.25rem;
-	cursor: pointer;
-	border: 1px solid currentColor;
-	border-radius: 9999px;
-}
-
-.call-controls .call-end {
-	color: #fff;
-	background: #dc2626;
-	border: none;
+	align-items: flex-start;
 }
 
 .call-start {
-	padding: 0.6rem 1.5rem;
-	margin-top: 1rem;
+	padding: 0.6rem 1.6rem;
+	margin-top: 0.5rem;
+	font-family: var(--font-display, inherit);
+	font-size: 1rem;
 	color: #fff;
 	cursor: pointer;
-	background: #1d4ed8;
+	background: var(--link-color);
 	border: none;
 	border-radius: 9999px;
+	transition:
+		box-shadow 0.3s ease,
+		transform 0.1s ease;
+}
+
+.call-start:hover:not(:disabled) {
+	box-shadow: 0 6px 26px var(--link-glow);
+}
+
+.call-start:active:not(:disabled) {
+	transform: translateY(1px);
 }
 
 .call-start:disabled {
@@ -53,5 +35,118 @@
 }
 
 .call-error {
-	color: #dc2626;
+	color: #ef4444;
+}
+
+/* ── In-call stage ──────────────────────────────────────── */
+.call-stage {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+	align-items: center;
+	padding: 3.5rem 0 2.5rem;
+}
+
+/* ambient sky halo behind the bars — echoes the site's link-glow */
+.call-stage::before {
+	position: absolute;
+	top: 32%;
+	left: 50%;
+	width: min(440px, 82%);
+	height: 240px;
+	pointer-events: none;
+	content: "";
+	background: radial-gradient(
+		ellipse at center,
+		var(--link-glow),
+		transparent 70%
+	);
+	filter: blur(6px);
+	transform: translate(-50%, -50%);
+}
+
+.call-visualizer {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	gap: 7px;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	max-width: 30rem;
+	height: 11rem;
+}
+
+/* the bars: pill-shaped, sky, glowing; smooth height transitions */
+.call-visualizer .lk-audio-bar {
+	width: 9px;
+	min-height: 7px;
+	background: var(--link-color);
+	border-radius: 9999px;
+	box-shadow: 0 0 8px var(--link-glow);
+	opacity: 0.3;
+	transition:
+		height 0.12s ease,
+		opacity 0.22s ease,
+		box-shadow 0.25s ease;
+}
+
+.call-visualizer .lk-audio-bar[data-lk-highlighted],
+.call-visualizer .lk-audio-bar[data-lk-highlighted="true"] {
+	box-shadow:
+		0 0 20px var(--link-glow),
+		0 0 7px var(--link-color);
+	opacity: 1;
+}
+
+.call-status {
+	position: relative;
+	z-index: 1;
+	font-family: var(--font-display, inherit);
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+	opacity: 0.7;
+}
+
+/* ── Controls: quiet, so the bars stay the hero ─────────── */
+.call-controls {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	gap: 0.75rem;
+}
+
+.call-controls button {
+	padding: 0.55rem 1.4rem;
+	font-family: var(--font-display, inherit);
+	color: var(--foreground);
+	cursor: pointer;
+	background: transparent;
+	border: 1px solid color-mix(in srgb, var(--foreground) 28%, transparent);
+	border-radius: 9999px;
+	transition:
+		background 0.2s ease,
+		border-color 0.2s ease;
+}
+
+.call-controls button:hover {
+	background: color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+
+.call-controls .call-end {
+	color: #fff;
+	background: #ef4444;
+	border-color: transparent;
+}
+
+.call-controls .call-end:hover {
+	background: #dc2626;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.call-visualizer .lk-audio-bar {
+		transition: none;
+	}
 }

@@ -61,7 +61,7 @@ function CallStage() {
 			<BarVisualizer
 				state={state}
 				trackRef={audioTrack}
-				barCount={7}
+				barCount={15}
 				className="call-visualizer"
 			/>
 			<p className="call-status">{status}</p>
