@@ -1,0 +1,57 @@
+.call-stage {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+	align-items: center;
+	padding: 2rem 0;
+}
+
+.call-visualizer {
+	--lk-va-bar-gap: 6px;
+	--lk-accent-bg: #1d4ed8;
+	width: 100%;
+	max-width: 28rem;
+	height: 9rem;
+}
+
+.call-status {
+	font-family: var(--font-display, inherit);
+	opacity: 0.8;
+}
+
+.call-controls {
+	display: flex;
+	gap: 0.75rem;
+}
+
+.call-controls button {
+	padding: 0.5rem 1.25rem;
+	cursor: pointer;
+	border: 1px solid currentColor;
+	border-radius: 9999px;
+}
+
+.call-controls .call-end {
+	color: #fff;
+	background: #dc2626;
+	border: none;
+}
+
+.call-start {
+	padding: 0.6rem 1.5rem;
+	margin-top: 1rem;
+	color: #fff;
+	cursor: pointer;
+	background: #1d4ed8;
+	border: none;
+	border-radius: 9999px;
+}
+
+.call-start:disabled {
+	cursor: default;
+	opacity: 0.6;
+}
+
+.call-error {
+	color: #dc2626;
+}
