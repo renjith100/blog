@@ -39,6 +39,21 @@ export type Week = {
 
 const CONTENT_DIR = path.join(process.cwd(), "app", "weekly", "content");
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+/**
+ * Returns whether a string is a real YYYY-MM-DD date. Date parsing rolls
+ * 2026-11-31 over to Dec 1, so the date must format back unchanged.
+ */
+function isRealDate(date: string) {
+	if (!DATE_PATTERN.test(date)) {
+		return false;
+	}
+	const parsed = new Date(`${date}T00:00:00Z`);
+	return (
+		!Number.isNaN(parsed.getTime()) &&
+		parsed.toISOString().slice(0, 10) === date
+	);
+}
 const REQUIRED_FIELDS = ["title", "source", "date", "category"] as const;
 
 /**
@@ -86,7 +101,7 @@ function readUpdate(week: string, weekDir: string, file: string) {
 	if (!fields || missing.length > 0) {
 		throw new Error(`${filePath}: missing ${missing.join(", ")}`);
 	}
-	if (!DATE_PATTERN.test(fields.date) || getWeekStart(fields.date) !== week) {
+	if (!isRealDate(fields.date) || getWeekStart(fields.date) !== week) {
 		throw new Error(
 			`${filePath}: date ${fields.date} is not in the week of ${week}`,
 		);
@@ -141,16 +156,14 @@ export function getWeeks(contentDir = CONTENT_DIR) {
 		.readdirSync(contentDir, { withFileTypes: true })
 		.filter((entry) => entry.isDirectory())
 		.map((entry) => {
-			if (
-				!DATE_PATTERN.test(entry.name) ||
-				getWeekStart(entry.name) !== entry.name
-			) {
+			if (!isRealDate(entry.name) || getWeekStart(entry.name) !== entry.name) {
 				throw new Error(
 					`${path.join(contentDir, entry.name)}: week folders must be named after their Monday (YYYY-MM-DD)`,
 				);
 			}
 			return readWeek(contentDir, entry.name);
 		})
+		.filter((week) => week.updates.length > 0) // The current week gets its page from getWeek
 		.sort((a, b) => a.start.localeCompare(b.start));
 }
 

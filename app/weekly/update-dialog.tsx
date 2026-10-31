@@ -22,7 +22,8 @@ export function UpdateDialog({
 	const router = useRouter();
 	const pathname = usePathname();
 	const id = useSearchParams().get("id");
-	const panel = id ? panels[id] : undefined;
+	// Own properties only, so ?id=__proto__ or ?id=toString shows nothing
+	const panel = id && Object.hasOwn(panels, id) ? panels[id] : undefined;
 	const dialogRef = useRef<HTMLDialogElement>(null);
 
 	useEffect(() => {
