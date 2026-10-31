@@ -1,7 +1,9 @@
 import type { IconType } from "react-icons";
+import { FaMicrosoft } from "react-icons/fa";
 import { FiZap } from "react-icons/fi";
 import {
 	SiAnthropic,
+	SiApple,
 	SiGithubcopilot,
 	SiGoogle,
 	SiGooglegemini,
@@ -27,6 +29,8 @@ const SOURCES: Record<string, { icon: IconType; color?: string }> = {
 	gemini: { icon: SiGooglegemini, color: "#8E75B2" },
 	xai: { icon: SiX }, // react-icons has no xAI logo
 	meta: { icon: SiMeta, color: "#0467DF" },
+	apple: { icon: SiApple },
+	microsoft: { icon: FaMicrosoft, color: "#00A4EF" }, // Not in Simple Icons
 	perplexity: { icon: SiPerplexity, color: "#1FB8CD" },
 	"github copilot": { icon: SiGithubcopilot },
 	"hugging face": { icon: SiHuggingface }, // Brand yellow is faint on white
