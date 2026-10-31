@@ -30,7 +30,7 @@ export default function Footer() {
 					<li>
 						<Link href="/call" className="footer-item">
 							<ArrowIcon />
-							<p className="paragraph-icon-label">call</p>
+							<p className="paragraph-icon-label">call me</p>
 						</Link>
 					</li>
 				)}
