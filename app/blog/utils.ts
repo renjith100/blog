@@ -13,6 +13,36 @@ type Metadata = {
 };
 
 /**
+ * Splits an MDX file into its flat `key: value` frontmatter fields and body.
+ * Shared by the blog and Weekly loaders.
+ *
+ * @param fileContent - Raw content of the MDX file
+ * @returns The fields (null when there is no frontmatter) and the body
+ */
+export function readFrontmatter(fileContent: string) {
+	const frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
+	const match = frontmatterRegex.exec(fileContent);
+
+	if (!match) {
+		return { fields: null, content: fileContent };
+	}
+
+	const frontMatterBlock = match[1];
+	const content = fileContent.replace(frontmatterRegex, "").trim();
+	const frontMatterLines = frontMatterBlock.trim().split("\n");
+	const fields: Record<string, string> = {};
+
+	frontMatterLines.forEach((line) => {
+		const [key, ...valueArr] = line.split(": ");
+		let value = valueArr.join(": ").trim();
+		value = value.replace(/^['"](.*)['"]$/, "$1"); // Remove quotes
+		fields[key.trim()] = value;
+	});
+
+	return { fields, content };
+}
+
+/**
  * Parses the frontmatter section of an MDX file
  * Extracts metadata and content from the MDX document
  *
@@ -27,31 +57,20 @@ type Metadata = {
  * ---
  */
 function parseFrontmatter(fileContent: string) {
-	const frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
-	const match = frontmatterRegex.exec(fileContent);
+	const { fields, content } = readFrontmatter(fileContent);
 
-	if (!match) {
+	if (!fields) {
 		return {
 			metadata: {
 				title: "FontMatter Error",
 				publishedAt: new Date().toISOString(),
 				summary: "FontMatter Error",
 			},
-			content: fileContent,
+			content,
 		};
 	}
 
-	const frontMatterBlock = match[1];
-	const content = fileContent.replace(frontmatterRegex, "").trim();
-	const frontMatterLines = frontMatterBlock.trim().split("\n");
-	const metadata: Partial<Metadata> = {};
-
-	frontMatterLines.forEach((line) => {
-		const [key, ...valueArr] = line.split(": ");
-		let value = valueArr.join(": ").trim();
-		value = value.replace(/^['"](.*)['"]$/, "$1"); // Remove quotes
-		metadata[key.trim() as keyof Metadata] = value;
-	});
+	const metadata = fields as Partial<Metadata>;
 
 	return {
 		metadata: {

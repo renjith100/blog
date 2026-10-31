@@ -1,0 +1,7 @@
+# Vercel installs with pnpm 9, which rejects this file without `packages`
+packages:
+  - "."
+allowBuilds:
+  core-js: true
+  protobufjs: true
+  sharp: true

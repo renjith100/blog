@@ -259,13 +259,14 @@
 	@apply visible;
 }
 
-.prose a {
+/* Links inside embedded tweets keep react-tweet's own styles */
+.prose a:not(:where(.react-tweet-theme *)) {
 	color: var(--link-color);
 	text-decoration-color: var(--link-color);
 	@apply underline transition-all underline-offset-2 decoration-[0.1em];
 }
 
-.prose a:hover {
+.prose a:not(:where(.react-tweet-theme *)):hover {
 	color: var(--link-hover-color);
 	text-decoration-color: var(--link-hover-color);
 	text-shadow: 0 0 8px var(--link-glow);
