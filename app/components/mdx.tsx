@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import React from "react";
+import { Tweet } from "react-tweet";
 import remarkGfm from "remark-gfm";
 import { highlight } from "sugar-high";
 
@@ -143,6 +144,9 @@ function createHeading(level) {
 /**
  * Custom MDX components mapping
  * Provides enhanced versions of standard HTML elements
+ *
+ * Tweet embeds an X post by id, e.g. <Tweet id="2108271552991252810" />.
+ * It is fetched on the server at build time and follows the site theme.
  */
 const components = {
 	h1: createHeading(1),
@@ -155,6 +159,7 @@ const components = {
 	a: CustomLink,
 	code: Code,
 	Table,
+	Tweet,
 };
 
 /**
