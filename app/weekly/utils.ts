@@ -45,7 +45,7 @@ const REQUIRED_FIELDS = ["title", "source", "date", "category"] as const;
  * Adds days to a YYYY-MM-DD date. Works in UTC so the result never shifts
  * with the server's timezone.
  */
-function addDays(date: string, days: number) {
+export function addDays(date: string, days: number) {
 	const d = new Date(`${date}T00:00:00Z`);
 	d.setUTCDate(d.getUTCDate() + days);
 	return d.toISOString().slice(0, 10);
