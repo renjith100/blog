@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 function ArrowIcon() {
 	return (
 		<svg
@@ -22,6 +24,16 @@ export default function Footer() {
 	return (
 		<footer className="footer-container">
 			<ul className="footer-list">
+				{/* Only show /call where the backend URL is configured, so preview/local
+				    deployments without it don't link to a dead route. */}
+				{process.env.NEXT_PUBLIC_BACKEND_URL && (
+					<li>
+						<Link href="/call" className="footer-item">
+							<ArrowIcon />
+							<p className="paragraph-icon-label">call</p>
+						</Link>
+					</li>
+				)}
 				<li>
 					<a
 						href="/rss"
