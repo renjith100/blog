@@ -430,3 +430,70 @@ input[type="email"] {
 .dark .credly-badge-container iframe {
 	filter: invert(1) hue-rotate(180deg);
 }
+
+/*
+ * Weekly update popup (app/weekly/update-dialog.tsx). The dialog fades its
+ * backdrop in; the card inside gets .weekly-popup once its images have
+ * loaded, which starts the open animation: it grows in place (no sliding),
+ * overshoots to 104% and eases back to full size. On close, UpdateDialog
+ * sets data-closing on the dialog and waits for the out-animation, so keep
+ * its CLOSE_MS in step with weekly-popup-out.
+ */
+@keyframes weekly-popup-in {
+	0% {
+		opacity: 0;
+		transform: scale(0.85);
+		animation-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1);
+	}
+	60% {
+		opacity: 1;
+		transform: scale(1.04);
+		animation-timing-function: cubic-bezier(0.4, 0, 0.3, 1);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@keyframes weekly-popup-out {
+	to {
+		opacity: 0;
+		transform: scale(0.96);
+	}
+}
+
+@keyframes weekly-backdrop-in {
+	from {
+		opacity: 0;
+	}
+}
+
+@keyframes weekly-backdrop-out {
+	to {
+		opacity: 0;
+	}
+}
+
+.weekly-popup {
+	animation: weekly-popup-in 450ms both;
+}
+
+.weekly-dialog::backdrop {
+	animation: weekly-backdrop-in 240ms ease-out both;
+}
+
+.weekly-dialog[data-closing] .weekly-popup {
+	animation: weekly-popup-out 160ms ease-in both;
+}
+
+.weekly-dialog[data-closing]::backdrop {
+	animation: weekly-backdrop-out 160ms ease-in both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.weekly-popup,
+	.weekly-dialog::backdrop {
+		animation: none !important;
+	}
+}
