@@ -37,11 +37,12 @@ function waitUntil(isDone: () => boolean) {
  */
 function waitForContent(root: HTMLElement) {
 	const ready = (async () => {
-		// Every react-tweet box has .react-tweet-theme; the loading skeleton
-		// is the only one without links (author, Follow)
+		// Every react-tweet box has .react-tweet-theme. A loaded tweet has
+		// links (author, Follow) and a failed one an <h3> ("Tweet not found");
+		// the loading skeleton has neither
 		await waitUntil(() =>
 			Array.from(root.querySelectorAll(".react-tweet-theme")).every((tweet) =>
-				tweet.querySelector("a"),
+				tweet.querySelector("a, h3"),
 			),
 		);
 		const pending = Array.from(root.querySelectorAll("img")).filter((img) => {
@@ -74,7 +75,8 @@ function waitForContent(root: HTMLElement) {
  * they're in, the card springs in at its final size, so nothing grows or
  * jumps after it appears (the weekly-popup styles in global.css). To let
  * the fade-out play, close() first sets data-closing and only changes the
- * URL once it has finished.
+ * URL once it has finished. Until it's ready the card is inert, so focus
+ * and screen readers can't reach it; then focus moves to its close button.
  *
  * Must be inside a <Suspense> boundary, because it reads the search params
  * on a statically built page.
@@ -93,6 +95,8 @@ export function UpdateDialog({
 	const panel = id && Object.hasOwn(panels, id) ? panels[id] : undefined;
 	const dialogRef = useRef<HTMLDialogElement>(null);
 	const cardRef = useRef<HTMLDivElement>(null);
+	const closeButtonRef = useRef<HTMLButtonElement>(null);
+	const closeTimerRef = useRef<number | undefined>(undefined);
 	const [ready, setReady] = useState(false);
 
 	useEffect(() => {
@@ -109,10 +113,18 @@ export function UpdateDialog({
 		waitForContent(card).then(() => {
 			if (!cancelled) {
 				setReady(true);
+				// The card was inert while loading, so showModal() couldn't focus
+				// it; give focus to its first control now, as it would have
+				requestAnimationFrame(() =>
+					closeButtonRef.current?.focus({ preventScroll: true }),
+				);
 			}
 		});
 		return () => {
 			cancelled = true;
+			// A close still fading out mustn't change the URL after the update
+			// or page has changed
+			window.clearTimeout(closeTimerRef.current);
 			dialog.close();
 			document.body.style.overflow = "";
 		};
@@ -136,7 +148,7 @@ export function UpdateDialog({
 			return;
 		}
 		dialog.setAttribute("data-closing", "");
-		window.setTimeout(finish, CLOSE_MS);
+		closeTimerRef.current = window.setTimeout(finish, CLOSE_MS);
 	};
 
 	return (
@@ -163,7 +175,7 @@ export function UpdateDialog({
 					aria-label="Loading"
 					className="pointer-events-none fixed inset-0 grid place-items-center"
 				>
-					<span className="h-8 w-8 animate-spin rounded-full border-[3px] border-white/30 border-t-white" />
+					<span className="h-8 w-8 animate-spin rounded-full motion-reduce:animate-none border-[3px] border-white/30 border-t-white" />
 				</div>
 			)}
 			{/* The card, not the dialog, animates. Its inner div scrolls, so the
@@ -171,10 +183,12 @@ export function UpdateDialog({
 			    ready the card is invisible but laid out, so its images load. */}
 			<div
 				ref={cardRef}
+				inert={!ready}
 				className={`relative flex max-h-[85vh] flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-[var(--background)] shadow-2xl dark:border-neutral-800 ${ready ? "weekly-popup" : "opacity-0"}`}
 			>
 				{/* Outside both parts, so it stays in the corner */}
 				<button
+					ref={closeButtonRef}
 					type="button"
 					onClick={close}
 					aria-label="Close"
