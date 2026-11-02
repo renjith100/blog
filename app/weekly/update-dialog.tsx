@@ -125,6 +125,9 @@ export function UpdateDialog({
 			// A close still fading out mustn't change the URL after the update
 			// or page has changed
 			window.clearTimeout(closeTimerRef.current);
+			// The dialog is reused when the update changes mid-fade, so drop
+			// the closing state too, or the next update stays faded out
+			dialog.removeAttribute("data-closing");
 			dialog.close();
 			document.body.style.overflow = "";
 		};
