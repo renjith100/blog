@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { UpdateDialog } from "./update-dialog";
 import { UpdateList } from "./update-list";
-import { UpdatePanel } from "./update-panel";
+import { renderUpdatePanel } from "./update-panel";
 import {
 	formatWeekRange,
 	getCurrentWeekStart,
@@ -86,7 +86,7 @@ export function WeekView({ start }: { start: string }) {
 					panels={Object.fromEntries(
 						week.updates.map((update) => [
 							update.slug,
-							<UpdatePanel key={update.slug} update={update} />,
+							renderUpdatePanel(update),
 						]),
 					)}
 				/>
