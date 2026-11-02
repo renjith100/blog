@@ -1,8 +1,9 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiX } from "react-icons/fi";
+import type { UpdatePanel } from "./update-panel";
 
 /** Length of the weekly-popup-out animation in global.css, in ms */
 const CLOSE_MS = 160;
@@ -78,12 +79,12 @@ function waitForContent(root: HTMLElement) {
  * Must be inside a <Suspense> boundary, because it reads the search params
  * on a statically built page.
  *
- * @param panels - Each update's rendered UpdatePanel, keyed by slug
+ * @param panels - Each update's header and body, keyed by slug
  */
 export function UpdateDialog({
 	panels,
 }: {
-	panels: Record<string, ReactNode>;
+	panels: Record<string, UpdatePanel>;
 }) {
 	const router = useRouter();
 	const pathname = usePathname();
@@ -170,18 +171,24 @@ export function UpdateDialog({
 			    ready the card is invisible but laid out, so its images load. */}
 			<div
 				ref={cardRef}
-				className={`overflow-hidden rounded-2xl border border-neutral-200 bg-[var(--background)] shadow-2xl dark:border-neutral-800 ${ready ? "weekly-popup" : "opacity-0"}`}
+				className={`relative flex max-h-[85vh] flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-[var(--background)] shadow-2xl dark:border-neutral-800 ${ready ? "weekly-popup" : "opacity-0"}`}
 			>
-				<div className="weekly-popup-scroll relative max-h-[85vh] overflow-y-auto overscroll-contain p-5 sm:p-6">
-					<button
-						type="button"
-						onClick={close}
-						aria-label="Close"
-						className="absolute right-4 top-4 rounded-full p-1 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
-					>
-						<FiX size={20} />
-					</button>
-					{panel}
+				{/* Outside both parts, so it stays in the corner */}
+				<button
+					type="button"
+					onClick={close}
+					aria-label="Close"
+					className="absolute right-4 top-4 z-20 rounded-full p-1 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+				>
+					<FiX size={20} />
+				</button>
+				{/* The title bar stays put and only the body scrolls, so the
+				    scrollbar starts below the title */}
+				<div className="shrink-0 border-b border-neutral-200 px-5 pb-4 pr-12 pt-5 sm:px-6 sm:pr-14 sm:pt-6 dark:border-neutral-800">
+					{panel.header}
+				</div>
+				<div className="weekly-popup-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-5 pt-5 sm:px-6 sm:pb-6">
+					{panel.body}
 				</div>
 			</div>
 		</dialog>

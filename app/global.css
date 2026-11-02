@@ -495,7 +495,8 @@ input[type="email"] {
  * The popup's scroll area: a thin, quiet scrollbar that's barely there
  * until you need it. Chrome and Firefox use the standard properties; Safari
  * uses the ::-webkit-scrollbar ones, which also round the thumb and keep it
- * clear of the card's 16px corners.
+ * clear of the card's 16px bottom corners. Only the body scrolls, so the
+ * scrollbar starts below the title bar.
  */
 .weekly-popup-scroll {
 	scrollbar-width: thin;
@@ -512,7 +513,7 @@ input[type="email"] {
 
 .weekly-popup-scroll::-webkit-scrollbar-track {
 	background: transparent;
-	margin: 14px 0;
+	margin: 4px 0 14px;
 }
 
 .weekly-popup-scroll::-webkit-scrollbar-thumb {
