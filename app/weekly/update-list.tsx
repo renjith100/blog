@@ -29,7 +29,7 @@ export function UpdateList({ week }: { week: Week }) {
 			{week.updates.map((update) => (
 				<li key={update.slug}>
 					<Link
-						href={`?id=${update.slug}`}
+						href={`/weekly/${week.start}?id=${update.slug}`}
 						scroll={false}
 						className="flex items-center gap-3 px-3 py-2 transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900"
 					>
