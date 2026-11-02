@@ -172,7 +172,7 @@ export function UpdateDialog({
 				ref={cardRef}
 				className={`overflow-hidden rounded-2xl border border-neutral-200 bg-[var(--background)] shadow-2xl dark:border-neutral-800 ${ready ? "weekly-popup" : "opacity-0"}`}
 			>
-				<div className="relative max-h-[85vh] overflow-y-auto p-5 sm:p-6">
+				<div className="weekly-popup-scroll relative max-h-[85vh] overflow-y-auto overscroll-contain p-5 sm:p-6">
 					<button
 						type="button"
 						onClick={close}
