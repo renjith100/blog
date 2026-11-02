@@ -1,7 +1,4 @@
-import { Suspense } from "react";
-import { UpdateDialog } from "./update-dialog";
 import { UpdateList } from "./update-list";
-import { UpdatePanel } from "./update-panel";
 import {
 	formatWeekRange,
 	getCurrentWeekStart,
@@ -45,7 +42,7 @@ export function isWeekWithPage(start: string) {
 
 /**
  * The Weekly page for one week: heading and tagline, the week grid, then
- * the week's heading, summary, updates and their popups.
+ * the week's heading, summary and its updates as an accordion.
  * Used by both /weekly (the current week) and /weekly/[week].
  *
  * @param start - Monday of the week to show
@@ -80,17 +77,6 @@ export function WeekView({ start }: { start: string }) {
 			</div>
 
 			<UpdateList week={week} />
-
-			<Suspense fallback={null}>
-				<UpdateDialog
-					panels={Object.fromEntries(
-						week.updates.map((update) => [
-							update.slug,
-							<UpdatePanel key={update.slug} update={update} />,
-						]),
-					)}
-				/>
-			</Suspense>
 		</section>
 	);
 }

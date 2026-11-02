@@ -3,8 +3,8 @@ import path from "node:path";
 import { readFrontmatter } from "app/blog/utils";
 
 /**
- * One update on the Weekly page. Each update is its own MDX file and opens
- * as one popup.
+ * One update on the Weekly page. Each update is its own MDX file and is
+ * one row of the week's accordion.
  *
  * Example file, app/weekly/content/2026-10-26/claude-haiku-5-5.mdx:
  * ---
@@ -16,7 +16,7 @@ import { readFrontmatter } from "app/blog/utils";
  * A short summary, then <Tweet id="..." /> embeds and links.
  */
 export type WeeklyUpdate = {
-	slug: string; // File name without .mdx, used in ?id=
+	slug: string; // File name without .mdx, used in #<slug> links
 	week: string; // Monday of the update's week (YYYY-MM-DD)
 	title: string;
 	source: string; // Company or project, e.g. Anthropic, OpenAI

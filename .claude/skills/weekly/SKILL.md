@@ -6,8 +6,8 @@ description: Add this week's agent news to the Weekly page (/weekly) on Renjith'
 # Weekly: add this week's agent updates
 
 The Weekly page (`/weekly`) lists what shipped in AI agents, one week at a
-time. Each update is its own MDX file and opens as a popup with a short
-summary, embedded X posts and links. The code lives in `app/weekly/`.
+time. Each update is its own MDX file and is one row of the week's accordion;
+opening the row shows a short summary, embedded X posts and links. The code lives in `app/weekly/`.
 
 ## 1. Find the week
 
@@ -58,8 +58,8 @@ find the post, link the announcement page instead of embedding a tweet.
 ## 3. Write one file per update
 
 `app/weekly/content/<monday>/<slug>.mdx`, where the slug is short and kebab-case
-(`claude-haiku-5-5`). The slug is also the popup's `?id=`, so never rename a
-file once it's committed.
+(`claude-haiku-5-5`). The slug is also the row's link (`#<slug>`, and `?id=<slug>` for older
+links), so never rename a file once it's committed.
 
 ```mdx
 ---
