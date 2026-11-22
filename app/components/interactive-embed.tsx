@@ -56,8 +56,14 @@ export function Interactive({
 		if (!loaded || !doc?.body) return;
 		// Measure the body, not documentElement.scrollHeight: the latter never
 		// drops below the iframe's current height, so the iframe could only grow.
-		const measure = () =>
-			setHeight(Math.ceil(doc.body.getBoundingClientRect().height));
+		// The iframe's height includes its top and bottom border, so add
+		// them back, or the page is 2px short and shows an inner scrollbar.
+		const measure = () => {
+			const iframe = ref.current;
+			if (!iframe) return;
+			const border = iframe.offsetHeight - iframe.clientHeight;
+			setHeight(Math.ceil(doc.body.getBoundingClientRect().height) + border);
+		};
 		measure();
 		const observer = new ResizeObserver(measure);
 		observer.observe(doc.body);
