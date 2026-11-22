@@ -1,0 +1,47 @@
+---
+title: "The Best Claude Users Are Good Managers"
+publishedAt: "2026-11-21"
+summary: "Anthropic looked at how people actually use Claude. The ones who got the best results weren't the most technical. They briefed Claude the way a good manager briefs a new hire. Here are my notes, as an interactive page."
+---
+
+I watched a video this week that I found very useful. **[Ben AI](https://www.youtube.com/@BenAI92)** went through Anthropic's research on how people use Claude, about 400,000 Claude Code sessions plus Anthropic's own staff. The people who got the best results weren't the most technical. They were the clearest communicators. Managers scored highest of any group, even on coding tasks.
+
+Full credit goes to Ben for the video: [Anthropic's Study Just Revealed How The Top 1% Uses AI Differently](https://www.youtube.com/watch?v=81Jg17dQz1A). I recommend watching it.
+
+I made these notes for myself, as an interactive page I can come back to. Click the four parts of a brief to see them in an example, open each lesson, and try the quiz at the end. Every timestamp jumps to that part of the video.
+
+<Interactive src="/interactive/claude-expert-habits.html" title="Interactive notes: the best Claude users are good managers" />
+
+## The short version
+
+If you only take one thing away, it's this: **brief Claude the way a good manager briefs a new hire.** Every prompt should cover four parts:
+
+1. **The job.** Describe the whole task, not a list of steps. Decide what gets done and let Claude work out how.
+2. **The why.** Give the reason. On a long task Claude makes dozens of small decisions, and knowing why lets it make them the way you would.
+3. **Guardrails.** Only the ones that really matter, written plainly with a reason. No capitals and no "CRITICAL".
+4. **What done looks like.** One to three checks Claude can verify, and tell it not to stop until they all pass.
+
+The six lessons from the video:
+
+- **Communicate clearly.** Being precise about what you want, not your job title, is what made someone an expert.
+- **Get good at feedback.** Experts don't get it right first time more often. They recover more often. When an output is wrong, rewind, fix the original prompt and rerun it instead of piling on corrections.
+- **Make output fast to review.** As Claude does more of the work, you become the bottleneck. Ask for replies that lead with what needs your input.
+- **Automate what you never get to.** Look for the jobs you never did because they didn't feel worth your time.
+- **Give Claude your decisions.** You do the deciding and Claude does the doing, but Claude only knows the decisions it can read.
+- **Keep your setup lean.** Old rules, skills and connectors load into every chat. Cut them back when a new model comes out.
+
+### How to rewind in Claude Code
+
+Rewinding takes the conversation back to just before a prompt, as if the wrong answer never happened. You then improve that prompt and send it again. This is better than replying "no, not like that", because the wrong output stays in Claude's context and keeps pulling it the wrong way.
+
+1. With the input box empty, press `Esc` twice, or type `/rewind`.
+2. Pick the prompt that led to the wrong output.
+3. Choose what to restore:
+   - **Restore conversation**: removes everything from that prompt on and keeps your code as it is now.
+   - **Restore code and conversation**: also undoes the file changes Claude made since that prompt.
+   - **Restore code**: undoes the file changes and keeps the conversation.
+4. Your original prompt comes back in the input box. Add what was missing and send it again.
+
+Rewind only undoes files that Claude edited itself. Files changed only by shell commands stay as they are, so it's not a replacement for git.
+
+The figures in the notes are as reported in the video. I haven't checked them against Anthropic's papers.

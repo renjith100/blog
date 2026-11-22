@@ -5,6 +5,7 @@ import React from "react";
 import { Tweet } from "react-tweet";
 import remarkGfm from "remark-gfm";
 import { highlight } from "sugar-high";
+import { Interactive } from "./interactive-embed";
 
 /**
  * Custom Table component for MDX content
@@ -147,6 +148,9 @@ function createHeading(level) {
  *
  * Tweet embeds an X post by id, e.g. <Tweet id="2108271552991252810" />.
  * It is fetched on the server at build time and follows the site theme.
+ *
+ * Interactive embeds a self-contained HTML page from public/interactive/,
+ * e.g. <Interactive src="/interactive/claude-expert-habits.html" title="…" />.
  */
 const components = {
 	h1: createHeading(1),
@@ -160,6 +164,7 @@ const components = {
 	code: Code,
 	Table,
 	Tweet,
+	Interactive,
 };
 
 /**
