@@ -258,8 +258,10 @@ const T=[
    // Autoplay: child to old, hold, then start again from childhood. Begins once the picture is on screen.
    const setPlay=on=>{clearTimeout(bodyTimer);bodyTimer=null;pb.textContent=on?'Pause':'Play';if(on)bodyTimer=setTimeout(stepAge,age===3?3500:2400);};
    const stepAge=()=>{r.value=age===3?0:age+1;d();setPlay(true);};
-   pb.addEventListener('click',()=>{if(bodyTimer)setPlay(false);else{if(age===3){r.value=0;d();}setPlay(true);}});
-   r.addEventListener('input',()=>setPlay(false));
+   // Any manual control cancels the pending scroll-into-view autoplay, so it can't override the reader's choice
+   const stopAuto=()=>{if(bodyObs){bodyObs.disconnect();bodyObs=null;}};
+   pb.addEventListener('click',()=>{stopAuto();if(bodyTimer)setPlay(false);else{if(age===3){r.value=0;d();}setPlay(true);}});
+   r.addEventListener('input',()=>{stopAuto();setPlay(false);});
    const d=()=>{age=+r.value;const xs=[60,130,200,264];
    document.getElementById('bsvg').innerHTML=`<line x1="20" y1="148" x2="300" y2="148" stroke="var(--line)" stroke-width="2"/>`+AGES.map((a,i)=>i===age?'':(i<age?fig(xs[i],a,1):'')).join('')+fig(xs[age],AGES[age],0)+`<path d="M44 26L${xs[age]-8} ${148-AGES[age].h+6}" stroke="${S}" stroke-width="2" stroke-dasharray="2 5" fill="none"/>`+W(34,20)+`<text x="52" y="16" font-size="11" font-weight="700" fill="var(--mute)">the witness</text>`;
    document.getElementById('bcap').innerHTML=`<b>${AGES[age].n}.</b> ${AGES[age].c}`;};r.addEventListener('input',d);
