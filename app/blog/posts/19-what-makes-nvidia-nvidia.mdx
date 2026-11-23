@@ -1,0 +1,22 @@
+---
+title: "What Makes NVIDIA NVIDIA"
+publishedAt: "2026-11-24"
+summary: "Why a chip as fast as NVIDIA's still wouldn't be enough. Six decisions over 33 years, from curved polygons and one month of payroll to CUDA, AlexNet, Mellanox and Blackwell racks, as an interactive page."
+---
+
+Imagine a rival wakes up tomorrow with a chip every bit as fast as NVIDIA's best. It still wouldn't be enough. What makes NVIDIA so hard to catch was never only in the silicon.
+
+I watched a short video that packs NVIDIA's whole story into about two minutes. Every sentence in it hides a story: a chip that bet on curves, a company down to one month of payroll, a "GPU" that was half invention and half marketing, a software bet that made every chip cost more for years, two gaming cards in a Toronto bedroom, two miles of copper in a single rack. I wanted to understand each of those properly, so I looked them up and put them together here. Each section has something to play with.
+
+<Interactive src="/interactive/nvidia.html" title="Interactive notes: what makes NVIDIA NVIDIA" />
+
+## The short version
+
+NVIDIA's lead rests on four layers. To catch it, a rival has to rebuild all four at once:
+
+1. **Chips.** GPUs started as pixel painters. A screen needs millions of small, independent colour calculations every frame, so a GPU is an army of thousands of simple workers rather than one genius. That turned out to be exactly the shape of AI maths.
+2. **Software.** In 2006 NVIDIA put CUDA into every card, even the cheap gaming ones, years before anyone needed it. It cost money and Wall Street hated it. When AI arrived in 2012, the road was already built. Today about 11 million developers and twenty years of tuned libraries sit on top of it. Change the chip and that work starts over.
+3. **Connections.** Modern AI trains on thousands of GPUs at once, so the bottleneck moved from the chip to the links between chips. The $6.9 billion purchase of Mellanox, plus NVLink, lets NVIDIA sell the network along with the GPUs. A Blackwell NVL72 rack wires 72 GPUs into one machine with about 5,000 copper cables.
+4. **Pace.** In the 1990s NVIDIA shipped a new chip every six months while rivals took a year or two. Now it ships a new rack-scale system every year: Blackwell, Blackwell Ultra, and now Vera Rubin.
+
+Behind all four is a habit of Jensen Huang's: make big bets on markets that don't exist yet, give them a name, put on a show, and then actually ship.

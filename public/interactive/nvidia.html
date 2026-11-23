@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, indexifembedded">
+<base target="_blank">
+<title>What Makes NVIDIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE plain notes, one dense idea at a time, every number with its story
+   IDEA the chip is the easiest part to copy; the moat is chips + software + connections + pace, together
+   PICTURE four stacked slabs (chips, connections, software, pace) that come back through the page
+   COLOUR warm paper and ink like the other notes pages, one green accent for "NVIDIA's side", soft grey for rivals
+   TYPE Hanken Grotesk 800 display + Hanken Grotesk text
+   LAYOUT bands that alternate paper and tint; each band is one decision with one thing to play with; phone stacks everything */
+:root{color-scheme:light dark;--bg:light-dark(#fbfaf6,#111010);--ink:light-dark(#151412,#f0eee8);--mute:light-dark(#5b5850,#a8a59c);--con:light-dark(#e6e2d8,#2d2b27);--con2:light-dark(#f2efe7,#1b1a18);--line:light-dark(#c9c4b7,#44413b);
+--g:light-dark(#4f8a10,#8fd14f);--gs:light-dark(#dcebc8,#24331a);--warn:light-dark(#b3541e,#f0915a);--ws:light-dark(#f6dfcf,#3a2418);--sink:#151412;
+--l1:light-dark(#d9d4c6,#3a3731);--l2:light-dark(#cfe0e8,#1f3340);--l3:light-dark(#dcebc8,#25361b);--l4:light-dark(#f3ddb0,#3d3120)}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Hanken Grotesk",system-ui,sans-serif;overflow-x:clip}
+.band{padding-block:clamp(28px,4vw,64px);padding-left:max(5vw,16px);padding-right:max(5vw,16px)}
+.con{background:var(--con2)}
+.wrap{max-width:1100px;margin:0 auto}
+h1{font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.02em;font-weight:800;margin:0 0 14px;text-wrap:balance}
+h2{font-size:clamp(24px,3vw,30px);line-height:1.1;letter-spacing:-.01em;font-weight:800;margin:0 0 10px;text-wrap:balance}
+h3{font-size:17px;line-height:1.3;margin:0 0 6px;font-weight:800}
+p{margin:0 0 12px}
+.measure{max-width:64ch}
+ul{margin:0 0 12px;padding-left:20px}
+li{margin-bottom:6px}
+.small{font-size:14px;color:var(--mute)}
+.kick{display:inline-block;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:6px}
+.kick b{color:var(--g)}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:3px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--g);outline-offset:2px}
+.btn{font-size:14px;font-weight:700;padding:10px 14px;min-height:44px;border-radius:4px;border:1px solid var(--ink);background:var(--bg)}
+.btn.pri{background:var(--ink);color:var(--bg)}
+.btn[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 40px;align-items:start}
+.two.wide{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
+.box{padding:20px;border-radius:6px;background:var(--bg);border:1px solid var(--line)}
+.con .box{background:var(--bg)}
+.cap{font-size:15px;min-height:3em;margin-top:8px}
+svg{display:block;width:100%;height:auto}
+svg text{font-family:"Hanken Grotesk",system-ui,sans-serif}
+input[type=range]{width:100%;accent-color:var(--g);min-height:44px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+.stat{padding:12px 14px;border-radius:6px;background:var(--bg);border:1px solid var(--line)}
+.stat b{display:block;font-size:26px;line-height:1.1;font-weight:800}
+.stat span{font-size:14px;color:var(--mute)}
+.say{margin:16px 0;padding-left:16px;border-left:3px solid var(--g);font-size:19px;line-height:1.45;font-weight:700;max-width:56ch}
+.say small{display:block;font-size:14px;font-weight:400;color:var(--mute);margin-top:4px}
+/* hero stack */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 48px;align-items:center}
+.hero .lede{font-size:19px;max-width:46ch}
+.slab{cursor:pointer}
+.slab .face{transition:fill .3s}
+.slab.on .face{fill:var(--g)}
+.slab.on text.lab{fill:var(--g)}
+.slab:focus{outline:none}
+.slab:focus-visible .face{stroke:var(--g);stroke-width:4}
+.lnote{min-height:7.5em}
+.lnote h3 a{text-decoration:none}
+/* curves */
+.ttog{margin-bottom:8px}
+/* speed */
+.gantt text{font-size:11px;fill:var(--mute)}
+.grave{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin-top:14px}
+.grave div{padding:10px 12px;border-radius:6px;border:1px dashed var(--line);font-size:14px;color:var(--mute)}
+.grave b{display:block;color:var(--ink);font-size:15px}
+.grave .alive{border:2px solid var(--g);color:var(--ink)}
+/* pixels */
+.paint{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.paint figure{margin:0}
+.paint canvas{width:100%;height:auto;display:block;border-radius:4px;border:1px solid var(--line);background:var(--con)}
+.paint figcaption{font-size:14px;margin-top:6px}
+.paint figcaption b{font-size:16px}
+.clock{font-variant-numeric:tabular-nums;font-weight:800}
+/* code */
+.code{font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre;overflow-x:auto;padding:16px;border-radius:6px;background:var(--sink);color:#efece4;min-height:250px;margin:0}
+.code .c{color:#9a968c}
+.code .k{color:#a6dd6d}
+/* imagenet */
+.dots{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:4px;max-width:420px}
+.dots i{aspect-ratio:1;border-radius:50%;background:var(--g);transition:background .35s}
+.dots i.x{background:var(--warn)}
+.big{font-size:clamp(40px,6vw,64px);font-weight:800;line-height:1;letter-spacing:-.02em}
+.photo{margin:0}
+.photo img{width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)}
+.photo figcaption{font-size:14px;color:var(--mute);margin-top:6px}
+.vid{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;background:#000;margin-top:14px}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+/* stack */
+.layers{display:grid;gap:6px}
+.layer{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 14px;border-radius:6px;border:2px solid var(--ink);background:var(--bg);transition:background .3s,border-color .3s}
+.layer b{font-size:16px}
+.layer span{font-size:13px;color:var(--mute);display:block}
+.layer em{font-style:normal;font-size:13px;font-weight:800;padding:2px 8px;border-radius:999px;background:var(--con);white-space:nowrap}
+.layer.ok{border-color:var(--g)}
+.layer.ok em{background:var(--gs)}
+.layer.bad{border-color:var(--warn);border-style:dashed}
+.layer.bad em{background:var(--ws)}
+.layer.hw{background:var(--con)}
+/* comm */
+.bars{display:grid;gap:10px}
+.bar{display:flex;height:34px;border-radius:4px;overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;transition:width .3s}
+.bar .cp{background:var(--g)}
+.bar .cm{background:repeating-linear-gradient(45deg,var(--warn) 0 6px,var(--ws) 6px 12px)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--mute)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin-right:4px}
+/* blackwell */
+.part{cursor:pointer}
+.part:focus{outline:none}
+.part.on>*:not(.hit){stroke:var(--g);stroke-width:3}
+.part:focus-visible>*{stroke:var(--g);stroke-width:4}
+.road{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:12px}
+.road div{padding:10px;border-radius:6px;border:1px solid var(--line);font-size:13px;color:var(--mute);background:var(--bg)}
+.road b{display:block;color:var(--ink);font-size:15px}
+.road .now{border:2px solid var(--g);color:var(--ink)}
+.road .plan{border-style:dashed}
+/* rivals */
+.rtab{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0}
+.rt{display:grid;gap:2px;text-align:left;padding:12px 14px;min-height:44px;border:2px solid var(--ink);border-radius:6px;background:var(--bg)}
+.rt b{font-size:15px;line-height:1.25}
+.rt span{font-size:13px;color:var(--mute)}
+.rt[aria-selected=true]{background:var(--ink);color:var(--bg)}
+.rt[aria-selected=true] span{color:var(--bg);opacity:.75}
+.four{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.four div{padding:12px;border-radius:6px;border:2px solid var(--line);background:var(--bg);font-size:14px}
+.four b{display:block;font-size:15px;margin-bottom:2px}
+.four .tag{display:inline-block;font-size:12px;font-weight:800;padding:1px 8px;border-radius:999px;margin-bottom:6px}
+.four .s{border-color:var(--g)}.four .s .tag{background:var(--gs)}
+.four .m{border-color:var(--line)}.four .m .tag{background:var(--con)}
+.four .w{border-color:var(--warn);border-style:dashed}.four .w .tag{background:var(--ws)}
+.tl{list-style:none;padding:0;margin:0;border-left:3px solid var(--line)}
+.tl li{position:relative;padding:0 0 12px 18px;margin:0}
+.tl li::before{content:"";position:absolute;left:-8px;top:7px;width:13px;height:13px;border-radius:50%;background:var(--bg);border:3px solid var(--ink)}
+.tl li.hot::before{background:var(--warn);border-color:var(--warn)}
+.tl b{font-size:14px;color:var(--mute);display:block}
+/* playbook */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.card{padding:16px;border-radius:6px;background:var(--bg);border:1px solid var(--line)}
+.card h3{margin-bottom:4px}
+.card p{margin:0;font-size:15px}
+.fade{animation:fade .35s ease-out}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+details summary{cursor:pointer;font-weight:800;min-height:44px;display:flex;align-items:center}
+@media (max-width:760px){
+ .hero,.two,.two.wide,.paint{grid-template-columns:minmax(0,1fr)}
+ .rtab,.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .road{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .dots{gap:3px}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
+</style>
+</head>
+<body>
+
+<header class="band"><div class="wrap hero">
+<div>
+<h1>Why one great chip can't catch NVIDIA</h1>
+<p class="lede">Imagine a rival wakes up tomorrow with a chip every bit as fast as NVIDIA's best. It still wouldn't be enough. What makes NVIDIA hard to catch was never only in the silicon. It's four things stacked on top of each other, built over 33 years, one bet at a time.</p>
+<p class="small">Tap a layer to see what it is and jump to its part of the story.</p>
+<div class="lnote box fade" id="lnote" aria-live="polite"></div>
+</div>
+<div><svg viewBox="0 0 480 372" role="group" aria-label="Four stacked layers: chips, connections, software and pace" id="stack"></svg></div>
+</div></header>
+
+<!-- 1 -->
+<section class="band con" id="curves"><div class="wrap">
+<span class="kick">Decision 1 · <b>1993–1997</b></span>
+<h2>Bet on curves, lose, start over</h2>
+<div class="two wide">
+<div>
+<p>NVIDIA was founded in April 1993 by Jensen Huang, Chris Malachowsky and Curtis Priem, famously over meals at a Denny's in San Jose. Their first chip, the <b>NV1</b> (1995), drew 3D shapes with <b>curved surfaces</b> (quadratic patches). It was elegant: a few curves describe a smooth ball.</p>
+<p>Then Microsoft shipped <b>Direct3D</b>, the standard every Windows game would use, and it was built on <b>triangles</b>. A triangle is dumb, but it's the simplest shape there is, so hardware can draw billions of them, and anything can be built from enough of them. The NV1 bet was dead.</p>
+<p>NVIDIA was also building a curves chip for Sega's next console. Jensen told Sega's president that the design was wrong and that Sega should go elsewhere, and asked Sega to pay the contract anyway so NVIDIA could survive. Sega invested $5 million. That money kept the lights on.</p>
+<p>He laid off about half of the roughly 100 staff and started again, on triangles. The new chip, the <b>RIVA 128</b>, shipped in August 1997 when the company had about <b>one month of payroll left</b>. It sold around a million units in four months.</p>
+</div>
+<div class="box">
+<div class="row ttog" id="ctog"><button class="btn" aria-pressed="true" data-m="c">Curves (NV1)</button><button class="btn" aria-pressed="false" data-m="t">Triangles (Direct3D)</button></div>
+<svg viewBox="0 0 300 260" id="ball" role="img" aria-label="A ball drawn with curves or with triangles"></svg>
+<div id="tri" hidden><input type="range" min="6" max="120" step="6" value="12" id="trin" aria-label="Number of triangles"></div>
+<p class="cap" id="ccap"></p>
+</div>
+</div>
+</div></section>
+
+<!-- 2 -->
+<section class="band" id="speed"><div class="wrap">
+<span class="kick">Decision 2 · <b>1997–2000</b></span>
+<h2>Anyone can draw triangles, so win on speed</h2>
+<p class="measure">Triangles were a standard, so every rival could draw them. Jensen's answer was to be faster at shipping, not just faster in silicon. Three moves made that possible:</p>
+<ul class="measure">
+<li><b>No factory.</b> NVIDIA designs chips and lets <b>TSMC</b> in Taiwan build them. Jensen wrote to TSMC's founder Morris Chang in 1997, and Chang phoned him back. Within a few years NVIDIA was one of TSMC's biggest customers. Not owning a fab meant NVIDIA's money went into design.</li>
+<li><b>Test the chip before it exists.</b> For the RIVA 128, NVIDIA spent a big slice of its remaining cash on an emulator, a machine that runs the chip's design in software. That let them fix bugs before a real chip was made, instead of waiting months for each test chip from the factory.</li>
+<li><b>Three teams in overlapping waves.</b> A chip still takes a long time to design. But with three teams staggered, one team finishes every six months. Rivals shipped a new chip every year or two.</li>
+</ul>
+<div class="box">
+<svg viewBox="0 0 640 210" class="gantt" id="gantt" role="img" aria-label="A rival ships every 18 months; NVIDIA's three staggered teams ship every 6 months"></svg>
+<div class="row" style="flex-wrap:nowrap;gap:12px"><button class="btn" id="gplay" style="flex:none">Play</button><input type="range" min="0" max="48" value="48" id="gm" aria-label="Months since 1997"></div>
+<p class="cap" id="gcap"></p>
+<p class="small" style="margin:0">A simplified picture of the idea. The real chips in that run: RIVA 128 (1997), RIVA TNT (1998), TNT2 (1999), GeForce 256 (1999), GeForce2 (2000), GeForce3 (2001).</p>
+</div>
+<p style="margin-top:20px" class="measure">Dozens of companies were making PC graphics chips in the late 1990s. A few years later almost all of them were gone, sold or out of the business:</p>
+<div class="grave">
+<div><b>3dfx</b>The early king (Voodoo). NVIDIA bought its assets in 2000.</div>
+<div><b>S3</b>Graphics sold into a joint venture with VIA, 2001.</div>
+<div><b>Rendition</b>Bought by Micron, 1998.</div>
+<div><b>Tseng Labs</b>Graphics business sold to ATI, 1997.</div>
+<div><b>Number Nine</b>Went bankrupt, 1999.</div>
+<div><b>3Dlabs</b>Bought by Creative, 2002.</div>
+<div class="alive"><b>ATI</b>Survived. Bought by AMD in 2006, still NVIDIA's rival today.</div>
+<div class="alive"><b>NVIDIA</b>Survived.</div>
+</div>
+</div></section>
+
+<!-- 3 -->
+<section class="band con" id="army"><div class="wrap">
+<span class="kick">Decision 3 · <b>1999</b></span>
+<h2>Name it the GPU: a genius vs an army</h2>
+<div class="two">
+<div>
+<p>In 1999, the year NVIDIA went public, it launched the <b>GeForce 256</b> and called it "the world's first GPU", a graphics processing unit. The chip moved more of the 3D work off the main processor. The name was also marketing, and it worked: NVIDIA got to define the category it was selling into. That mix of real engineering and loud naming became a habit.</p>
+<p>Why does a picture need a different kind of chip? A 1080p screen holds about <b>2 million pixels</b> (1920 × 1080 = 2,073,600). Repaint it <b>60 times a second</b> and that's about <b>124 million pixel colours every second</b>, each one needing its own small calculation (light, shadow, texture).</p>
+<p>The key: <b>each pixel's maths doesn't depend on its neighbour's</b>. A CPU is a genius with a few brilliant cores that solve one hard thing after another. A GPU is an army of thousands of simple workers doing the same small job on different pixels at the same time.</p>
+</div>
+<div class="box">
+<div class="paint">
+<figure><canvas id="cpu" width="192" height="108"></canvas><figcaption><b>The genius</b> (CPU-style): one fast worker, one pixel at a time · <span class="clock" id="tcpu">0</span> steps</figcaption></figure>
+<figure><canvas id="gpu" width="192" height="108"></canvas><figcaption><b>The army</b> (GPU-style): 1,000 simple workers at once · <span class="clock" id="tgpu">0</span> steps</figcaption></figure>
+</div>
+<div class="row" style="margin-top:12px"><button class="btn pri" id="pgo">Paint a frame</button></div>
+<p class="cap" id="pcap">Both have to paint the same 20,736-pixel picture. Press the button.</p>
+</div>
+</div>
+</div></section>
+
+<!-- 4 -->
+<section class="band" id="cuda"><div class="wrap">
+<span class="kick">Decision 4 · <b>2006</b></span>
+<h2>CUDA: a road built before there were cars</h2>
+<div class="two wide">
+<div>
+<p>Scientists noticed that same army could crunch physics, finance, medical scans: any maths that splits into many independent pieces. But the army only spoke graphics. To use it you had to disguise your numbers as the colours of a picture and your calculation as "shading" it. A Stanford PhD student, <b>Ian Buck</b>, built a research language (Brook) to hide that trick. NVIDIA hired him.</p>
+<p>In November 2006, with the <b>GeForce 8800</b>, NVIDIA launched <b>CUDA</b>: a way to program the GPU in ordinary C. And Jensen made a costly call. CUDA would go into <b>every</b> GeForce card, even the cheap gaming ones, so every gamer's PC became a machine CUDA could run on. Every chip carried extra circuitry and extra cost that gamers didn't pay for.</p>
+<p>For years almost nobody used it. Then the 2008 crash hit, along with a costly batch of faulty laptop chips. NVIDIA's shares fell more than 75%, and the whole company was worth only around $4 billion at the bottom. Wall Street wanted the CUDA spending cut. Jensen kept paying for the road.</p>
+</div>
+<div>
+<div class="row" id="ktog" style="margin-bottom:8px"><button class="btn" aria-pressed="true" data-m="b">Before: pretend it's graphics</button><button class="btn" aria-pressed="false" data-m="a">After: CUDA</button></div>
+<pre class="code fade" id="kcode"></pre>
+<p class="cap" id="kcap"></p>
+</div>
+</div>
+<p class="say">Install base first, users later. By the time AI researchers needed a parallel computer, there were already hundreds of millions of them in gamers' PCs, all speaking CUDA.</p>
+</div></section>
+
+<!-- 5 -->
+<section class="band con" id="alexnet"><div class="wrap">
+<span class="kick">Decision 5 · <b>2012–2016</b></span>
+<h2>AI finds its engine, and NVIDIA bets the company on it</h2>
+<div class="two">
+<div>
+<p><b>ImageNet</b> was the big yearly contest for computer vision: 1.2 million labelled photos, 1,000 categories, and each program gets five guesses per photo. In 2012 a team from the University of Toronto, professor <b>Geoffrey Hinton</b> and his students <b>Alex Krizhevsky</b> and <b>Ilya Sutskever</b>, entered a neural network now called <b>AlexNet</b>.</p>
+<p>It didn't follow hand-written rules about edges and shapes. It <b>learned</b> to see by adjusting about <b>60 million numbers</b> (its parameters) over and over against the photos. It was trained on <b>two GeForce GTX 580 gaming cards</b> in Krizhevsky's bedroom, over five to six days, using CUDA.</p>
+<p>The runner-up missed on more than 1 photo in 4. AlexNet missed on fewer than 1 in 6. In a field that usually moved by a point or two a year, that was a cliff.</p>
+</div>
+<div class="box">
+<div class="row" id="itog" style="margin-bottom:12px"></div>
+<div class="big" id="ibig">26.2%</div>
+<p class="small" id="ilab" style="margin-top:4px"></p>
+<div class="dots" id="dots" role="img" aria-label="100 photos, misses shown in orange"></div>
+<p class="cap" id="icap"></p>
+</div>
+</div>
+<div class="two" style="margin-top:28px">
+<div>
+<h3>Bet the company</h3>
+<p>Jensen saw it early. Deep learning was exactly the army's kind of work: huge piles of simple multiply-and-add maths, all independent. Around 2013–2014 he told the company NVIDIA was now an AI computing company, and pointed every team at it: libraries like <b>cuDNN</b> (2014) that made neural nets fast on GPUs, and chips designed for AI rather than games.</p>
+<p>In April 2016 NVIDIA announced the <b>DGX-1</b>, a box of eight GPUs sold as an "AI supercomputer" for $129,000. In August 2016 Jensen hand-delivered the very first one to a six-month-old non-profit lab in San Francisco, <b>OpenAI</b>, and signed it.</p>
+<p>It was a gift with a strategy. In 2016 NVIDIA was still seen as a gaming company, worth about $35 billion. Putting its hardware in the hands of the most visible AI lab made the point publicly, seeded models built natively on CUDA, and gave NVIDIA's engineers a direct view of what frontier AI training needed next. Six years later, OpenAI's ChatGPT ran on NVIDIA GPUs.</p>
+</div>
+<div>
+<figure class="photo"><img src="/images/nvidia/dgx-1-note.webp" alt="Handwritten note on the DGX-1 lid: To Elon and the OpenAI team! To the future of computing and humanity, I present you the world's first DGX-1! Signed by Jensen, Thanks!" loading="lazy" width="1024" height="646"><figcaption>Jensen's note on the lid of the first DGX-1, August 2016. Photo shared by Elon Musk on X.</figcaption></figure>
+<div class="vid"><iframe title="Jensen Huang on delivering the first DGX-1 to OpenAI" src="https://www.youtube-nocookie.com/embed/CZP2DpxQs70?rel=0" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+<p class="small" style="margin-top:6px">Jensen telling the story of the delivery.</p>
+</div>
+</div>
+</div></section>
+
+<!-- moat -->
+<section class="band" id="software"><div class="wrap">
+<span class="kick">The moat · <b>software</b></span>
+<h2>Change the chip, and the work starts over</h2>
+<div class="two">
+<div>
+<p>Twenty years after launch, NVIDIA says more than <b>11 million developers</b> build on CUDA. But the real moat isn't CUDA itself. It's everything piled on top of it.</p>
+<p>Almost nobody writes raw CUDA. AI researchers write in <b>PyTorch</b>. PyTorch calls NVIDIA's libraries: <b>cuDNN</b> for neural-net layers, <b>cuBLAS</b> for matrix maths, <b>NCCL</b> for GPUs talking to each other, <b>TensorRT</b> for serving models fast. Those were hand-tuned by NVIDIA engineers, chip generation after chip generation, for two decades. On top sit thousands of research papers, tutorials, Stack Overflow answers, hiring pipelines, and the habits of every ML engineer alive.</p>
+<p>Press the buttons and see what happens to that stack when the chip changes.</p>
+</div>
+<div class="box">
+<div class="row" id="stog" style="margin-bottom:12px"><button class="btn" aria-pressed="true" data-m="n">On NVIDIA</button><button class="btn" aria-pressed="false" data-m="a">Switch to AMD</button><button class="btn" aria-pressed="false" data-m="x">Switch to a brand-new chip</button></div>
+<div class="layers" id="layers"></div>
+<p class="cap" id="scap"></p>
+</div>
+</div>
+<p class="say">Silicon can be copied. Twenty years of code is another matter.</p>
+</div></section>
+
+<!-- connections -->
+<section class="band con" id="connections"><div class="wrap">
+<span class="kick">Decision 6, part 1 · <b>2019</b></span>
+<h2>When one machine became thousands, the cables became the computer</h2>
+<div class="two">
+<div>
+<p>AlexNet fit on two cards. Today's frontier models are trained on tens of thousands of GPUs at once. Each GPU works on its slice, then <b>all of them must share their results</b> before the next step can start. If the links between them are slow, thousands of very expensive chips sit idle, waiting.</p>
+<p>So in March 2019 NVIDIA agreed to buy <b>Mellanox</b>, an Israeli networking company, for <b>$6.9 billion</b> (it closed in April 2020). Mellanox made <b>InfiniBand</b>, the fast, low-delay network used in supercomputers. Together with NVIDIA's own <b>NVLink</b> (a direct GPU-to-GPU link) and <b>NVSwitch</b>, NVIDIA could now sell the network as well as the chips, and tune the two together.</p>
+<p class="small">The slider is a toy model, not real benchmark data. It shows the shape of the problem: as the number of GPUs grows, waiting on the network eats more of each step, and faster links keep more of the GPUs you paid for busy.</p>
+</div>
+<div class="box">
+<div class="row" id="ntog" style="margin-bottom:8px"><button class="btn" aria-pressed="true" data-m="s">Ordinary network</button><button class="btn" aria-pressed="false" data-m="f">NVLink + InfiniBand</button></div>
+<label class="small" for="nn">GPUs working together: <b id="nv" style="color:var(--ink)">8</b></label>
+<input type="range" min="0" max="15" value="3" id="nn">
+<div class="bars" id="nbars"></div>
+<div class="legend" style="margin-top:8px"><span><i style="background:var(--g)"></i>computing</span><span><i style="background:var(--warn)"></i>waiting on other GPUs</span></div>
+<p class="cap" id="ncap"></p>
+</div>
+</div>
+</div></section>
+
+<!-- blackwell -->
+<section class="band" id="blackwell"><div class="wrap">
+<span class="kick">Decision 6, part 2 · <b>2024 →</b></span>
+<h2>Blackwell: selling a rack instead of a chip</h2>
+<div class="two">
+<div>
+<p>Announced in March 2024, <b>Blackwell</b> hit a wall that every chip hits: a chip factory can only print a die up to a certain size (the "reticle limit"). So NVIDIA made one GPU out of <b>two of the largest possible dies</b>, joined by a link so fast (10 TB/s) that software sees them as a single chip. Together: <b>208 billion transistors</b>.</p>
+<p>It also does maths in <b>FP4</b>, 4-bit numbers. Neural nets tolerate rough numbers well, and halving the bits roughly doubles how much maths fits through the chip. Its "Transformer Engine" picks the precision layer by layer.</p>
+<p>But the real product isn't the chip. It's the <b>GB200 NVL72</b>: one rack holding 72 Blackwell GPUs and 36 of NVIDIA's own Grace CPUs, all wired by NVLink so they behave like <b>one giant GPU</b>. Tap the parts.</p>
+</div>
+<div class="box">
+<svg viewBox="0 0 300 210" id="chip" role="group" aria-label="A Blackwell GPU: two dies and eight memory stacks"></svg>
+<p class="cap" id="chcap"></p>
+</div>
+</div>
+<div class="two" style="margin-top:24px">
+<div class="box">
+<svg viewBox="0 0 300 420" id="rack" style="max-width:300px;margin:0 auto" role="group" aria-label="The GB200 NVL72 rack: compute trays, NVLink switch trays and power"></svg>
+</div>
+<div>
+<p class="cap" id="rcap" style="min-height:6em"></p>
+<div class="stats">
+<div class="stat"><b>72</b><span>Blackwell GPUs acting as one</span></div>
+<div class="stat"><b>~5,000</b><span>copper NVLink cables in the spine</span></div>
+<div class="stat"><b>~2 miles</b><span>of that copper, end to end</span></div>
+<div class="stat"><b>~1.36 t</b><span>about 3,000 lb, over a ton</span></div>
+<div class="stat"><b>~120 kW</b><span>liquid-cooled; roughly 100 homes' worth of power</span></div>
+<div class="stat"><b>1.4 EF</b><span>exaFLOPS of FP4 AI maths per rack</span></div>
+</div>
+<p>Why copper and not fibre? Inside one rack, copper needs no power-hungry optical converters at each end, which saves power and cost. Fill a building with these racks and NVIDIA calls it an <b>AI factory</b>: electricity and data go in, tokens (AI answers) come out.</p>
+</div>
+</div>
+<h3 style="margin-top:28px">And then, a new generation every year</h3>
+<p class="measure">In 2024 Jensen announced NVIDIA would move from a new data-centre architecture every two years to <b>one every year</b>, each sold as a whole rack-scale system. Customers can't wait it out, and rivals aim at a target that moves every twelve months.</p>
+<div class="road">
+<div><b>Hopper</b>2022 · H100, the chip of the ChatGPT boom</div>
+<div><b>Blackwell</b>2024 · two dies, FP4, NVL72 racks</div>
+<div><b>Blackwell Ultra</b>2025 · GB300, more memory</div>
+<div class="now"><b>Vera Rubin</b>2026 · shipping now, fastest ramp in NVIDIA's history</div>
+<div class="plan"><b>Rubin Ultra</b>2027 · planned</div>
+<div class="plan"><b>Feynman</b>2028 · planned</div>
+</div>
+<div class="stats" style="margin-top:20px">
+<div class="stat"><b>$115.8B</b><span>revenue, one quarter (Aug–Oct 2026)</span></div>
+<div class="stat"><b>$107.6B</b><span>of it from data centres</span></div>
+<div class="stat"><b>+103%</b><span>vs the same quarter a year before</span></div>
+<div class="stat"><b>~75%</b><span>gross margin</span></div>
+</div>
+<p class="small">For scale: in fiscal 2016 NVIDIA's revenue for the whole year was about $5 billion.</p>
+</div></section>
+
+<!-- rivals -->
+<section class="band con" id="rivals"><div class="wrap">
+<span class="kick">The whole game</span>
+<h2>To catch NVIDIA, rebuild four things at once</h2>
+<p class="measure">Chips, software, connections and pace. Each one is hard. Together they reinforce each other: the software makes the chips easy to buy, the connections make thousands of chips work as one, and the yearly pace means a rival that catches up has caught up with last year's NVIDIA. Pick a challenger. This is my reading of where each stood in late 2026, not a benchmark.</p>
+<div class="rtab" role="tablist" id="rtab"></div>
+<div class="four fade" id="rfour" role="tabpanel"></div>
+<p class="cap" id="rcap2"></p>
+
+<div class="two" style="margin-top:28px">
+<div>
+<h3>Why China can't just buy, or build, its way in</h3>
+<p>Since 2022 the US has kept NVIDIA's most advanced AI chips out of China. NVIDIA kept designing cut-down chips under each new limit, and the limits kept moving. Chinese labs have kept building strong models anyway, with older chips, smuggled chips and very clever software. But the full stack (fast chips <i>made in volume</i>, mature software, rack-scale networking, and a yearly pace) is exactly the thing a ban makes hardest to assemble.</p>
+<p>Huawei's answer shows the four-layer problem: its <b>CloudMatrix 384</b> links 384 Ascend chips with optical cables to make up in numbers and power what each chip lacks, and its <b>CANN</b> software is being built to replace CUDA, all while China's chipmakers work without the most advanced lithography machines.</p>
+</div>
+<ol class="tl" id="china"></ol>
+</div>
+</div></section>
+
+<!-- playbook -->
+<section class="band" id="playbook"><div class="wrap">
+<span class="kick">The playbook</span>
+<h2>How Jensen runs the company</h2>
+<p class="measure">Skill and showmanship, in roughly equal measure, and the showmanship only works because the products ship.</p>
+<div class="cards">
+<div class="card"><h3>"30 days from going out of business"</h3><p>He said it for years, long after NVIDIA was rich. It started as the literal truth in 1997 and became a culture of urgency.</p></div>
+<div class="card"><h3>Build for markets that don't exist yet</h3><p>He calls them "zero-billion-dollar markets". CUDA in 2006 and AI in 2012 had no customers when he started paying for them.</p></div>
+<div class="card"><h3>Name the category</h3><p>"GPU" in 1999. "Accelerated computing". "AI factory". "Sovereign AI". Whoever names the category gets to define what winning in it looks like.</p></div>
+<div class="card"><h3>Sell the whole system</h3><p>First the chip, then the card, then the DGX box, then the rack, then the blueprint for the whole data centre. Each step makes NVIDIA harder to swap out piece by piece.</p></div>
+<div class="card"><h3>Flat and fast</h3><p>Around 60 people reporting straight to him, few one-on-ones, and staff emailing their "top five things" so news reaches him without layers of managers.</p></div>
+<div class="card"><h3>Honest when it costs</h3><p>He told Sega its NV2 design was wrong while NVIDIA was nearly broke. Sega paid anyway, and the company survived on that trust.</p></div>
+<div class="card"><h3>Hype, then ship</h3><p>The keynotes are pure theatre (the leather jacket, "the more you buy, the more you save"). But the roadmap he shows on stage usually arrives on time, which is why customers plan around it.</p></div>
+<div class="card"><h3>Seed the future</h3><p>Hand-delivering the first DGX-1 to OpenAI. Free GPUs to university labs. Get the people who'll define the next decade building on your platform first.</p></div>
+</div>
+</div></section>
+
+<section class="band con"><div class="wrap">
+<details>
+<summary>Sources and caveats</summary>
+<ul>
+<li>A short video on NVIDIA's six decisions inspired these notes. Some of its numbers didn't survive checking. I couldn't find a source for "about 70 graphics startups", so I say "dozens". I also couldn't find support for NVIDIA's value sinking to $1.5 billion after CUDA. At the late-2008 bottom it was worth roughly $3.5–4 billion (about 537 million shares at $7–8, shares down more than 75% in a year).</li>
+<li>Early history (NV1, Sega, the layoffs, one month of payroll, the emulator, three teams): from Tae Kim's book <i>The Nvidia Way</i> (2024), Jensen's own interviews, and the RIVA 128 histories by Jon Peddie and others.</li>
+<li>AlexNet: Krizhevsky, Sutskever and Hinton, <i>ImageNet Classification with Deep Convolutional Neural Networks</i> (NeurIPS 2012). The top-5 error was 15.3% vs 26.2% for the second-best entry.</li>
+<li>DGX-1: NVIDIA's 2016 launch ($129,000) and Elon Musk's photos of the delivery, shared on X in 2024.</li>
+<li>CUDA's 11 million developers: NVIDIA's own figure for CUDA's 20th anniversary (November 2026). NVIDIA doesn't say how it counts.</li>
+<li>NVL72: NVIDIA's product pages and The Register / ServeTheHome coverage (2024). Cable count, weight and power vary a little between sources.</li>
+<li>Latest numbers: NVIDIA's results for the quarter ended 25 October 2026 (published 17 November 2026). Its outlook assumes no data-centre compute revenue from China.</li>
+<li>The rival ratings are my own judgement, not measurements.</li>
+</ul>
+</details>
+</div></section>
+
+<script>
+{
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+const toggle=(rowId,on)=>{const row=$(rowId);row.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;row.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));on(b.dataset.m);});};
+
+/* ---------- hero: four stacked layers ---------- */
+const LAYERS=[
+ {k:'pace',n:'Pace',fill:'var(--l4)',href:'#speed',t:'A new chip every six months in the 1990s, a new rack-scale system every year now. Rivals aim at a target that moves.',
+  icon:(x,y)=>`<g fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"><circle cx="${x}" cy="${y}" r="16"/><path d="M${x} ${y-9}V${y}L${x+8} ${y+5}"/><path d="M${x+22} ${y-14}l6 6l-8 2"/></g>`},
+ {k:'soft',n:'Software',fill:'var(--l3)',href:'#software',t:'CUDA since 2006, and twenty years of libraries, tools and habits on top. 11 million developers. Change the chip and their work starts over.',
+  icon:(x,y)=>`<text x="${x}" y="${y+8}" text-anchor="middle" font-size="24" font-weight="800" fill="var(--ink)">{ }</text>`},
+ {k:'conn',n:'Connections',fill:'var(--l2)',href:'#connections',t:'NVLink, NVSwitch and Mellanox networking, so thousands of GPUs work as one machine instead of waiting on each other.',
+  icon:(x,y)=>`<g stroke="var(--ink)" stroke-width="3" fill="var(--bg)"><path d="M${x-26} ${y}H${x+26}M${x} ${y-12}V${y+12}" fill="none"/><circle cx="${x-26}" cy="${y}" r="5"/><circle cx="${x+26}" cy="${y}" r="5"/><circle cx="${x}" cy="${y-12}" r="5"/><circle cx="${x}" cy="${y+12}" r="5"/></g>`},
+ {k:'chip',n:'Chips',fill:'var(--l1)',href:'#blackwell',t:'The GPU itself: from pixel painter in 1999 to Blackwell\'s 208 billion transistors. The part everyone looks at, and the easiest part to copy.',
+  icon:(x,y)=>`<g stroke="var(--ink)" stroke-width="3" fill="none"><rect x="${x-14}" y="${y-14}" width="28" height="28" rx="3"/><path d="M${x-6} ${y-20}v6M${x+6} ${y-20}v6M${x-6} ${y+14}v6M${x+6} ${y+14}v6M${x-20} ${y-6}h6M${x-20} ${y+6}h6M${x+14} ${y-6}h6M${x+14} ${y+6}h6"/></g>`}
+];
+let layerOn=-1;
+const drawStack=()=>{
+ // Draw bottom first so each higher slab overlaps the one below
+ $('stack').innerHTML=LAYERS.map((L,i)=>({L,i})).reverse().map(({L,i})=>{
+  const y=12+i*72+(i===layerOn?-14:0),cx=180,w=150,h=62,t=20;
+  return `<g class="slab${i===layerOn?' on':''}" data-i="${i}" tabindex="0" role="button" aria-label="${L.n}" aria-pressed="${i===layerOn}">
+  <path d="M${cx-w} ${y+h}L${cx} ${y+2*h}L${cx} ${y+2*h+t}L${cx-w} ${y+h+t}Z" fill="${L.fill}" stroke="var(--ink)" stroke-width="2"/><path d="M${cx-w} ${y+h}L${cx} ${y+2*h}L${cx} ${y+2*h+t}L${cx-w} ${y+h+t}Z" fill="#000" opacity=".12"/>
+  <path d="M${cx} ${y+2*h}L${cx+w} ${y+h}L${cx+w} ${y+h+t}L${cx} ${y+2*h+t}Z" fill="${L.fill}" stroke="var(--ink)" stroke-width="2"/>
+  <path class="face" d="M${cx} ${y}L${cx+w} ${y+h}L${cx} ${y+2*h}L${cx-w} ${y+h}Z" fill="${L.fill}" stroke="var(--ink)" stroke-width="2"/>
+  ${L.icon(cx,y+h+28)}
+  <text class="lab" x="${cx+w+14}" y="${y+h+16}" font-size="18" font-weight="800" fill="var(--ink)">${L.n}</text></g>`;}).join('');
+ const L=LAYERS[layerOn];
+ $('lnote').innerHTML=L?`<h3><a href="${L.href}" target="_self">${L.n} →</a></h3><p style="margin:0">${L.t}</p>`:`<h3>Four layers, one company</h3><p style="margin:0">Most people only look at the bottom one. This page goes through the six decisions that built all four.</p>`;
+};
+const pickLayer=el=>{const g=el.closest('.slab');if(!g)return;const i=+g.dataset.i;layerOn=layerOn===i?-1:i;drawStack();$('stack').querySelector(`.slab[data-i="${i}"]`)?.focus();};
+$('stack').addEventListener('click',ev=>pickLayer(ev.target));
+$('stack').addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();pickLayer(ev.target);}});
+// In-page links: scroll inside the iframe, not a new tab
+document.addEventListener('click',ev=>{const a=ev.target.closest('a[href^="#"]');if(!a)return;ev.preventDefault();document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:reduce?'auto':'smooth'});});
+drawStack();
+
+/* ---------- curves vs triangles ---------- */
+const CX=150,CY=128,R=100;
+const curves=()=>{
+ // Eight quadratic arcs describe the ball; their control points are shown as dots
+ const at=(a,r)=>[CX+r*Math.cos(a),CY+r*Math.sin(a)],step=Math.PI/4;
+ const pts=[...Array(8)].map((_,i)=>at(i*step,R)),ctl=[...Array(8)].map((_,i)=>at((i+.5)*step,R/Math.cos(step/2)));
+ let d=`M${pts[0][0]} ${pts[0][1]}`;for(let i=0;i<8;i++){const n=pts[(i+1)%8];d+=`Q${ctl[i][0]} ${ctl[i][1]} ${n[0]} ${n[1]}`;}
+ const inner=`M${CX-R} ${CY}Q${CX} ${CY+R*.7} ${CX+R} ${CY}`;
+ return `<path d="${d}" fill="var(--l3)" stroke="var(--ink)" stroke-width="3"/><path d="${inner}" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="4 4"/>`+
+ ctl.map(c=>`<circle cx="${c[0]}" cy="${c[1]}" r="5" fill="var(--g)"/>`).join('')+ctl.map((c,i)=>`<path d="M${pts[i][0]} ${pts[i][1]}L${c[0]} ${c[1]}L${pts[(i+1)%8][0]} ${pts[(i+1)%8][1]}" fill="none" stroke="var(--g)" stroke-width="1" opacity=".6"/>`).join('');
+};
+const triangles=n=>{
+ const out=[],inn=[],m=n/2;
+ for(let i=0;i<n;i++){const a=i/n*2*Math.PI;out.push([CX+R*Math.cos(a),CY+R*Math.sin(a)]);}
+ for(let i=0;i<m;i++){const a=(i+.5)/m*2*Math.PI;inn.push([CX+R*.55*Math.cos(a),CY+R*.55*Math.sin(a)]);}
+ const tris=[];
+ for(let i=0;i<m;i++){const a=inn[i],b=inn[(i+1)%m],o0=out[(2*i)%n],o1=out[(2*i+1)%n],o2=out[(2*i+2)%n];tris.push([a,o1,o2],[a,o0,o1],[a,o2,b],[[CX,CY],a,b]);}
+ const P=p=>p.map(q=>q.map(v=>v.toFixed(1)).join(' ')).join(' L');
+ return tris.map((t,i)=>`<path d="M${P(t)}Z" fill="var(--l2)" fill-opacity="${.55+((i*37)%10)/25}" stroke="var(--ink)" stroke-width="${n>60?.6:1.2}" stroke-linejoin="round"/>`).join('');
+};
+let cmode='c';
+const drawBall=()=>{
+ const n=+$('trin').value;
+ $('ball').innerHTML=cmode==='c'?curves():triangles(n);
+ $('tri').hidden=cmode==='c';
+ $('ccap').innerHTML=cmode==='c'?'<b>NV1\'s way:</b> eight curved pieces and their control points (green) describe a smooth ball. Elegant, but nobody else drew shapes this way, and Microsoft\'s Direct3D didn\'t either.':`<b>${n*2} triangles.</b> Each one is trivially simple, so hardware can draw them at enormous speed. Drag the slider: add enough triangles and they look like a curve. Simple and fast won.`;
+};
+toggle('ctog',m=>{cmode=m;drawBall();});
+$('trin').addEventListener('input',drawBall);
+drawBall();
+
+/* ---------- speed: staggered teams ---------- */
+const GX=110,GW=510,MON=48,mx=m=>GX+m/MON*GW;
+const rows=[{n:'A rival',y:30,bars:[[0,18],[18,36],[36,54]],c:'var(--line)'},
+ {n:'NVIDIA team A',y:84,bars:[[-12,6],[6,24],[24,42],[42,60]],c:'var(--g)'},
+ {n:'NVIDIA team B',y:116,bars:[[-6,12],[12,30],[30,48]],c:'var(--g)'},
+ {n:'NVIDIA team C',y:148,bars:[[0,18],[18,36],[36,54]],c:'var(--g)'}];
+let gnow=48,gTimer=null;
+const drawGantt=()=>{
+ let s=`<rect x="${GX}" y="14" width="${GW}" height="170" fill="var(--con2)"/>`;
+ for(let y=0;y<=4;y++)s+=`<line x1="${mx(y*12)}" y1="14" x2="${mx(y*12)}" y2="184" stroke="var(--line)"/><text x="${mx(y*12)}" y="200" text-anchor="middle">${1997+y}</text>`;
+ let rival=0,nv=0;
+ rows.forEach((r,ri)=>{s+=`<text x="${GX-8}" y="${r.y+16}" text-anchor="end" font-weight="700" fill="var(--ink)">${r.n}</text>`;
+  r.bars.forEach(([a,b])=>{const x0=Math.max(a,0),x1=Math.min(b,MON);if(x1<=0)return;const done=b<=gnow&&b<=MON;
+   const vis=Math.min(x1,gnow)-x0;if(vis>0)s+=`<rect x="${mx(x0)}" y="${r.y+4}" width="${Math.max(mx(x0+vis)-mx(x0)-3,1)}" height="18" rx="3" fill="${r.c}" opacity=".55"/>`;
+   if(done){s+=`<circle cx="${mx(b)}" cy="${r.y+13}" r="7" fill="${ri?'var(--g)':'var(--mute)'}" stroke="var(--ink)" stroke-width="2"/>`;ri?nv++:rival++;}});});
+ s+=`<line x1="${mx(gnow)}" y1="10" x2="${mx(gnow)}" y2="188" stroke="var(--ink)" stroke-width="2"/>`;
+ s+=`<text x="${GX}" y="78" font-weight="700" fill="var(--mute)">each bar = one chip being designed; dot = chip ships</text>`;
+ $('gantt').innerHTML=s;
+ $('gcap').innerHTML=`After <b>${gnow} months</b>: the rival has shipped <b>${rival}</b> new chip${rival===1?'':'s'}, NVIDIA <b>${nv}</b>. Every six months a customer looking to buy found a newer NVIDIA part on the shelf.`;
+};
+const gStop=()=>{clearInterval(gTimer);gTimer=null;$('gplay').textContent='Play';};
+$('gplay').addEventListener('click',()=>{if(gTimer){gStop();return;}if(gnow>=48)gnow=0;$('gplay').textContent='Pause';
+ gTimer=setInterval(()=>{gnow++;$('gm').value=gnow;drawGantt();if(gnow>=48)gStop();},reduce?10:180);});
+$('gm').addEventListener('input',()=>{gStop();gnow=+$('gm').value;drawGantt();});
+drawGantt();
+
+/* ---------- genius vs army ---------- */
+const PW=192,PH=108,cv={cpu:$('cpu').getContext('2d'),gpu:$('gpu').getContext('2d')};
+// A small landscape, computed per pixel: each pixel's colour depends only on its own position
+const pix=(x,y)=>{const u=x/PW,v=y/PH;const hill=.62+.08*Math.sin(u*7)+.05*Math.sin(u*17+1);const sun=Math.hypot(u-.75,v-.28);
+ if(sun<.09)return[248,196,80];if(v>hill)return[60+40*v,120+50*(1-v),40];if(v>hill-.03)return[90,150,60];
+ const t=v/hill;return[120+100*t+(sun<.2?40:0),170+50*t,230-40*t];};
+let painting=false;
+const clear=()=>{['cpu','gpu'].forEach(k=>cv[k].clearRect(0,0,PW,PH));};
+const put=(c,x,y)=>{const p=pix(x,y);c.fillStyle=`rgb(${p[0]|0},${p[1]|0},${p[2]|0})`;c.fillRect(x,y,1,1);};
+$('pgo').addEventListener('click',()=>{
+ if(painting)return;painting=true;clear();
+ const total=PW*PH,CPU_STEP=1,GPU_LANES=1000,PERF=reduce?total:72; // the genius does 72 pixels per animation frame so the demo ends; the army does 1000 per "step"
+ let ci=0,gi=0,cs=0,gs=0;$('pcap').textContent='Painting…';
+ const tick=()=>{
+  for(let k=0;k<PERF&&ci<total;k++){put(cv.cpu,ci%PW,(ci/PW)|0);ci+=CPU_STEP;cs++;}
+  if(gi<total&&(cs%(PERF*4)===0||reduce)){for(let k=0;k<GPU_LANES&&gi<total;k++){put(cv.gpu,gi%PW,(gi/PW)|0);gi++;}gs++;}
+  $('tcpu').textContent=cs.toLocaleString();$('tgpu').textContent=gs.toLocaleString();
+  if(ci<total)requestAnimationFrame(tick);
+  else{while(gi<total){for(let k=0;k<GPU_LANES&&gi<total;k++){put(cv.gpu,gi%PW,(gi/PW)|0);gi++;}gs++;}$('tgpu').textContent=gs;
+   painting=false;$('pcap').innerHTML=`The genius took <b>${cs.toLocaleString()}</b> steps, the army <b>${gs}</b>. Even if each army worker is a few times slower, ${Math.round(cs/gs)}× fewer steps wins. Now scale it to 2 million pixels, 60 times a second.`;}
+ };
+ requestAnimationFrame(tick);
+});
+clear();
+
+/* ---------- before / after CUDA ---------- */
+const K={
+ b:{code:`<span class="c">// Want to add two big lists of numbers on the GPU, 2005-style?
+// Pretend each list is a picture, and each number is a pixel colour.</span>
+<span class="k">uniform</span> sampler2D listA;   <span class="c">// list A, smuggled in as a texture</span>
+<span class="k">uniform</span> sampler2D listB;   <span class="c">// list B, also a "texture"</span>
+<span class="k">varying</span> vec2 where;       <span class="c">// which "pixel" am I?</span>
+
+<span class="k">void</span> main() {
+  vec4 a = texture2D(listA, where);
+  vec4 b = texture2D(listB, where);
+  gl_FragColor = a + b;   <span class="c">// the answer comes out as a colour</span>
+}
+<span class="c">// ...then draw a rectangle on screen to make it run,
+// and read the "image" back to get your numbers.</span>`,
+  cap:'Researchers really did this: data as textures, maths as shading, results read back as an image. It worked, but only graphics experts could do it.'},
+ a:{code:`<span class="c">// CUDA, 2006: say what you mean, in C.</span>
+<span class="k">__global__</span> <span class="k">void</span> add(float *a, float *b, float *out, int n) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;  <span class="c">// which worker am I?</span>
+  <span class="k">if</span> (i &lt; n) out[i] = a[i] + b[i];
+}
+
+<span class="c">// Launch a million workers, one per number:</span>
+add&lt;&lt;&lt;4096, 256&gt;&gt;&gt;(a, b, out, n);`,
+  cap:'Same army, now spoken to in ordinary C. Each "thread" is one worker; you write the job once and launch as many as you have numbers. Scientists could finally use it directly.'}
+};
+const drawK=m=>{const k=$('kcode');k.classList.remove('fade');void k.offsetWidth;k.classList.add('fade');k.innerHTML=K[m].code;$('kcap').textContent=K[m].cap;};
+toggle('ktog',drawK);drawK('b');
+
+/* ---------- ImageNet ---------- */
+const IN=[
+ {k:'r',b:'2012 runner-up',e:26.2,c:'The best "hand-crafted features" approach in 2012: engineers wrote the rules for what to look for.'},
+ {k:'a',b:'AlexNet, 2012',e:15.3,c:'Learned its own features from the photos, on two gaming GPUs. Almost 11 points better in one jump.'},
+ {k:'z',b:'ResNet, 2015',e:3.6,c:'Three years of deeper networks on more GPUs later. Around this point, machines matched or beat a careful human on this test.'}];
+$('itog').innerHTML=IN.map((x,i)=>`<button class="btn" aria-pressed="${i===0}" data-m="${x.k}">${x.b}</button>`).join('');
+$('dots').innerHTML='<i></i>'.repeat(100);
+const drawIN=m=>{const x=IN.find(v=>v.k===m),miss=Math.round(x.e);
+ $('ibig').textContent=x.e+'%';$('ilab').textContent=`top-5 error: photos where none of 5 guesses was right · ${miss} of every 100 shown in orange`;
+ $('dots').querySelectorAll('i').forEach((d,i)=>{d.classList.toggle('x',(i*37)%100<miss);});$('icap').textContent=x.c;};
+toggle('itog',drawIN);drawIN('r');
+
+/* ---------- software stack ---------- */
+const STACK=[
+ {n:'Your model',s:'the thing you actually care about'},
+ {n:'PyTorch / JAX',s:'the framework researchers write in'},
+ {n:'cuDNN · cuBLAS · NCCL · TensorRT',s:'hand-tuned NVIDIA libraries, per chip, for 20 years'},
+ {n:'CUDA',s:'the language and compiler for the GPU'},
+ {n:'The GPU',s:'the silicon',hw:1}];
+const ST={
+ n:{st:['ok','ok','ok','ok','ok'],tag:['works','works','fast','mature','NVIDIA'],c:'Everything just works, and every tutorial, paper and Stack Overflow answer assumes this stack.'},
+ a:{st:['ok','ok','bad','bad','ok'],tag:['mostly works','supported','swap for ROCm libs','ROCm / HIP','AMD Instinct'],c:'AMD\'s chips are strong and PyTorch supports them. But underneath, NVIDIA\'s libraries are replaced by AMD\'s ROCm, which is younger. Custom CUDA code needs porting, and performance needs re-tuning. It\'s doable, and getting better, but it\'s work, and work is the moat.'},
+ x:{st:['bad','bad','bad','bad','ok'],tag:['re-test','new backend','write them all','new compiler','fast chip ✓'],c:'A brand-new chip, even a faster one, arrives with almost nothing above it. Someone has to write the compiler, the libraries, the framework support, then debug the models. That\'s years of work before a customer gets the speed they paid for.'}};
+const drawS=m=>{const x=ST[m];$('layers').innerHTML=STACK.map((l,i)=>`<div class="layer ${x.st[i]}${l.hw?' hw':''} fade"><div><b>${l.n}</b><span>${l.s}</span></div><em>${x.tag[i]}</em></div>`).join('');$('scap').textContent=x.c;};
+toggle('stog',drawS);drawS('n');
+
+/* ---------- networking toy model ---------- */
+let net='s';
+const drawN=()=>{const N=2**+$('nn').value;$('nv').textContent=N.toLocaleString();
+ // Toy model: each step = 100 units of compute + time to share results, which grows with the number of GPUs
+ const p=net==='s'?{bw:60,lat:2.2}:{bw:5,lat:.25};
+ const comm=N===1?0:p.bw*(1-1/N)+p.lat*Math.log2(N),useful=100/(100+comm),eff=Math.round(N*useful);
+ $('nbars').innerHTML=`<div class="bar" role="img" aria-label="${Math.round(useful*100)}% computing"><i class="cp" style="width:${useful*100}%"></i><i class="cm" style="width:${(1-useful)*100}%"></i></div>`;
+ $('ncap').innerHTML=N===1?'One GPU never waits for anyone. Slide right.':`Busy <b>${Math.round(useful*100)}%</b> of the time. You paid for <b>${N.toLocaleString()}</b> GPUs and get the work of about <b>${eff.toLocaleString()}</b>.`;};
+toggle('ntog',m=>{net=m;drawN();});$('nn').addEventListener('input',drawN);drawN();
+
+/* ---------- Blackwell chip ---------- */
+const CHIP={
+ die:'<b>Two dies, one GPU.</b> Each die is about as big as a chip factory can print. Two of them give 208 billion transistors in total (TSMC 4NP process).',
+ seam:'<b>The 10 TB/s seam.</b> NV-HBI links the two dies so fast that software sees a single GPU. No rewriting code for "two chips".',
+ hbm:'<b>Eight stacks of HBM3e memory</b>, 192 GB on B200 (288 GB on Blackwell Ultra). AI is often limited by how fast numbers can be fed in, not by maths, so memory sits right next to the dies.',
+ fp4:'<b>FP4 and the Transformer Engine.</b> 4-bit numbers where the model can tolerate them, more bits where it can\'t, chosen layer by layer. Fewer bits means more maths per second and per watt.'};
+let chipOn='die';
+const drawChip=()=>{
+ const P=(k,body)=>`<g class="part${chipOn===k?' on':''}" data-k="${k}" tabindex="0" role="button" aria-pressed="${chipOn===k}">${body}</g>`;
+ let hbm='';[[18,28],[18,78],[18,128],[248,28],[248,78],[248,128]].forEach(([x,y])=>{hbm+=`<rect x="${x}" y="${y}" width="34" height="44" rx="3" fill="var(--l4)" stroke="var(--ink)" stroke-width="2"/>`;});
+ $('chip').innerHTML=`<rect x="6" y="14" width="288" height="170" rx="8" fill="var(--con)" stroke="var(--ink)" stroke-width="2"/>`+
+ P('hbm',hbm+`<rect x="70" y="160" width="34" height="18" rx="3" fill="var(--l4)" stroke="var(--ink)" stroke-width="2"/><rect x="196" y="160" width="34" height="18" rx="3" fill="var(--l4)" stroke="var(--ink)" stroke-width="2"/>`)+
+ P('die',`<rect x="62" y="26" width="84" height="128" rx="4" fill="var(--l1)" stroke="var(--ink)" stroke-width="2"/><rect x="154" y="26" width="84" height="128" rx="4" fill="var(--l1)" stroke="var(--ink)" stroke-width="2"/>`)+
+ P('seam',`<rect x="144" y="40" width="12" height="100" rx="2" fill="var(--g)" stroke="var(--ink)" stroke-width="2"/>`)+
+ P('fp4',`<rect x="76" y="70" width="56" height="40" rx="3" fill="var(--bg)" stroke="var(--ink)" stroke-width="1.5"/><text x="104" y="96" text-anchor="middle" font-size="15" font-weight="800" fill="var(--ink)">FP4</text>`)+
+ `<text x="150" y="204" text-anchor="middle" font-size="12" font-weight="700" fill="var(--mute)">Blackwell GPU (drawing, not to scale)</text>`;
+ $('chcap').innerHTML=CHIP[chipOn];};
+const pickChip=t=>{const g=t.closest('.part');if(!g)return;chipOn=g.dataset.k;drawChip();$('chip').querySelector(`.part[data-k="${chipOn}"]`)?.focus();};
+$('chip').addEventListener('click',ev=>pickChip(ev.target));
+$('chip').addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();pickChip(ev.target);}});
+drawChip();
+
+/* ---------- NVL72 rack ---------- */
+const RACK={
+ comp:'<b>18 compute trays.</b> Each holds two GB200 "superchips". One superchip = one Grace CPU + two Blackwell GPUs. So: 36 CPUs and 72 GPUs, cooled by liquid running through cold plates on every chip.',
+ sw:'<b>9 NVLink switch trays.</b> 18 NVSwitch chips that connect every GPU to every other GPU at full speed: 130 TB/s across the rack. This is what turns 72 GPUs into one.',
+ spine:'<b>The copper spine.</b> Around 5,000 cables, roughly two miles of copper, run down the back of the rack from every compute tray to every switch tray.',
+ pow:'<b>Power and cooling.</b> Power shelves feed roughly 120 kW, about what a hundred homes draw on average. Air can\'t carry that much heat away, so liquid cooling is required, not optional.'};
+let rackOn='comp';
+const drawRack=()=>{
+ const P=(k,body)=>`<g class="part${rackOn===k?' on':''}" data-k="${k}" tabindex="0" role="button" aria-pressed="${rackOn===k}">${body}</g>`;
+ const tray=(y,c,h=13)=>`<rect x="40" y="${y}" width="190" height="${h}" rx="2" fill="${c}" stroke="var(--ink)" stroke-width="1.5"/>`;
+ let pow1='',comp='',sw='',pow2='',y=20;
+ for(let i=0;i<4;i++){pow1+=tray(y,'var(--l4)',10);y+=12;}y+=4;
+ for(let i=0;i<10;i++){comp+=tray(y,'var(--l1)');comp+=`<rect x="54" y="${y+3}" width="18" height="7" fill="var(--g)" opacity=".7"/><rect x="78" y="${y+3}" width="18" height="7" fill="var(--g)" opacity=".7"/><rect x="160" y="${y+3}" width="18" height="7" fill="var(--g)" opacity=".7"/><rect x="184" y="${y+3}" width="18" height="7" fill="var(--g)" opacity=".7"/>`;y+=15;}y+=4;
+ for(let i=0;i<9;i++){sw+=tray(y,'var(--l2)');y+=15;}y+=4;
+ for(let i=0;i<8;i++){comp+=tray(y,'var(--l1)');comp+=`<rect x="54" y="${y+3}" width="18" height="7" fill="var(--g)" opacity=".7"/><rect x="78" y="${y+3}" width="18" height="7" fill="var(--g)" opacity=".7"/><rect x="160" y="${y+3}" width="18" height="7" fill="var(--g)" opacity=".7"/><rect x="184" y="${y+3}" width="18" height="7" fill="var(--g)" opacity=".7"/>`;y+=15;}y+=4;
+ for(let i=0;i<4;i++){pow2+=tray(y,'var(--l4)',10);y+=12;}
+ let spine='';for(let i=0;i<14;i++){spine+=`<path d="M232 ${80+i*20}C${252+i%4*6} ${120+i*14} ${252+i%3*8} ${200+i*6} 232 ${190+i*7}" fill="none" stroke="var(--warn)" stroke-width="1.6"/>`;}
+ $('rack').innerHTML=`<rect x="30" y="10" width="210" height="${y+4}" rx="4" fill="var(--con)" stroke="var(--ink)" stroke-width="2"/>`+
+ P('pow',pow1+pow2)+P('comp',comp)+P('sw',sw)+P('spine',`<rect class="hit" x="238" y="70" width="34" height="300" fill="transparent"/>`+spine)+
+ `<text x="135" y="${y+24}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--mute)">GB200 NVL72 (drawing, front + cable spine)</text>`;
+ $('rack').setAttribute('viewBox',`0 0 300 ${y+32}`);
+ $('rcap').innerHTML=RACK[rackOn]+'<br><span class="small">Tap the trays, the switches, the power shelves or the orange cables.</span>';};
+const pickRack=t=>{const g=t.closest('.part');if(!g)return;rackOn=g.dataset.k;drawRack();$('rack').querySelector(`.part[data-k="${rackOn}"]`)?.focus();};
+$('rack').addEventListener('click',ev=>pickRack(ev.target));
+$('rack').addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();pickRack(ev.target);}});
+drawRack();
+
+/* ---------- rivals ---------- */
+const RV=[
+ {n:'A chip as fast as Blackwell',s:'the thought experiment',c:'This is the opening question. Even a perfect chip only fills one of the four boxes. The customer still needs the software, the network to scale it, and confidence that next year\'s version will arrive.',
+  f:[['s','Chips','match','As fast as NVIDIA\'s best.'],['w','Software','nothing yet','No libraries, no framework support, no developers.'],['w','Connections','nothing yet','How do 10,000 of them talk?'],['w','Pace','unknown','NVIDIA ships the next one in 12 months.']]},
+ {n:'AMD Instinct',s:'the closest full rival',c:'AMD is the one company attacking all four at once, and it has won real customers. Its gap is mostly the software layer and the years of tuning above it.',
+  f:[['s','Chips','strong','MI300 and MI350 series compete on memory size and speed.'],['m','Software','catching up','ROCm works with PyTorch, but is younger and less tuned.'],['m','Connections','arriving','Rack-scale "Helios" systems in 2026; backs the open UALink standard.'],['s','Pace','yearly','Matched NVIDIA\'s annual cadence.']]},
+ {n:'Google TPU',s:'strong, but mostly in-house',c:'Google built the full stack for itself, and it\'s excellent. But you mostly get it by renting Google Cloud, not by buying chips. A different business, not a drop-in NVIDIA replacement for everyone else.',
+  f:[['s','Chips','strong','Built for exactly Google\'s AI maths.'],['s','Software','strong inside','JAX and XLA; Google\'s own models run on it.'],['s','Connections','strong','Thousands of TPUs linked in "pods" with optical switches.'],['m','Pace','steady','Mostly available only through Google Cloud.']]},
+ {n:'Huawei Ascend',s:'China\'s answer, under a ban',c:'Huawei is attacking all four layers with state backing. Each chip is weaker and harder to make in volume, so it compensates with more chips and more power. A real effort, under hard limits.',
+  f:[['m','Chips','behind','Made without the most advanced lithography; supply is the limit.'],['m','Software','building','CANN and MindSpore, replacing CUDA from scratch.'],['s','Connections','brute force','CloudMatrix 384 links 384 chips optically.'],['m','Pace','constrained','Roadmap set by what China\'s fabs can make.']]}];
+let rOn=0;
+$('rtab').innerHTML=RV.map((r,i)=>`<button class="rt" role="tab" aria-selected="${i===0}" data-i="${i}"><b>${r.n}</b><span>${r.s}</span></button>`).join('');
+const drawR=()=>{const r=RV[rOn],el=$('rfour');el.classList.remove('fade');void el.offsetWidth;el.classList.add('fade');
+ el.innerHTML=r.f.map(([c,n,tag,t])=>`<div class="${c}"><span class="tag">${tag}</span><b>${n}</b>${t}</div>`).join('');$('rcap2').textContent=r.c;
+ $('rtab').querySelectorAll('.rt').forEach((b,i)=>b.setAttribute('aria-selected',String(i===rOn)));};
+$('rtab').addEventListener('click',ev=>{const b=ev.target.closest('.rt');if(!b)return;rOn=+b.dataset.i;drawR();});
+drawR();
+
+/* ---------- China timeline ---------- */
+const CN=[
+ ['Oct 2022','US bans A100 and H100 sales to China. NVIDIA designs cut-down A800 and H800.'],
+ ['Oct 2023','The rules tighten; A800 and H800 are blocked too. NVIDIA designs the weaker H20.',1],
+ ['Apr 2025','H20 now needs a licence. NVIDIA writes off billions in unsold stock.',1],
+ ['Jul–Aug 2025','H20 sales allowed again, with a cut of revenue going to the US government. Beijing tells its companies to avoid it.'],
+ ['Dec 2025','The US says the more powerful H200 may ship to approved Chinese customers, with a 25% cut. Licences follow in 2026, but deliveries stay tiny.'],
+ ['Nov 2026','NVIDIA says it will stop selling H200 in China. Its forecast now assumes no data-centre chip sales there. Blackwell was never allowed.',1]];
+$('china').innerHTML=CN.map(([d,t,h])=>`<li${h?' class="hot"':''}><b>${d}</b>${t}</li>`).join('');
+}
+</script>
+</body>
+</html>
