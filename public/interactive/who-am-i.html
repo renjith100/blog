@@ -15,7 +15,7 @@
    COLOUR warm paper, ink, soft sky and sea, saffron only on the witness
    TYPE Hanken Grotesk 800 display + Hanken Grotesk text, same family as the other notes pages
    LAYOUT title and player across the top, then not-this panels, the inquiry, the wave, a guided sit; phone stacks everything */
-:root{color-scheme:light dark;--bg:light-dark(#fbfaf6,#111010);--ink:light-dark(#151412,#f0eee8);--mute:light-dark(#5b5850,#a8a59c);--con:light-dark(#e6e2d8,#2d2b27);--con2:light-dark(#f2efe7,#1b1a18);--line:light-dark(#c9c4b7,#44413b);--sky:light-dark(#dde7ee,#18212b);--sea:light-dark(#c9dae4,#1b2933);--s:#f0a531;--sink:#151412}
+:root{color-scheme:light dark;--bg:light-dark(#fbfaf6,#111010);--ink:light-dark(#151412,#f0eee8);--mute:light-dark(#5b5850,#a8a59c);--con:light-dark(#e6e2d8,#2d2b27);--con2:light-dark(#f2efe7,#1b1a18);--line:light-dark(#c9c4b7,#44413b);--sky:light-dark(#dde7ee,#18212b);--sea:light-dark(#c9dae4,#eef1f3);--s:#f0a531;--sink:#151412}
 :root[data-theme=light]{color-scheme:light}
 :root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
@@ -246,20 +246,31 @@ const fig=(x,a,ghost)=>{
   <path d="M${x+st*.7} ${sh}L${x-h*.16+st*.3} ${hip+h*.04}M${x+st*.7} ${sh}L${x+h*.16+st} ${hip+h*.02}"/>
   ${a.st&&!ghost?`<path d="M${x+h*.16+st} ${hip}L${x+h*.2+st} ${base}" stroke-width="3"/>`:''}</g>`;
 };
-let age=2,thoughtTimer=null;
+let age=0,thoughtTimer=null,bodyTimer=null,bodyObs=null;
 const THOUGHTS=['I need to know','Am I doing this right?','What will they think','I should meditate more','Lunch?','That email…','I am tired','Peace will come one day','I remember when…','Who am I?'];
 let ti=0;
 const T=[
  {n:'Not the body',s:'it ages; the witness doesn\'t',t:110,g:'The body changes, ages, decays and dies. The witness of those changes stays untouched.',
   draw:()=>`<div class="stage"><svg viewBox="0 0 320 156" role="img" aria-label="A body at four ages, watched by one unchanging witness" id="bsvg"></svg>
-  <input type="range" min="0" max="3" step="1" value="${age}" id="ager" aria-label="Age"><p class="cap" id="bcap"></p></div>`,
-  txt:`<p>"The body you had as a child is gone. The cells have changed. The skin has aged."</p><p>"But the one who witnessed the child's body, the one who witnesses this body now, has that witness ever changed?" The seeker: "No, the witness feels the same." ${ts(118)}</p><p class="small">Drag the slider through a life.</p>`,
-  init:()=>{const r=document.getElementById('ager');const d=()=>{age=+r.value;const xs=[60,130,200,264];
+  <div class="row" style="flex-wrap:nowrap;gap:12px"><button class="btn" id="bplay" style="flex:none">Pause</button><input type="range" min="0" max="3" step="1" value="${age}" id="ager" aria-label="Age"></div><p class="cap" id="bcap"></p></div>`,
+  txt:`<p>"The body you had as a child is gone. The cells have changed. The skin has aged."</p><p>"But the one who witnessed the child's body, the one who witnesses this body now, has that witness ever changed?" The seeker: "No, the witness feels the same." ${ts(118)}</p><p class="small">It plays through a life from childhood. Pause it, or drag the slider yourself.</p>`,
+  init:()=>{const r=document.getElementById('ager'),pb=document.getElementById('bplay');
+   // Autoplay: child to old, hold, then start again from childhood. Begins once the picture is on screen.
+   const setPlay=on=>{clearTimeout(bodyTimer);bodyTimer=null;pb.textContent=on?'Pause':'Play';if(on)bodyTimer=setTimeout(stepAge,age===3?3500:2400);};
+   const stepAge=()=>{r.value=age===3?0:age+1;d();setPlay(true);};
+   pb.addEventListener('click',()=>{if(bodyTimer)setPlay(false);else{if(age===3){r.value=0;d();}setPlay(true);}});
+   r.addEventListener('input',()=>setPlay(false));
+   const d=()=>{age=+r.value;const xs=[60,130,200,264];
    document.getElementById('bsvg').innerHTML=`<line x1="20" y1="148" x2="300" y2="148" stroke="var(--line)" stroke-width="2"/>`+AGES.map((a,i)=>i===age?'':(i<age?fig(xs[i],a,1):'')).join('')+fig(xs[age],AGES[age],0)+`<path d="M44 26L${xs[age]-8} ${148-AGES[age].h+6}" stroke="${S}" stroke-width="2" stroke-dasharray="2 5" fill="none"/>`+W(34,20)+`<text x="52" y="16" font-size="11" font-weight="700" fill="var(--mute)">the witness</text>`;
-   document.getElementById('bcap').innerHTML=`<b>${AGES[age].n}.</b> ${AGES[age].c}`;};r.addEventListener('input',d);d();}},
+   document.getElementById('bcap').innerHTML=`<b>${AGES[age].n}.</b> ${AGES[age].c}`;};r.addEventListener('input',d);
+   r.value=0;d();
+   if(reduce){pb.textContent='Play';return;}
+   pb.textContent='Play';
+   bodyObs=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){bodyObs.disconnect();bodyObs=null;setPlay(true);}},{threshold:.6});
+   bodyObs.observe(document.getElementById('bsvg'));}},
  {n:'Not the mind',s:'thoughts drift; the sky stays',t:152,g:'You are not the thoughts. You are the sky that watches them drift.',
   draw:()=>`<div class="stage"><div class="sky" id="sky"><span class="lab"><span class="dotk"></span>the sky: never comes or goes</span></div>
-  <div class="row" style="margin-top:10px"><button class="btn pri" id="think">Let a thought arise</button></div></div>`,
+  <div class="row" style="margin-top:10px"><button class="btn pri" id="think" aria-pressed="false">Let thoughts arise</button></div></div>`,
   txt:`<p>"The mind is like clouds drifting across the sky. Thoughts arise, thoughts dissolve. Yesterday you had thoughts that are gone today. Tomorrow you will have thoughts that do not exist yet."</p><p>"But consciousness, the vast sky in which these thoughts appear, does that ever come or go?" ${ts(152)}</p>`,
   init:()=>{const sky=document.getElementById('sky');
    const add=()=>{if(sky.querySelectorAll('.cloud').length>5)return;const c=document.createElement('span');c.className='cloud';c.textContent=THOUGHTS[ti++%THOUGHTS.length];
@@ -268,8 +279,14 @@ const T=[
     if(reduce)setTimeout(()=>c.remove(),4000);
     else{c.style.animationDuration=(9+Math.random()*5)+'s';c.addEventListener('animationend',()=>c.remove());}
     sky.insertBefore(c,sky.firstChild);};
-   document.getElementById('think').addEventListener('click',add);add();setTimeout(add,1500);
-   if(!reduce)thoughtTimer=setInterval(add,3200);}},
+   // The sky starts empty. The button starts a stream of thoughts at random moments, and stopping clears them away.
+   const btn=document.getElementById('think');
+   const loop=()=>{add();thoughtTimer=setTimeout(loop,1600+Math.random()*2600);};
+   btn.addEventListener('click',()=>{
+     const on=!thoughtTimer;
+     if(on)loop();else{clearTimeout(thoughtTimer);thoughtTimer=null;sky.querySelectorAll('.cloud').forEach(c=>{c.animate([{opacity:getComputedStyle(c).opacity},{opacity:0}],{duration:reduce?1:800,fill:'forwards'}).finished.then(()=>c.remove());});}
+     btn.textContent=on?'Stop the thoughts':'Let thoughts arise';btn.setAttribute('aria-pressed',String(on));
+   });}},
  {n:'Not an experience',s:'joy, pain, peace come and go',t:262,g:'All experiences come and go. The one who knows them has never come or gone.',
   draw:()=>`<div class="stage"><div class="knower" id="kn"><div class="wit big"></div><span class="lab">the one who knows</span></div>
   <div class="row" style="margin-top:10px" id="eb"><button class="btn" data-e="joy">Joy</button><button class="btn" data-e="pain">Pain</button><button class="btn" data-e="peace">Peace</button></div></div>`,
@@ -282,7 +299,7 @@ const tabs=document.getElementById('tabs'),panel=document.getElementById('panel'
 tabs.innerHTML=T.map((t,i)=>`<button class="tab" role="tab" id="tab${i}" aria-controls="panel" aria-selected="false" tabindex="-1" data-i="${i}"><b>${t.n}</b><span>${t.s}</span></button>`).join('');
 let cur=0;
 const drawTab=()=>{
-  clearInterval(thoughtTimer);thoughtTimer=null;
+  clearTimeout(thoughtTimer);thoughtTimer=null;clearTimeout(bodyTimer);bodyTimer=null;if(bodyObs){bodyObs.disconnect();bodyObs=null;}
   const t=T[cur];
   tabs.querySelectorAll('.tab').forEach(b=>{const on=+b.dataset.i===cur;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1;});
   panel.setAttribute('aria-labelledby','tab'+cur);
