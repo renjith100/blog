@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, indexifembedded">
+<base target="_blank">
+<title>Who Is Asking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE a quiet page to return to, slow and plain, the video's own words where they matter
+   IDEA everything changes around one point that never moves
+   PICTURE a single saffron dot, the witness, stays still in every picture while bodies, clouds, feelings and names come and go
+   COLOUR warm paper, ink, soft sky and sea, saffron only on the witness
+   TYPE Hanken Grotesk 800 display + Hanken Grotesk text, same family as the other notes pages
+   LAYOUT title and player across the top, then not-this panels, the inquiry, the wave, a guided sit; phone stacks everything */
+:root{color-scheme:light dark;--bg:light-dark(#fbfaf6,#111010);--ink:light-dark(#151412,#f0eee8);--mute:light-dark(#5b5850,#a8a59c);--con:light-dark(#e6e2d8,#2d2b27);--con2:light-dark(#f2efe7,#1b1a18);--line:light-dark(#c9c4b7,#44413b);--sky:light-dark(#dde7ee,#18212b);--sea:light-dark(#c9dae4,#1b2933);--s:#f0a531;--sink:#151412}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Hanken Grotesk",system-ui,sans-serif;overflow-x:clip}
+.band{padding-block:clamp(28px,4vw,64px);padding-left:max(5vw,16px);padding-right:max(5vw,16px)}
+.con{background:var(--con2)}
+.wrap{max-width:1100px;margin:0 auto}
+h1{font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.02em;font-weight:800;margin:0 0 14px;text-wrap:balance}
+h2{font-size:28px;line-height:1.1;letter-spacing:-.01em;font-weight:800;margin:0 0 10px;text-wrap:balance}
+h3{font-size:17px;line-height:1.3;margin:0 0 6px;font-weight:800}
+p{margin:0 0 12px}
+ul{margin:0 0 12px;padding-left:20px}
+li{margin-bottom:6px}
+.small{font-size:14px;color:var(--mute)}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:3px}
+.ts{display:inline-block;font-size:14px;font-weight:700;white-space:nowrap;background:var(--con);padding:2px 8px;border-radius:4px;text-decoration:none}
+.ts:hover,.ts:focus-visible{background:var(--s);color:var(--sink)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--s);outline-offset:2px}
+.btn{font-size:14px;font-weight:700;padding:10px 14px;min-height:44px;border-radius:4px;border:1px solid var(--ink);background:var(--bg)}
+.btn.pri{background:var(--ink);color:var(--bg)}
+.btn[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:24px 48px;align-items:center}
+.hero .lede{font-size:19px;max-width:46ch}
+.player{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;background:#000}
+.player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.dotk{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--s);border:2px solid var(--ink);vertical-align:-1px;margin-right:4px}
+/* tabs */
+.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:18px 0}
+.tab{display:grid;gap:2px;text-align:left;padding:12px 14px;min-height:44px;border:2px solid var(--ink);border-radius:6px;background:var(--bg)}
+.tab b{font-size:16px;line-height:1.25}
+.tab span{font-size:13px;color:var(--mute)}
+.tab[aria-selected=true]{background:var(--ink);color:var(--bg)}
+.tab[aria-selected=true] span{color:var(--bg);opacity:.75}
+.panel{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:32px;padding:24px;border-radius:6px;background:var(--bg);border:1px solid var(--line)}
+.gist{font-size:22px;line-height:1.25;font-weight:800;margin-bottom:14px}
+.stage svg{width:100%;height:auto;display:block}
+.cap{font-size:15px;min-height:3em;margin-top:8px}
+input[type=range]{width:100%;accent-color:var(--s);min-height:44px}
+.sky{position:relative;height:230px;border-radius:6px;background:var(--sky);overflow:hidden;border:1px solid var(--line)}
+.sky .lab{position:absolute;left:12px;bottom:10px;font-size:13px;font-weight:700;color:var(--mute)}
+.cloud{position:absolute;left:0;white-space:nowrap;font-size:15px;font-weight:500;padding:8px 16px;border-radius:999px;background:var(--bg);box-shadow:14px 6px 0 -4px var(--bg),-12px 5px 0 -5px var(--bg);animation:drift 11s linear forwards}
+@keyframes drift{0%{transform:translateX(-110%);opacity:0}12%{opacity:1}75%{opacity:1}100%{transform:translateX(var(--w));opacity:0}}
+.knower{position:relative;height:230px;border-radius:6px;background:var(--con2);border:1px solid var(--line);display:grid;place-items:center;overflow:hidden}
+.wit{width:22px;height:22px;border-radius:50%;background:var(--s);border:3px solid var(--ink);position:relative;z-index:2}
+.wit.big{width:30px;height:30px}
+.knower .lab{position:absolute;left:0;right:0;top:calc(50% + 22px);text-align:center;font-size:13px;font-weight:700;color:var(--mute)}
+.exp{position:absolute;left:50%;top:50%;font-weight:800;font-size:22px;transform:translate(-50%,-50%);animation:rise 3.6s ease-out forwards;pointer-events:none}
+.ring{position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;border:2px solid var(--ink);animation:ring 3.6s ease-out forwards;pointer-events:none}
+@keyframes rise{0%{opacity:0;transform:translate(-50%,-50%) translateY(10px)}20%{opacity:1;transform:translate(-50%,-50%) translateY(-60px)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) translateY(-90px)}}
+@keyframes ring{0%{opacity:.7;transform:scale(.4)}100%{opacity:0;transform:scale(4)}}
+/* inquiry */
+.inq{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:32px;align-items:start}
+.names{display:grid;gap:8px;justify-items:center;padding:20px;border-radius:6px;background:var(--bg);border:1px solid var(--line);min-height:320px;align-content:end}
+.name{font-size:15px;padding:6px 14px;border-radius:999px;border:1px solid var(--ink);background:var(--bg);transition:opacity .6s}
+.name.gone{opacity:.3;text-decoration:line-through;border-style:dashed}
+.names .wit{margin-top:14px}
+.names .lab{font-size:13px;font-weight:700;color:var(--mute);text-align:center}
+.say{display:grid;gap:12px}
+.line{margin:0;padding-left:16px;border-left:3px solid var(--line)}
+.line.r{border-left-color:var(--s)}
+.line b{display:block;font-size:13px;color:var(--mute);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.line p{margin:0;font-size:19px;line-height:1.45}
+.line.r p{font-weight:700}
+.steps{display:flex;gap:6px;margin:4px 0 2px}
+.steps i{width:28px;height:6px;border-radius:3px;background:var(--con)}
+.steps i.on{background:var(--ink)}
+/* who knows */
+.knows{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.say3{display:grid;gap:4px;justify-items:center;text-align:center;padding:14px 10px;min-height:44px;border:2px solid var(--ink);border-radius:6px;background:var(--bg)}
+.say3 span{font-size:13px;color:var(--mute)}
+.say3 b{font-size:17px}
+.say3[aria-pressed=true]{border-color:var(--s);box-shadow:inset 0 0 0 2px var(--s)}
+.lines{display:block;width:100%;height:70px}
+.lines line{stroke:var(--line);stroke-width:2;stroke-dasharray:4 5;transition:stroke .4s}
+.lines line.on{stroke:var(--s);stroke-width:3;stroke-dasharray:none}
+.center{display:grid;justify-items:center;gap:8px;text-align:center}
+.qs3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;text-align:center;font-weight:700;min-height:1.6em;margin-top:8px}
+.qs3 span{opacity:0;transition:opacity .5s}
+.qs3 span.on{opacity:1}
+/* wave */
+.sea svg{width:100%;height:auto;display:block;border-radius:6px}
+.waves{animation:slide 9s linear infinite}
+@keyframes slide{to{transform:translateX(-160px)}}
+.bob{animation:bob 3.2s ease-in-out infinite;transform-box:fill-box}
+@keyframes bob{50%{transform:translateY(-10px)}}
+/* sit */
+.sit{display:grid;gap:18px;justify-items:center;text-align:center;padding:clamp(24px,5vw,56px) 20px;border-radius:6px;background:var(--bg);border:1px solid var(--line)}
+.prompt{font-size:clamp(24px,3.4vw,34px);line-height:1.2;font-weight:800;max-width:24ch;min-height:2.6em;display:grid;place-items:center;text-wrap:balance;transition:opacity 1.2s}
+.prompt.out{opacity:0}
+.breath{width:18px;height:18px;border-radius:50%;background:var(--s);border:3px solid var(--ink)}
+.sitting .breath{animation:breathe 10s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.9)}}
+.prog{width:min(360px,100%);height:4px;border-radius:2px;background:var(--con);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--ink);transition:width 1s linear}
+/* quotes */
+.quotes{display:grid;gap:28px;margin-top:20px}
+.qrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16em),1fr));gap:28px 32px}
+.q{margin:0;padding:2px 0 2px 18px;border-left:3px solid var(--ink);display:grid;gap:8px;align-content:start}
+.q blockquote{margin:0}
+.q p{margin:0;font-size:19px;line-height:1.4}
+.q.big{border-left:6px solid var(--s);padding-left:22px}
+.q.big p{font-size:clamp(26px,3.4vw,36px);font-weight:800;line-height:1.15;text-wrap:balance}
+details{border-top:1px solid var(--line);padding-top:12px}
+summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+.fade{animation:fade .4s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.fade,.waves,.bob,.sitting .breath{animation:none}.cloud{animation-duration:.01s;animation-fill-mode:none;position:static;display:inline-block;margin:6px}.exp,.ring{animation:none}.ring{display:none}.exp{transform:translate(-50%,-50%) translateY(-60px)}.prompt{transition:none}}
+@media(max-width:820px){.hero,.panel,.inq{grid-template-columns:minmax(0,1fr)}.names{min-height:0}}
+@media(max-width:520px){.tabs{grid-template-columns:minmax(0,1fr)}.panel{padding:16px}.say3 b{font-size:15px}}
+</style>
+</head>
+<body>
+
+<header class="band"><div class="wrap hero">
+<div>
+<h1>Who is asking?</h1>
+<p class="lede">A tired seeker asks Ramana Maharshi, "What is the nature of consciousness?" Ramana doesn't answer. He asks a question back. Everything else here unfolds from that one question.</p>
+<p class="small">Notes on a video by One Timeless Witness · <a href="https://www.youtube.com/watch?v=nTLOOwjmZ4s">watch on YouTube</a> · the player stops at 8:04, before the movie-screen part · any timestamp plays from there</p>
+</div>
+<div class="player"><iframe id="yt" title="Consciousness is not what you think: Ramana Maharshi" src="https://www.youtube.com/embed/nTLOOwjmZ4s?end=484&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+</div></header>
+
+<section class="band con" id="search"><div class="wrap">
+<h2>The search itself is the confusion</h2>
+<p style="max-width:62ch">We look for consciousness as if it were an object hidden somewhere in the body or the mind, or a state of peace or light that will one day come down on us after enough effort. The seeker had spent years on meditation, study and ritual for exactly that. So Ramana starts the other way round: with what consciousness is <em>not</em>. <a class="ts" href="https://www.youtube.com/watch?v=nTLOOwjmZ4s&t=64s">1:04</a></p>
+<div class="tabs" role="tablist" id="tabs"></div>
+<div class="panel fade" id="panel" role="tabpanel"></div>
+<p class="small" style="margin-top:14px"><span class="dotk"></span>The saffron dot is the witness. Watch it stay where it is while everything else changes.</p>
+</div></section>
+
+<section class="band" id="inquiry"><div class="wrap">
+<h2>Then ask: who am I?</h2>
+<p style="max-width:62ch">"You do not stop searching by effort. You see through the search." Not as a mantra to repeat, and not as a question for the mind to answer, but as a living inquiry that turns attention back to its source. Step through the conversation and watch every answer that can be named fall away. <a class="ts" href="https://www.youtube.com/watch?v=nTLOOwjmZ4s&t=322s">5:22</a></p>
+<div class="inq">
+<div class="names" id="names"></div>
+<div class="say">
+<div class="steps" id="steps"></div>
+<div id="dlg" class="fade"></div>
+<div class="row"><button class="btn pri" id="ask">Ask: who is that?</button><button class="btn" id="again">Start again</button></div>
+</div>
+</div>
+</div></section>
+
+<section class="band con" id="knows"><div class="wrap">
+<h2>Who knows it?</h2>
+<p>The body, the mind and the emotions all say "I". Tap each one. <a class="ts" href="https://www.youtube.com/watch?v=nTLOOwjmZ4s&t=410s">6:50</a></p>
+<div class="knows" id="k3"></div>
+<div class="qs3" id="q3"></div>
+<svg class="lines" viewBox="0 0 300 70" preserveAspectRatio="none" aria-hidden="true"><line id="l0" x1="50" y1="0" x2="150" y2="70" vector-effect="non-scaling-stroke"/><line id="l1" x1="150" y1="0" x2="150" y2="70" vector-effect="non-scaling-stroke"/><line id="l2" x1="250" y1="0" x2="150" y2="70" vector-effect="non-scaling-stroke"/></svg>
+<div class="center"><div class="wit big"></div><p id="kfin" class="small" style="max-width:40ch">The one who knows</p></div>
+</div></section>
+
+<section class="band" id="wave"><div class="wrap panel" style="border:0;padding:0;background:none">
+<div class="sea" id="sea"></div>
+<div>
+<h2>You were always the ocean</h2>
+<p>"Then how do I rest in it?" "You already are. You have never left it. The question is not how to reach it, but how to stop pretending you are something else." <a class="ts" href="https://www.youtube.com/watch?v=nTLOOwjmZ4s&t=436s">7:16</a></p>
+<p>"You do not break free. You see that you were never bound. Bondage is created by misidentification." <a class="ts" href="https://www.youtube.com/watch?v=nTLOOwjmZ4s&t=463s">7:43</a></p>
+<div class="row" id="wtog"><button class="btn" aria-pressed="true" data-m="wave">See it as the wave</button><button class="btn" aria-pressed="false" data-m="ocean">See it as the ocean</button></div>
+<p class="cap" id="wcap"></p>
+</div>
+</div></section>
+
+<section class="band con" id="sit"><div class="wrap">
+<h2>Sit with it</h2>
+<p class="small">For when I come back to this page. Pick a length, press Begin, and let one question at a time lead attention back to the one who is asking. Nothing to achieve.</p>
+<div class="sit" id="sitbox">
+<div class="breath" aria-hidden="true"></div>
+<p class="prompt" id="sp" aria-live="polite">Who is asking?</p>
+<div class="prog" aria-hidden="true"><i id="pg"></i></div>
+<div class="row" style="justify-content:center" id="len"><button class="btn" aria-pressed="false" data-m="3">3 min</button><button class="btn" aria-pressed="true" data-m="5">5 min</button><button class="btn" aria-pressed="false" data-m="10">10 min</button></div>
+<button class="btn pri" id="go">Begin</button>
+</div>
+</div></section>
+
+<section class="band" id="lines"><div class="wrap">
+<h2>Lines worth keeping</h2>
+<div class="quotes" id="qs"></div>
+</div></section>
+
+<section class="band con"><div class="wrap">
+<details>
+<summary>About these notes</summary>
+<ul>
+<li>The video is a narrated story, not a recording of Ramana Maharshi. The words are the narrator's retelling of his teaching. I haven't checked them line by line against his own writings, such as <em>Who Am I?</em> (<em>Nan Yar?</em>).</li>
+<li>I stopped at 8:04, where the movie-screen analogy begins. It's a good analogy, but these notes are about the part before it, and the player above stops there too.</li>
+<li>The captions spell Ramana as "Romana" and "Ramina" in places. Quotes here are lightly cleaned up from the captions.</li>
+</ul>
+</details>
+</div></section>
+
+<script>
+{
+const VID='nTLOOwjmZ4s',END=484;
+const fmt=s=>`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+const ts=s=>`<a class="ts" href="https://www.youtube.com/watch?v=${VID}&t=${s}s">${fmt(s)}</a>`;
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const yt=document.getElementById('yt');
+// Timestamps play in the page's own player, which always stops before the movie-screen part
+document.addEventListener('click',ev=>{
+  const a=ev.target.closest('a.ts');if(!a)return;
+  const s=+(new URL(a.href).searchParams.get('t')||'0').replace('s','');
+  if(s>=END)return;
+  ev.preventDefault();
+  yt.src=`https://www.youtube.com/embed/${VID}?start=${s}&end=${END}&autoplay=1&rel=0`;
+  yt.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});
+});
+const I='var(--ink)',S='var(--s)',C='var(--con)',BG='var(--bg)';
+const W=(x,y,r=8)=>`<circle cx="${x}" cy="${y}" r="${r+7}" fill="${S}" opacity=".25"/><circle cx="${x}" cy="${y}" r="${r}" fill="${S}" stroke="${I}" stroke-width="2.5"/>`;
+
+/* ---------- not the body / mind / experience ---------- */
+const AGES=[
+ {n:'A child',h:52,r:.2,c:'This body is gone. Every cell in it has changed since.'},
+ {n:'Young',h:84,r:.14,c:'Gone too. The flesh you called yours ten years ago is not the flesh you call yours today.'},
+ {n:'Now',h:96,r:.13,c:'The body you call yours today. It is already changing.'},
+ {n:'Old',h:88,r:.13,st:12,c:'It will age, decay and die. Has the one who watched all of this ever changed?'}
+];
+const fig=(x,a,ghost)=>{
+  const base=146,h=a.h,hr=h*a.r,st=a.st||0;
+  const top=base-h,neck=top+hr*2,hip=base-h*.44,sh=neck+h*.08;
+  const sw=ghost?2:5,col=ghost?'var(--line)':I,da=ghost?' stroke-dasharray="3 4"':'';
+  return `<g fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round"${da}>
+  <circle cx="${x+st}" cy="${top+hr}" r="${hr}" fill="${ghost?'none':BG}"/>
+  <path d="M${x+st*.8} ${neck}Q${x+st*.6} ${(neck+hip)/2} ${x} ${hip}"/>
+  <path d="M${x} ${hip}L${x-h*.12} ${base}M${x} ${hip}L${x+h*.12} ${base}"/>
+  <path d="M${x+st*.7} ${sh}L${x-h*.16+st*.3} ${hip+h*.04}M${x+st*.7} ${sh}L${x+h*.16+st} ${hip+h*.02}"/>
+  ${a.st&&!ghost?`<path d="M${x+h*.16+st} ${hip}L${x+h*.2+st} ${base}" stroke-width="3"/>`:''}</g>`;
+};
+let age=2,thoughtTimer=null;
+const THOUGHTS=['I need to know','Am I doing this right?','What will they think','I should meditate more','Lunch?','That email…','I am tired','Peace will come one day','I remember when…','Who am I?'];
+let ti=0;
+const T=[
+ {n:'Not the body',s:'it ages; the witness doesn\'t',t:110,g:'The body changes, ages, decays and dies. The witness of those changes stays untouched.',
+  draw:()=>`<div class="stage"><svg viewBox="0 0 320 156" role="img" aria-label="A body at four ages, watched by one unchanging witness" id="bsvg"></svg>
+  <input type="range" min="0" max="3" step="1" value="${age}" id="ager" aria-label="Age"><p class="cap" id="bcap"></p></div>`,
+  txt:`<p>"The body you had as a child is gone. The cells have changed. The skin has aged."</p><p>"But the one who witnessed the child's body, the one who witnesses this body now, has that witness ever changed?" The seeker: "No, the witness feels the same." ${ts(118)}</p><p class="small">Drag the slider through a life.</p>`,
+  init:()=>{const r=document.getElementById('ager');const d=()=>{age=+r.value;const xs=[60,130,200,264];
+   document.getElementById('bsvg').innerHTML=`<line x1="20" y1="148" x2="300" y2="148" stroke="var(--line)" stroke-width="2"/>`+AGES.map((a,i)=>i===age?'':(i<age?fig(xs[i],a,1):'')).join('')+fig(xs[age],AGES[age],0)+`<path d="M44 26L${xs[age]-8} ${148-AGES[age].h+6}" stroke="${S}" stroke-width="2" stroke-dasharray="2 5" fill="none"/>`+W(34,20)+`<text x="52" y="16" font-size="11" font-weight="700" fill="var(--mute)">the witness</text>`;
+   document.getElementById('bcap').innerHTML=`<b>${AGES[age].n}.</b> ${AGES[age].c}`;};r.addEventListener('input',d);d();}},
+ {n:'Not the mind',s:'thoughts drift; the sky stays',t:152,g:'You are not the thoughts. You are the sky that watches them drift.',
+  draw:()=>`<div class="stage"><div class="sky" id="sky"><span class="lab"><span class="dotk"></span>the sky: never comes or goes</span></div>
+  <div class="row" style="margin-top:10px"><button class="btn pri" id="think">Let a thought arise</button></div></div>`,
+  txt:`<p>"The mind is like clouds drifting across the sky. Thoughts arise, thoughts dissolve. Yesterday you had thoughts that are gone today. Tomorrow you will have thoughts that do not exist yet."</p><p>"But consciousness, the vast sky in which these thoughts appear, does that ever come or go?" ${ts(152)}</p>`,
+  init:()=>{const sky=document.getElementById('sky');
+   const add=()=>{if(sky.querySelectorAll('.cloud').length>5)return;const c=document.createElement('span');c.className='cloud';c.textContent=THOUGHTS[ti++%THOUGHTS.length];
+    c.style.top=(12+Math.random()*150)+'px';c.style.setProperty('--w',(sky.clientWidth+40)+'px');c.style.animationDuration=(9+Math.random()*5)+'s';
+    c.addEventListener('animationend',()=>c.remove());sky.insertBefore(c,sky.firstChild);if(reduce)setTimeout(()=>c.remove(),4000);};
+   document.getElementById('think').addEventListener('click',add);add();setTimeout(add,1500);
+   if(!reduce)thoughtTimer=setInterval(add,3200);}},
+ {n:'Not an experience',s:'joy, pain, peace come and go',t:262,g:'All experiences come and go. The one who knows them has never come or gone.',
+  draw:()=>`<div class="stage"><div class="knower" id="kn"><div class="wit big"></div><span class="lab">the one who knows</span></div>
+  <div class="row" style="margin-top:10px" id="eb"><button class="btn" data-e="joy">Joy</button><button class="btn" data-e="pain">Pain</button><button class="btn" data-e="peace">Peace</button></div></div>`,
+  txt:`<p>"Joy arises and fades. Pain arrives and dissolves. Peace comes and leaves."</p><p>"But the one who knows these experiences, the one who is aware of joy, aware of pain, aware of peace, that one has never come or gone. That one is consciousness." ${ts(262)}</p><p class="small">Even peace comes and goes. So consciousness isn't a peaceful feeling to chase.</p>`,
+  init:()=>{const kn=document.getElementById('kn');document.getElementById('eb').addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;
+   kn.querySelectorAll('.exp,.ring').forEach(e=>e.remove());const r=document.createElement('span');r.className='ring';const e=document.createElement('span');e.className='exp';e.textContent=b.textContent;
+   kn.append(r,e);if(!reduce){e.addEventListener('animationend',()=>e.remove());r.addEventListener('animationend',()=>r.remove());}});}}
+];
+const tabs=document.getElementById('tabs'),panel=document.getElementById('panel');
+tabs.innerHTML=T.map((t,i)=>`<button class="tab" role="tab" aria-selected="false" data-i="${i}"><b>${t.n}</b><span>${t.s}</span></button>`).join('');
+let cur=0;
+const drawTab=()=>{
+  clearInterval(thoughtTimer);thoughtTimer=null;
+  const t=T[cur];
+  tabs.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',String(+b.dataset.i===cur)));
+  panel.innerHTML=`${t.draw()}<div><p class="gist">${t.g}</p>${t.txt}</div>`;
+  t.init();
+  panel.classList.remove('fade');void panel.offsetWidth;panel.classList.add('fade');
+};
+tabs.addEventListener('click',ev=>{const b=ev.target.closest('.tab');if(!b)return;cur=+b.dataset.i;drawTab();});
+drawTab();
+
+/* ---------- the inquiry ---------- */
+const D=[
+ {t:322,r:'Ask yourself, who am I? Not as a mantra to repeat. Not as a question to answer with the mind, but as a living inquiry that turns the attention back to its source.'},
+ {t:342,s:'I am the one who is sitting here listening to you.',n:'the one sitting here listening',r:'And who is aware of the one sitting? Who observes the listener?'},
+ {t:357,s:'I am.',n:'"I am"',r:'Yes, but who is this I you speak of? Is it the body that sits, the mind that listens, or something deeper?'},
+ {t:370,s:'I am the one who thinks.',n:'the one who thinks',r:'And who watches the thoughts?'},
+ {t:376,s:'I do.',n:'the watcher',r:'Then you are not the thoughts. You are the watcher. But who is the watcher?'},
+ {t:390,s:'Every time I think I have found it, it slips away. The I I name is not the real I.',r:'Exactly. The I that can be named is not the true self. The true self is the one who remains when all names dissolve.'}
+];
+let step=0;
+const namesEl=document.getElementById('names'),dlg=document.getElementById('dlg'),stepsEl=document.getElementById('steps'),ask=document.getElementById('ask');
+const drawInq=()=>{
+  const d=D[step];
+  const named=D.slice(1,step+1).filter(x=>x.n);
+  const last=step===D.length-1;
+  namesEl.innerHTML=named.map((x,i)=>`<span class="name${(i<named.length-1||last)?' gone':''}">${x.n}</span>`).join('')
+    +`<div class="wit${last?' big':''}"></div><span class="lab">${last?'what remains when all names dissolve':'?'}</span>`;
+  stepsEl.innerHTML=D.map((_,i)=>`<i class="${i<=step?'on':''}"></i>`).join('');
+  dlg.innerHTML=(d.s?`<div class="line"><b>Seeker</b><p>"${d.s}"</p></div>`:'')+`<div class="line r" style="margin-top:12px"><b>Ramana</b><p>"${d.r}"</p></div><p class="small" style="margin-top:8px">${ts(d.t)}</p>`;
+  dlg.classList.remove('fade');void dlg.offsetWidth;dlg.classList.add('fade');
+  ask.disabled=last;ask.textContent=last?'Nothing left to name':(step===0?'The seeker answers':'Ask: who is that?');
+};
+ask.addEventListener('click',()=>{if(step<D.length-1){step++;drawInq();}});
+document.getElementById('again').addEventListener('click',()=>{step=0;drawInq();});
+drawInq();
+
+/* ---------- who knows it ---------- */
+const K=[['The body says','I am hungry','Who knows the hunger?'],['The mind says','I am thinking','Who knows the thinking?'],['The emotions say','I am angry','Who knows the anger?']];
+const k3=document.getElementById('k3'),q3=document.getElementById('q3'),kfin=document.getElementById('kfin');
+k3.innerHTML=K.map((k,i)=>`<button class="say3" aria-pressed="false" data-i="${i}"><span>${k[0]}</span><b>"${k[1]}"</b></button>`).join('');
+q3.innerHTML=K.map(k=>`<span>${k[2]}</span>`).join('');
+const kon=new Set();
+k3.addEventListener('click',ev=>{const b=ev.target.closest('.say3');if(!b)return;const i=+b.dataset.i;kon.has(i)?kon.delete(i):kon.add(i);
+  b.setAttribute('aria-pressed',String(kon.has(i)));q3.children[i].classList.toggle('on',kon.has(i));document.getElementById('l'+i).classList.toggle('on',kon.has(i));
+  kfin.innerHTML=kon.size===3?`<b style="color:var(--ink);font-size:17px">That witness is the I that cannot be named. That is consciousness.</b> ${ts(425)}`:'The one who knows';});
+
+/* ---------- wave and ocean ---------- */
+const wavePath=(y,amp)=>{let d=`M-160 ${y}`;for(let x=-160;x<=480;x+=40)d+=` q20 ${-amp} 40 0`;return d+` V200 H-160 Z`;};
+document.getElementById('sea').innerHTML=`<svg viewBox="0 0 320 200" role="img" aria-label="One wave on the ocean">
+ <rect width="320" height="200" fill="var(--sky)"/>
+ <g id="ocean"><path class="waves" d="${wavePath(96,10)}" fill="var(--sea)"/><path class="waves" d="${wavePath(110,7)}" fill="var(--sea)" opacity=".8" style="animation-duration:13s"/></g>
+ <g id="crest"><path class="bob" d="M120 104 Q160 40 200 104 Z" fill="${S}" stroke="${I}" stroke-width="2.5"/></g>
+ <text id="wlab" x="160" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="${I}"></text></svg>`;
+const sea=document.getElementById('sea'),wcap=document.getElementById('wcap');
+const drawSea=m=>{
+  const wave=m==='wave';
+  const crest=sea.querySelector('#crest path');
+  crest.setAttribute('fill',wave?S:'var(--sea)');crest.setAttribute('stroke',wave?I:'none');
+  sea.querySelectorAll('#ocean path').forEach((p,i)=>{p.setAttribute('stroke',wave||i?'none':S);p.setAttribute('stroke-width','3');});
+  sea.querySelector('#wlab').textContent=wave?'"I am this wave"':'always the ocean';
+  wcap.innerHTML=wave?'"You believe you are the wave, and so you fear dissolving back into the ocean."':'"But you were always the ocean. The wave is just a temporary shape." '+ts(478);
+  document.querySelectorAll('#wtog button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.m===m)));
+};
+document.getElementById('wtog').addEventListener('click',ev=>{const b=ev.target.closest('button');if(b)drawSea(b.dataset.m);});
+drawSea('wave');
+
+/* ---------- sit with it ---------- */
+const PR=['Who is asking?','A thought arises. Who knows it?','Don\'t answer with the mind. Just turn back toward the one who asks.','The body feels something. Who knows the feeling?','Whatever can be named, let it go.','Who is aware of the one sitting here?','You don\'t have to find it. You are it.','Nothing to reach. Just stop pretending to be something else.','Who am I?','Rest here. You have never left it.'];
+let mins=5,timer=null,el=0;
+const sp=document.getElementById('sp'),pg=document.getElementById('pg'),go=document.getElementById('go'),box=document.getElementById('sitbox'),lenEl=document.getElementById('len');
+const setPrompt=t=>{if(reduce){sp.textContent=t;return;}sp.classList.add('out');setTimeout(()=>{sp.textContent=t;sp.classList.remove('out');},1200);};
+const stop=(done)=>{clearInterval(timer);timer=null;box.classList.remove('sitting');go.textContent='Begin';lenEl.style.visibility='';
+  setPrompt(done?'Rest here as long as you like.':'Who is asking?');if(!done)pg.style.width='0';};
+lenEl.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b||timer)return;mins=+b.dataset.m;lenEl.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
+go.addEventListener('click',()=>{
+  if(timer){stop(false);return;}
+  el=0;const total=mins*60,every=Math.max(25,Math.floor(total/PR.length));let pi=0;
+  box.classList.add('sitting');go.textContent='End';lenEl.style.visibility='hidden';pg.style.width='0';setPrompt(PR[0]);
+  timer=setInterval(()=>{el++;pg.style.width=(el/total*100)+'%';
+    if(el>=total){stop(true);return;}
+    if(el%every===0&&pi<PR.length-1){pi++;setPrompt(PR[pi]);}},1000);
+});
+
+/* ---------- quotes ---------- */
+const Q=[
+ {big:1,t:302,q:'You do not find it. You are it. The search itself is the obstacle.'},
+ {t:443,q:'The question is not how to reach it, but how to stop pretending you are something else.'},
+ {t:463,q:'You do not break free. You see that you were never bound.'},
+ {t:194,q:'You are not the thoughts. You are the sky that watches them drift.'},
+ {t:221,q:'You are not nothing. You are the presence that has never altered.'},
+ {t:398,q:'The I that can be named is not the true self.'}
+];
+const qh=q=>`<figure class="q${q.big?' big':''}"><blockquote><p>"${q.q}"</p></blockquote><figcaption class="small">Ramana, as told in the video ${ts(q.t)}</figcaption></figure>`;
+document.getElementById('qs').innerHTML=Q.filter(q=>q.big).map(qh).join('')+`<div class="qrow">${Q.filter(q=>!q.big).map(qh).join('')}</div>`;
+}
+</script>
+</body>
+</html>
