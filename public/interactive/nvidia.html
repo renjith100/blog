@@ -66,6 +66,11 @@ input[type=range]{width:100%;accent-color:var(--g);min-height:44px}
 .slab:focus{outline:none}
 .slab:focus-visible .face{stroke:var(--g);stroke-width:4}
 .lnote{min-height:7.5em}
+.try{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);background:var(--gs);padding:4px 11px;border-radius:999px;margin-bottom:12px}
+.try::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--g);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.6);opacity:.45}}
+.slab:hover:not(.on) .face{fill:var(--gs)}
+.part:hover>*:not(.hit){stroke:var(--g);stroke-width:2.5}
 .hero .player{position:relative;aspect-ratio:9/16;width:100%;max-width:320px;justify-self:center;border-radius:8px;overflow:hidden;background:#000}
 .player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .stackrow{margin-top:clamp(28px,4vw,56px);padding-top:clamp(24px,3vw,40px);border-top:1px solid var(--line)}
@@ -181,6 +186,7 @@ details summary{cursor:pointer;font-weight:800;min-height:44px;display:flex;alig
 <div class="hero stackrow">
 <div>
 <h2>Four layers, one company</h2>
+<span class="try" style="margin-top:4px">Try it · tap a layer</span>
 <p class="small">It plays through the four layers by itself. Tap any layer to stop on it and read, or jump to its part of the story. <a class="ts" href="https://www.youtube.com/watch?v=rxG8s7YnEo0&t=157s">2:37</a></p>
 <div class="lnote box fade" id="lnote" aria-live="polite"></div>
 <div class="row" style="margin-top:10px"><button class="btn" id="splay">Play</button></div>
@@ -201,6 +207,7 @@ details summary{cursor:pointer;font-weight:800;min-height:44px;display:flex;alig
 <p>He laid off about half of the roughly 100 staff and started again, on triangles. The new chip, the <b>RIVA 128</b>, shipped in August 1997 when the company had about <b>one month of payroll left</b>. It sold around a million units in four months. <a class="ts" href="https://www.youtube.com/watch?v=rxG8s7YnEo0&t=37s">0:37</a></p>
 </div>
 <div class="box">
+<span class="try">Try it · switch, then drag the slider</span>
 <div class="row ttog" id="ctog"><button class="btn" aria-pressed="true" data-m="c">Curves (NV1)</button><button class="btn" aria-pressed="false" data-m="t">Triangles (Direct3D)</button></div>
 <svg viewBox="0 0 300 260" id="ball" role="img" aria-label="A ball drawn with curves or with triangles"></svg>
 <div id="tri" hidden><input type="range" min="6" max="120" step="6" value="12" id="trin" aria-label="Number of triangles"></div>
@@ -220,6 +227,7 @@ details summary{cursor:pointer;font-weight:800;min-height:44px;display:flex;alig
 <li><b>Three teams in overlapping waves.</b> A chip still takes a long time to design. But with three teams staggered, one team finishes every six months. Rivals shipped a new chip every year or two.</li>
 </ul>
 <div class="box">
+<span class="try">Try it · press play or drag through the years</span>
 <svg viewBox="0 0 640 210" class="gantt" id="gantt" role="img" aria-label="A rival ships every 18 months; NVIDIA's three staggered teams ship every 6 months"></svg>
 <div class="row" style="flex-wrap:nowrap;gap:12px"><button class="btn" id="gplay" style="flex:none">Play</button><input type="range" min="0" max="48" value="48" id="gm" aria-label="Months since 1997"></div>
 <p class="cap" id="gcap"></p>
@@ -249,12 +257,13 @@ details summary{cursor:pointer;font-weight:800;min-height:44px;display:flex;alig
 <p>The key: <b>each pixel's maths doesn't depend on its neighbour's</b>. A CPU is a genius with a few brilliant cores that solve one hard thing after another. A GPU is an army of thousands of simple workers doing the same small job on different pixels at the same time.</p>
 </div>
 <div class="box">
+<span class="try">Try it · paint a frame</span>
 <div class="paint">
 <figure><canvas id="cpu" width="192" height="108"></canvas><figcaption><b>The genius</b> (CPU-style): one fast worker, one pixel at a time · <span class="clock" id="tcpu">0</span> steps</figcaption></figure>
 <figure><canvas id="gpu" width="192" height="108"></canvas><figcaption><b>The army</b> (GPU-style): 1,000 simple workers at once · <span class="clock" id="tgpu">0</span> steps</figcaption></figure>
 </div>
 <div class="row" style="margin-top:12px"><button class="btn pri" id="pgo">Paint a frame</button></div>
-<p class="cap" id="pcap">Both have to paint the same 20,736-pixel picture. Press the button.</p>
+<p class="cap" id="pcap" role="status">Both have to paint the same 20,736-pixel picture.</p>
 </div>
 </div>
 </div></section>
@@ -270,6 +279,7 @@ details summary{cursor:pointer;font-weight:800;min-height:44px;display:flex;alig
 <p>For years almost nobody used it. Then the 2008 crash hit, along with a costly batch of faulty laptop chips. NVIDIA's shares fell more than 75%, and the whole company was worth only around $4 billion at the bottom. Wall Street wanted the CUDA spending cut. Jensen kept paying for the road. <a class="ts" href="https://www.youtube.com/watch?v=rxG8s7YnEo0&t=87s">1:27</a></p>
 </div>
 <div>
+<span class="try">Try it · switch the code</span>
 <div class="row" id="ktog" style="margin-bottom:8px"><button class="btn" aria-pressed="true" data-m="b">Before: pretend it's graphics</button><button class="btn" aria-pressed="false" data-m="a">After: CUDA</button></div>
 <pre class="code fade" id="kcode"></pre>
 <p class="cap" id="kcap"></p>
@@ -289,6 +299,7 @@ details summary{cursor:pointer;font-weight:800;min-height:44px;display:flex;alig
 <p>The runner-up missed on more than 1 photo in 4. AlexNet missed on fewer than 1 in 6. In a field that usually moved by a point or two a year, that was a cliff. <a class="ts" href="https://www.youtube.com/watch?v=rxG8s7YnEo0&t=95s">1:35</a></p>
 </div>
 <div class="box">
+<span class="try">Try it · compare the three</span>
 <div class="row" id="itog" style="margin-bottom:12px"></div>
 <div class="big" id="ibig">26.2%</div>
 <p class="small" id="ilab" style="margin-top:4px"></p>
@@ -322,6 +333,7 @@ details summary{cursor:pointer;font-weight:800;min-height:44px;display:flex;alig
 <p>Press the buttons and see what happens to that stack when the chip changes.</p>
 </div>
 <div class="box">
+<span class="try">Try it · switch the chip</span>
 <div class="row" id="stog" style="margin-bottom:12px"><button class="btn" aria-pressed="true" data-m="n">On NVIDIA</button><button class="btn" aria-pressed="false" data-m="a">Switch to AMD</button><button class="btn" aria-pressed="false" data-m="x">Switch to a brand-new chip</button></div>
 <div class="layers" id="layers"></div>
 <p class="cap" id="scap"></p>
@@ -341,6 +353,7 @@ details summary{cursor:pointer;font-weight:800;min-height:44px;display:flex;alig
 <p class="small">The slider is a toy model, not real benchmark data. It shows the shape of the problem: as the number of GPUs grows, waiting on the network eats more of each step, and faster links keep more of the GPUs you paid for busy.</p>
 </div>
 <div class="box">
+<span class="try">Try it · add GPUs, change the network</span>
 <div class="row" id="ntog" style="margin-bottom:8px"><button class="btn" aria-pressed="true" data-m="s">Ordinary network</button><button class="btn" aria-pressed="false" data-m="f">NVLink + InfiniBand</button></div>
 <label class="small" for="nn">GPUs working together: <b id="nv" style="color:var(--ink)">8</b></label>
 <input type="range" min="0" max="15" value="3" id="nn">
@@ -362,13 +375,17 @@ details summary{cursor:pointer;font-weight:800;min-height:44px;display:flex;alig
 <p>But the real product isn't the chip. It's the <b>GB200 NVL72</b>: one rack holding 72 Blackwell GPUs and 36 of NVIDIA's own Grace CPUs, all wired by NVLink so they behave like <b>one giant GPU</b>. Tap the parts.</p>
 </div>
 <div class="box">
+<span class="try">Try it · tap a part</span>
 <svg viewBox="0 0 300 210" id="chip" role="group" aria-label="A Blackwell GPU: two dies and eight memory stacks"></svg>
 <p class="cap" id="chcap"></p>
+<div class="row"><button class="btn" id="chplay">Play</button></div>
 </div>
 </div>
 <div class="two" style="margin-top:24px">
 <div class="box">
+<span class="try">Try it · tap the trays or the cables</span>
 <svg viewBox="0 0 300 420" id="rack" style="max-width:300px;margin:0 auto" role="group" aria-label="The GB200 NVL72 rack: compute trays, NVLink switch trays and power"></svg>
+<div class="row" style="justify-content:center;margin-top:10px"><button class="btn" id="rkplay">Play</button></div>
 </div>
 <div>
 <p class="cap" id="rcap" style="min-height:6em"></p>
@@ -407,6 +424,7 @@ details summary{cursor:pointer;font-weight:800;min-height:44px;display:flex;alig
 <span class="kick">The whole game</span>
 <h2>To catch NVIDIA, rebuild four things at once</h2>
 <p class="measure">Chips, software, connections and pace. Each one is hard. Together they reinforce each other: the software makes the chips easy to buy, the connections make thousands of chips work as one, and the yearly pace means a rival that catches up has caught up with last year's NVIDIA. Pick a challenger. This is my reading of where each stood in late 2026, not a benchmark. <a class="ts" href="https://www.youtube.com/watch?v=rxG8s7YnEo0&t=157s">2:37</a></p>
+<span class="try">Try it · pick a challenger</span>
 <div class="rtab" role="tablist" id="rtab"></div>
 <div class="four fade" id="rfour" role="tabpanel"></div>
 <p class="cap" id="rcap2"></p>
@@ -469,6 +487,22 @@ document.addEventListener('click',ev=>{
 });
 const toggle=(rowId,on)=>{const row=$(rowId);row.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;row.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));on(b.dataset.m);});};
 
+/* ---------- autoplay for the clickable drawings ----------
+   Steps through a drawing's parts by itself once it is on screen, so readers see it is interactive.
+   Stops for good the moment the reader picks a part, presses Pause, or tabs into the drawing
+   (so playback never redraws the control under a keyboard user's focus). */
+const cycle=({el,btn,steps,show,also=[]})=>{
+ let i=-1,timer=null,obs=null;
+ const set=on=>{clearTimeout(timer);timer=null;btn.textContent=on?'Pause':'Play';
+  if(on)timer=setTimeout(()=>{i=(i+1)%steps.length;show(steps[i]);set(true);},i<0?600:4000);};
+ const stopAuto=()=>{if(obs){obs.disconnect();obs=null;}};
+ const stop=()=>{stopAuto();set(false);};
+ btn.addEventListener('click',()=>{stopAuto();set(!timer);});
+ [el,...also].forEach(x=>x.addEventListener('focusin',stop));
+ if(!reduce){obs=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){stopAuto();set(true);}},{threshold:.5});obs.observe(el);}
+ return {stop};
+};
+
 /* ---------- hero: four stacked layers ---------- */
 const LAYERS=[
  {k:'pace',n:'Pace',fill:'var(--l4)',href:'#speed',t:'A new chip every six months in the 1990s, a new rack-scale system every year now. Rivals aim at a target that moves.',
@@ -494,20 +528,14 @@ const drawStack=()=>{
  const L=LAYERS[layerOn];
  $('lnote').innerHTML=L?`<h3><a href="${L.href}" target="_self">${L.n} →</a></h3><p style="margin:0">${L.t}</p>`:`<h3>Four layers, one company</h3><p style="margin:0">Most people only look at the bottom one. This page goes through the six decisions that built all four.</p>`;
 };
-const pickLayer=el=>{const g=el.closest('.slab');if(!g)return;stopStackAuto();setStackPlay(false);const i=+g.dataset.i;layerOn=layerOn===i?-1:i;drawStack();$('stack').querySelector(`.slab[data-i="${i}"]`)?.focus();};
+const pickLayer=el=>{const g=el.closest('.slab');if(!g)return;stackCycle.stop();const i=+g.dataset.i;layerOn=i;drawStack();$('stack').querySelector(`.slab[data-i="${i}"]`)?.focus();};
 $('stack').addEventListener('click',ev=>pickLayer(ev.target));
 $('stack').addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();pickLayer(ev.target);}});
 // In-page links: scroll inside the iframe, not a new tab
 document.addEventListener('click',ev=>{const a=ev.target.closest('a[href^="#"]');if(!a)return;ev.preventDefault();document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:reduce?'auto':'smooth'});});
 drawStack();
 // Play through the layers by itself: chips, connections, software, pace, then the overview, and round again
-const SEQ=[3,2,1,0,-1];let seqI=-1,stackTimer=null,stackObs=null;
-const setStackPlay=on=>{clearTimeout(stackTimer);stackTimer=null;$('splay').textContent=on?'Pause':'Play';
- if(on)stackTimer=setTimeout(()=>{seqI=(seqI+1)%SEQ.length;layerOn=SEQ[seqI];drawStack();setStackPlay(true);},seqI<0?600:4000);};
-// Any manual choice cancels the pending start-on-scroll, so it can't override the reader
-const stopStackAuto=()=>{if(stackObs){stackObs.disconnect();stackObs=null;}};
-$('splay').addEventListener('click',()=>{stopStackAuto();setStackPlay(!stackTimer);});
-if(!reduce){stackObs=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){stopStackAuto();setStackPlay(true);}},{threshold:.5});stackObs.observe($('stack'));}
+const stackCycle=cycle({el:$('stack'),btn:$('splay'),also:[$('lnote')],steps:[3,2,1,0,-1],show:k=>{layerOn=k;drawStack();}});
 
 /* ---------- curves vs triangles ---------- */
 const CX=150,CY=128,R=100;
@@ -563,7 +591,10 @@ const drawGantt=()=>{
 const gStop=()=>{clearInterval(gTimer);gTimer=null;$('gplay').textContent='Play';};
 $('gplay').addEventListener('click',()=>{if(gTimer){gStop();return;}if(gnow>=48)gnow=0;$('gplay').textContent='Pause';
  gTimer=setInterval(()=>{gnow++;$('gm').value=gnow;drawGantt();if(gnow>=48)gStop();},reduce?10:180);});
-$('gm').addEventListener('input',()=>{gStop();gnow=+$('gm').value;drawGantt();});
+let gObs=null;
+$('gm').addEventListener('input',()=>{gObs?.disconnect();gStop();gnow=+$('gm').value;drawGantt();});
+$('gplay').addEventListener('click',()=>gObs?.disconnect(),{capture:true});
+if(!reduce){gnow=0;$('gm').value=0;gObs=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){gObs.disconnect();if(!gTimer)$('gplay').click();}},{threshold:.6});gObs.observe($('gantt'));}
 drawGantt();
 
 /* ---------- genius vs army ---------- */
@@ -578,18 +609,21 @@ const put=(c,x,y)=>{const p=pix(x,y);c.fillStyle=`rgb(${p[0]|0},${p[1]|0},${p[2]
 $('pgo').addEventListener('click',()=>{
  if(painting)return;painting=true;clear();
  const total=PW*PH,CPU_STEP=1,GPU_LANES=1000,PERF=reduce?total:72; // the genius does 72 pixels per animation frame so the demo ends; the army does 1000 per "step"
- let ci=0,gi=0,cs=0,gs=0;$('pcap').textContent='Painting…';
+ let ci=0,gi=0,cs=0,gs=0;
  const tick=()=>{
   for(let k=0;k<PERF&&ci<total;k++){put(cv.cpu,ci%PW,(ci/PW)|0);ci+=CPU_STEP;cs++;}
   if(gi<total&&(cs%(PERF*4)===0||reduce)){for(let k=0;k<GPU_LANES&&gi<total;k++){put(cv.gpu,gi%PW,(gi/PW)|0);gi++;}gs++;}
   $('tcpu').textContent=cs.toLocaleString();$('tgpu').textContent=gs.toLocaleString();
   if(ci<total)requestAnimationFrame(tick);
   else{while(gi<total){for(let k=0;k<GPU_LANES&&gi<total;k++){put(cv.gpu,gi%PW,(gi/PW)|0);gi++;}gs++;}$('tgpu').textContent=gs;
-   painting=false;$('pcap').innerHTML=`The genius took <b>${cs.toLocaleString()}</b> steps, the army <b>${gs}</b>. Even if each army worker is a few times slower, ${Math.round(cs/gs)}× fewer steps wins. Now scale it to 2 million pixels, 60 times a second.`;}
+   painting=false;$('pgo').textContent='Paint again';$('pcap').innerHTML=`The genius took <b>${cs.toLocaleString()}</b> steps, the army <b>${gs}</b>. Even if each army worker is a few times slower, ${Math.round(cs/gs)}× fewer steps wins. Now scale it to 2 million pixels, 60 times a second.`;}
  };
  requestAnimationFrame(tick);
 });
 clear();
+// Paint one frame by itself the first time the pictures are on screen
+const paintObs=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){paintObs.disconnect();if(!painting)$('pgo').click();}},{threshold:.6});
+paintObs.observe($('cpu'));
 
 /* ---------- before / after CUDA ---------- */
 const K={
@@ -662,9 +696,10 @@ const CHIP={
  seam:'<b>The 10 TB/s seam.</b> NV-HBI links the two dies so fast that software sees a single GPU. No rewriting code for "two chips".',
  hbm:'<b>Eight stacks of HBM3e memory</b>, 192 GB on B200 (288 GB on Blackwell Ultra). AI is often limited by how fast numbers can be fed in, not by maths, so memory sits right next to the dies.',
  fp4:'<b>FP4 and the Transformer Engine.</b> 4-bit numbers where the model can tolerate them, more bits where it can\'t, chosen layer by layer. Fewer bits means more maths per second and per watt.'};
+const CHIPN={die:'GPU dies',seam:'NV-HBI seam',hbm:'HBM memory',fp4:'FP4 and the Transformer Engine'};
 let chipOn='die';
 const drawChip=()=>{
- const P=(k,body)=>`<g class="part${chipOn===k?' on':''}" data-k="${k}" tabindex="0" role="button" aria-pressed="${chipOn===k}">${body}</g>`;
+ const P=(k,body)=>`<g class="part${chipOn===k?' on':''}" data-k="${k}" tabindex="0" role="button" aria-label="${CHIPN[k]}" aria-pressed="${chipOn===k}">${body}</g>`;
  let hbm='';[[18,28],[18,78],[18,128],[248,28],[248,78],[248,128]].forEach(([x,y])=>{hbm+=`<rect x="${x}" y="${y}" width="34" height="44" rx="3" fill="var(--l4)" stroke="var(--ink)" stroke-width="2"/>`;});
  $('chip').innerHTML=`<rect x="6" y="14" width="288" height="170" rx="8" fill="var(--con)" stroke="var(--ink)" stroke-width="2"/>`+
  P('hbm',hbm+`<rect x="70" y="160" width="34" height="18" rx="3" fill="var(--l4)" stroke="var(--ink)" stroke-width="2"/><rect x="196" y="160" width="34" height="18" rx="3" fill="var(--l4)" stroke="var(--ink)" stroke-width="2"/>`)+
@@ -673,10 +708,11 @@ const drawChip=()=>{
  P('fp4',`<rect x="76" y="70" width="56" height="40" rx="3" fill="var(--bg)" stroke="var(--ink)" stroke-width="1.5"/><text x="104" y="96" text-anchor="middle" font-size="15" font-weight="800" fill="var(--ink)">FP4</text>`)+
  `<text x="150" y="204" text-anchor="middle" font-size="12" font-weight="700" fill="var(--mute)">Blackwell GPU (drawing, not to scale)</text>`;
  $('chcap').innerHTML=CHIP[chipOn];};
-const pickChip=t=>{const g=t.closest('.part');if(!g)return;chipOn=g.dataset.k;drawChip();$('chip').querySelector(`.part[data-k="${chipOn}"]`)?.focus();};
+const pickChip=t=>{const g=t.closest('.part');if(!g)return;chipCycle.stop();chipOn=g.dataset.k;drawChip();$('chip').querySelector(`.part[data-k="${chipOn}"]`)?.focus();};
 $('chip').addEventListener('click',ev=>pickChip(ev.target));
 $('chip').addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();pickChip(ev.target);}});
 drawChip();
+const chipCycle=cycle({el:$('chip'),btn:$('chplay'),steps:['die','seam','hbm','fp4'],show:k=>{chipOn=k;drawChip();}});
 
 /* ---------- NVL72 rack ---------- */
 const RACK={
@@ -684,9 +720,10 @@ const RACK={
  sw:'<b>9 NVLink switch trays.</b> 18 NVSwitch chips that connect every GPU to every other GPU at full speed: 130 TB/s across the rack. This is what turns 72 GPUs into one.',
  spine:'<b>The copper spine.</b> Around 5,000 cables, roughly two miles of copper, run down the back of the rack from every compute tray to every switch tray.',
  pow:'<b>Power and cooling.</b> Power shelves feed roughly 120 kW, about what a hundred homes draw on average. Air can\'t carry that much heat away, so liquid cooling is required, not optional.'};
+const RACKN={comp:'Compute trays',sw:'NVLink switch trays',spine:'Copper spine',pow:'Power shelves'};
 let rackOn='comp';
 const drawRack=()=>{
- const P=(k,body)=>`<g class="part${rackOn===k?' on':''}" data-k="${k}" tabindex="0" role="button" aria-pressed="${rackOn===k}">${body}</g>`;
+ const P=(k,body)=>`<g class="part${rackOn===k?' on':''}" data-k="${k}" tabindex="0" role="button" aria-label="${RACKN[k]}" aria-pressed="${rackOn===k}">${body}</g>`;
  const tray=(y,c,h=13)=>`<rect x="40" y="${y}" width="190" height="${h}" rx="2" fill="${c}" stroke="var(--ink)" stroke-width="1.5"/>`;
  let pow1='',comp='',sw='',pow2='',y=20;
  for(let i=0;i<4;i++){pow1+=tray(y,'var(--l4)',10);y+=12;}y+=4;
@@ -700,10 +737,11 @@ const drawRack=()=>{
  `<text x="135" y="${y+24}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--mute)">GB200 NVL72 (drawing, front + cable spine)</text>`;
  $('rack').setAttribute('viewBox',`0 0 300 ${y+32}`);
  $('rcap').innerHTML=RACK[rackOn]+'<br><span class="small">Tap the trays, the switches, the power shelves or the orange cables.</span>';};
-const pickRack=t=>{const g=t.closest('.part');if(!g)return;rackOn=g.dataset.k;drawRack();$('rack').querySelector(`.part[data-k="${rackOn}"]`)?.focus();};
+const pickRack=t=>{const g=t.closest('.part');if(!g)return;rackCycle.stop();rackOn=g.dataset.k;drawRack();$('rack').querySelector(`.part[data-k="${rackOn}"]`)?.focus();};
 $('rack').addEventListener('click',ev=>pickRack(ev.target));
 $('rack').addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();pickRack(ev.target);}});
 drawRack();
+const rackCycle=cycle({el:$('rack'),btn:$('rkplay'),steps:['comp','sw','spine','pow'],show:k=>{rackOn=k;drawRack();}});
 
 /* ---------- rivals ---------- */
 const RV=[
