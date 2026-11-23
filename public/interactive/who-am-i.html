@@ -263,8 +263,11 @@ const T=[
   txt:`<p>"The mind is like clouds drifting across the sky. Thoughts arise, thoughts dissolve. Yesterday you had thoughts that are gone today. Tomorrow you will have thoughts that do not exist yet."</p><p>"But consciousness, the vast sky in which these thoughts appear, does that ever come or go?" ${ts(152)}</p>`,
   init:()=>{const sky=document.getElementById('sky');
    const add=()=>{if(sky.querySelectorAll('.cloud').length>5)return;const c=document.createElement('span');c.className='cloud';c.textContent=THOUGHTS[ti++%THOUGHTS.length];
-    c.style.top=(12+Math.random()*150)+'px';c.style.setProperty('--w',(sky.clientWidth+40)+'px');c.style.animationDuration=(9+Math.random()*5)+'s';
-    c.addEventListener('animationend',()=>c.remove());sky.insertBefore(c,sky.firstChild);if(reduce)setTimeout(()=>c.remove(),4000);};
+    c.style.top=(12+Math.random()*150)+'px';c.style.setProperty('--w',(sky.clientWidth+40)+'px');
+    // Reduced motion: leave the stylesheet's near-zero duration alone and show the thought still for a few seconds
+    if(reduce)setTimeout(()=>c.remove(),4000);
+    else{c.style.animationDuration=(9+Math.random()*5)+'s';c.addEventListener('animationend',()=>c.remove());}
+    sky.insertBefore(c,sky.firstChild);};
    document.getElementById('think').addEventListener('click',add);add();setTimeout(add,1500);
    if(!reduce)thoughtTimer=setInterval(add,3200);}},
  {n:'Not an experience',s:'joy, pain, peace come and go',t:262,g:'All experiences come and go. The one who knows them has never come or gone.',
@@ -276,17 +279,25 @@ const T=[
    kn.append(r,e);if(!reduce){e.addEventListener('animationend',()=>e.remove());r.addEventListener('animationend',()=>r.remove());}});}}
 ];
 const tabs=document.getElementById('tabs'),panel=document.getElementById('panel');
-tabs.innerHTML=T.map((t,i)=>`<button class="tab" role="tab" aria-selected="false" data-i="${i}"><b>${t.n}</b><span>${t.s}</span></button>`).join('');
+tabs.innerHTML=T.map((t,i)=>`<button class="tab" role="tab" id="tab${i}" aria-controls="panel" aria-selected="false" tabindex="-1" data-i="${i}"><b>${t.n}</b><span>${t.s}</span></button>`).join('');
 let cur=0;
 const drawTab=()=>{
   clearInterval(thoughtTimer);thoughtTimer=null;
   const t=T[cur];
-  tabs.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',String(+b.dataset.i===cur)));
+  tabs.querySelectorAll('.tab').forEach(b=>{const on=+b.dataset.i===cur;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1;});
+  panel.setAttribute('aria-labelledby','tab'+cur);
   panel.innerHTML=`${t.draw()}<div><p class="gist">${t.g}</p>${t.txt}</div>`;
   t.init();
   panel.classList.remove('fade');void panel.offsetWidth;panel.classList.add('fade');
 };
 tabs.addEventListener('click',ev=>{const b=ev.target.closest('.tab');if(!b)return;cur=+b.dataset.i;drawTab();});
+// Arrow keys move between tabs (Up/Down too, since the tabs stack on phones); Enter and Space stay native button clicks
+tabs.addEventListener('keydown',ev=>{
+  const n=T.length,k=ev.key;
+  const next=k==='ArrowRight'||k==='ArrowDown'?(cur+1)%n:k==='ArrowLeft'||k==='ArrowUp'?(cur+n-1)%n:k==='Home'?0:k==='End'?n-1:null;
+  if(next===null)return;
+  ev.preventDefault();cur=next;drawTab();document.getElementById('tab'+cur).focus();
+});
 drawTab();
 
 /* ---------- the inquiry ---------- */
@@ -347,7 +358,7 @@ drawSea('wave');
 
 /* ---------- sit with it ---------- */
 const PR=['Who is asking?','A thought arises. Who knows it?','Don\'t answer with the mind. Just turn back toward the one who asks.','The body feels something. Who knows the feeling?','Whatever can be named, let it go.','Who is aware of the one sitting here?','You don\'t have to find it. You are it.','Nothing to reach. Just stop pretending to be something else.','Who am I?','Rest here. You have never left it.'];
-let mins=5,timer=null,el=0;
+let mins=5,timer=null,pi=0,startAt=0,total=0,every=0;
 const sp=document.getElementById('sp'),pg=document.getElementById('pg'),go=document.getElementById('go'),box=document.getElementById('sitbox'),lenEl=document.getElementById('len');
 const setPrompt=t=>{if(reduce){sp.textContent=t;return;}sp.classList.add('out');setTimeout(()=>{sp.textContent=t;sp.classList.remove('out');},1200);};
 const stop=(done)=>{clearInterval(timer);timer=null;box.classList.remove('sitting');go.textContent='Begin';lenEl.style.visibility='';
@@ -355,12 +366,20 @@ const stop=(done)=>{clearInterval(timer);timer=null;box.classList.remove('sittin
 lenEl.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b||timer)return;mins=+b.dataset.m;lenEl.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
 go.addEventListener('click',()=>{
   if(timer){stop(false);return;}
-  el=0;const total=mins*60,every=Math.max(25,Math.floor(total/PR.length));let pi=0;
+  total=mins*60;every=Math.max(25,Math.floor(total/PR.length));pi=0;startAt=Date.now();
   box.classList.add('sitting');go.textContent='End';lenEl.style.visibility='hidden';pg.style.width='0';setPrompt(PR[0]);
-  timer=setInterval(()=>{el++;pg.style.width=(el/total*100)+'%';
-    if(el>=total){stop(true);return;}
-    if(el%every===0&&pi<PR.length-1){pi++;setPrompt(PR[pi]);}},1000);
+  timer=setInterval(tick,1000);
 });
+// Work from the clock, not from counting callbacks: background tabs throttle timers
+function tick(){
+  if(!timer)return;
+  const el=Math.min(total,(Date.now()-startAt)/1000);
+  pg.style.width=(el/total*100)+'%';
+  if(el>=total){stop(true);return;}
+  const want=Math.min(PR.length-1,Math.floor(el/every));
+  if(want!==pi){pi=want;setPrompt(PR[pi]);}
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)tick();});
 
 /* ---------- quotes ---------- */
 const Q=[
