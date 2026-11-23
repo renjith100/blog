@@ -169,7 +169,7 @@ details summary{cursor:pointer;font-weight:800;min-height:44px;display:flex;alig
  .road{grid-template-columns:repeat(3,minmax(0,1fr))}
  .dots{gap:3px}
 }
-@media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}.try::before{animation:none}}
 </style>
 </head>
 <body>
@@ -499,7 +499,7 @@ const cycle=({el,btn,steps,show,also=[]})=>{
  const stop=()=>{stopAuto();set(false);};
  btn.addEventListener('click',()=>{stopAuto();set(!timer);});
  [el,...also].forEach(x=>x.addEventListener('focusin',stop));
- if(!reduce){obs=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){stopAuto();set(true);}},{threshold:.5});obs.observe(el);}
+ if(!reduce){obs=new IntersectionObserver(es=>{if(!obs)return;if(es.some(e=>e.isIntersecting)){stopAuto();set(true);}},{threshold:.5});obs.observe(el);}
  return {stop};
 };
 
@@ -591,10 +591,10 @@ const drawGantt=()=>{
 const gStop=()=>{clearInterval(gTimer);gTimer=null;$('gplay').textContent='Play';};
 $('gplay').addEventListener('click',()=>{if(gTimer){gStop();return;}if(gnow>=48)gnow=0;$('gplay').textContent='Pause';
  gTimer=setInterval(()=>{gnow++;$('gm').value=gnow;drawGantt();if(gnow>=48)gStop();},reduce?10:180);});
-let gObs=null;
-$('gm').addEventListener('input',()=>{gObs?.disconnect();gStop();gnow=+$('gm').value;drawGantt();});
-$('gplay').addEventListener('click',()=>gObs?.disconnect(),{capture:true});
-if(!reduce){gnow=0;$('gm').value=0;gObs=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){gObs.disconnect();if(!gTimer)$('gplay').click();}},{threshold:.6});gObs.observe($('gantt'));}
+let gObs=null,gTouched=false;
+$('gm').addEventListener('input',()=>{gTouched=true;gObs?.disconnect();gStop();gnow=+$('gm').value;drawGantt();});
+$('gplay').addEventListener('click',ev=>{if(ev.isTrusted)gTouched=true;gObs?.disconnect();},{capture:true});
+if(!reduce){gnow=0;$('gm').value=0;gObs=new IntersectionObserver(es=>{if(gTouched)return;if(es.some(e=>e.isIntersecting)){gObs.disconnect();if(!gTimer)$('gplay').click();}},{threshold:.6});gObs.observe($('gantt'));}
 drawGantt();
 
 /* ---------- genius vs army ---------- */
