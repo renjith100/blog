@@ -126,7 +126,36 @@ summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.fade,.waves,.bob,.sitting .breath{animation:none}.cloud{animation-duration:.01s;animation-fill-mode:none;position:static;display:inline-block;margin:6px}.exp,.ring{animation:none}.ring{display:none}.exp{transform:translate(-50%,-50%) translateY(-60px)}.prompt{transition:none}}
 @media(max-width:820px){.hero,.panel,.inq{grid-template-columns:minmax(0,1fr)}.names{min-height:0}}
-@media(max-width:520px){.tabs{grid-template-columns:minmax(0,1fr)}.panel{padding:16px}.say3 b{font-size:15px}}
+/* a clip opened in place, under the line whose timestamp was tapped (phones) */
+.clip{margin:12px 0 16px;display:grid;gap:6px;justify-items:end;width:100%}
+.clip .player{width:100%}
+.clip button{font-size:13px;font-weight:700;background:none;border:0;padding:8px 2px;min-height:44px;text-decoration:underline;text-underline-offset:3px}
+.tab .sh,.tsub{display:none}
+/* phones: the page sits inside the blog's own margins, so it is only about 340px wide here */
+@media(max-width:560px){
+ .band{padding-left:12px;padding-right:12px}
+ .panel{padding:16px}
+ /* timestamps keep their look but get a 44px-tall tap area */
+ .ts{position:relative}
+ .ts::after{content:"";position:absolute;inset:-11px -4px}
+ /* tabs: one row of short names; the longer line moves under the picture */
+ .tabs{gap:6px}
+ .tab{text-align:center;justify-items:center;padding:10px 4px}
+ .tab b,.tab>span{display:none}
+ .tab .sh{display:block;font-size:15px;font-weight:800;color:inherit}
+ .tab[aria-selected=true] .sh{color:var(--bg);opacity:1}
+ .tsub{display:block;margin:4px 0 0}
+ /* inquiry: progress, then the buttons in a fixed spot, then the names falling away, then the dialogue */
+ .inq{gap:14px}
+ .say{display:contents}
+ .steps{order:-2}
+ .say>.row{order:-1}
+ .names{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:flex-start;padding:0;background:none;border:0;min-height:0}
+ .names .wit{margin:0 0 0 2px}
+ .names .lab{display:none}
+ .names .lab.fin{display:block;flex-basis:100%;text-align:left}
+ .say3 b{font-size:15px}
+}
 </style>
 </head>
 <body>
@@ -135,9 +164,9 @@ summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:
 <div>
 <h1>Who is asking?</h1>
 <p class="lede">A tired seeker asks Ramana Maharshi, "What is the nature of consciousness?" Ramana doesn't answer. He asks a question back. Everything else here unfolds from that one question.</p>
-<p class="small">Notes on a video by One Timeless Witness · <a href="https://www.youtube.com/watch?v=nTLOOwjmZ4s">watch on YouTube</a> · the player stops at 8:04, before the movie-screen part · any timestamp plays from there</p>
+<p class="small">Notes on a video by One Timeless Witness · <a href="https://www.youtube.com/watch?v=nTLOOwjmZ4s">watch on YouTube</a> · my notes stop at 8:04, before the movie-screen part · any timestamp plays from there</p>
 </div>
-<div class="player"><iframe id="yt" title="Consciousness is not what you think: Ramana Maharshi" src="https://www.youtube.com/embed/nTLOOwjmZ4s?end=484&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+<div class="player"><iframe id="yt" title="Consciousness is not what you think: Ramana Maharshi" src="https://www.youtube.com/embed/nTLOOwjmZ4s?rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
 </div></header>
 
 <section class="band con" id="search"><div class="wrap">
@@ -203,7 +232,7 @@ summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:
 <summary>About these notes</summary>
 <ul>
 <li>The video is a narrated story, not a recording of Ramana Maharshi. The words are the narrator's retelling of his teaching. I haven't checked them line by line against his own writings, such as <em>Who Am I?</em> (<em>Nan Yar?</em>).</li>
-<li>I stopped at 8:04, where the movie-screen analogy begins. It's a good analogy, but these notes are about the part before it, and the player above stops there too.</li>
+<li>I stopped at 8:04, where the movie-screen analogy begins. It's a good analogy, but these notes are about the part before it.</li>
 <li>The captions spell Ramana as "Romana" and "Ramina" in places. Quotes here are lightly cleaned up from the captions.</li>
 </ul>
 </details>
@@ -211,19 +240,28 @@ summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:
 
 <script>
 {
-const VID='nTLOOwjmZ4s',END=484;
+const VID='nTLOOwjmZ4s';
 const fmt=s=>`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
 const ts=s=>`<a class="ts" href="https://www.youtube.com/watch?v=${VID}&t=${s}s">${fmt(s)}</a>`;
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const yt=document.getElementById('yt');
-// Timestamps play in the page's own player, which always stops before the movie-screen part
+const phone=matchMedia('(max-width:560px)');
+const src=s=>`https://www.youtube.com/embed/${VID}?start=${s}&autoplay=1&rel=0`;
+// Timestamps play in the page's own player. On a phone that player can be thousands of pixels up,
+// so the clip opens right under the line that was tapped instead, one at a time.
+let clip=null;
+const closeClip=()=>{if(clip){clip.remove();clip=null;}};
 document.addEventListener('click',ev=>{
+  if(ev.target.closest('.clip-close')){closeClip();return;}
   const a=ev.target.closest('a.ts');if(!a)return;
   const s=+(new URL(a.href).searchParams.get('t')||'0').replace('s','');
-  if(s>=END)return;
   ev.preventDefault();
-  yt.src=`https://www.youtube.com/embed/${VID}?start=${s}&end=${END}&autoplay=1&rel=0`;
-  yt.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});
+  if(!phone.matches){yt.src=src(s);yt.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});return;}
+  closeClip();
+  clip=document.createElement('div');clip.className='clip';
+  clip.innerHTML=`<div class="player"><iframe title="Video from ${fmt(s)}" src="${src(s)}" allow="autoplay; encrypted-media; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><button class="clip-close" type="button">Close video</button>`;
+  (a.closest('figure,p')||a.parentElement).after(clip);
+  clip.scrollIntoView({behavior:reduce?'auto':'smooth',block:'nearest'});
 });
 const I='var(--ink)',S='var(--s)',C='var(--con)',BG='var(--bg)';
 const W=(x,y,r=8)=>`<circle cx="${x}" cy="${y}" r="${r+7}" fill="${S}" opacity=".25"/><circle cx="${x}" cy="${y}" r="${r}" fill="${S}" stroke="${I}" stroke-width="2.5"/>`;
@@ -250,7 +288,7 @@ let age=0,thoughtTimer=null,bodyTimer=null,bodyObs=null;
 const THOUGHTS=['I need to know','Am I doing this right?','What will they think','I should meditate more','Lunch?','That email…','I am tired','Peace will come one day','I remember when…','Who am I?'];
 let ti=0;
 const T=[
- {n:'Not the body',s:'it ages; the witness doesn\'t',t:110,g:'The body changes, ages, decays and dies. The witness of those changes stays untouched.',
+ {n:'Not the body',sh:'Body',s:'it ages; the witness doesn\'t',t:110,g:'The body changes, ages, decays and dies. The witness of those changes stays untouched.',
   draw:()=>`<div class="stage"><svg viewBox="0 0 320 156" role="img" aria-label="A body at four ages, watched by one unchanging witness" id="bsvg"></svg>
   <div class="row" style="flex-wrap:nowrap;gap:12px"><button class="btn" id="bplay" style="flex:none">Pause</button><input type="range" min="0" max="3" step="1" value="${age}" id="ager" aria-label="Age"></div><p class="cap" id="bcap"></p></div>`,
   txt:`<p>"The body you had as a child is gone. The cells have changed. The skin has aged."</p><p>"But the one who witnessed the child's body, the one who witnesses this body now, has that witness ever changed?" The seeker: "No, the witness feels the same." ${ts(118)}</p><p class="small">It plays through a life from childhood. Pause it, or drag the slider yourself.</p>`,
@@ -270,7 +308,7 @@ const T=[
    pb.textContent='Play';
    bodyObs=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){bodyObs.disconnect();bodyObs=null;setPlay(true);}},{threshold:.6});
    bodyObs.observe(document.getElementById('bsvg'));}},
- {n:'Not the mind',s:'thoughts drift; the sky stays',t:152,g:'You are not the thoughts. You are the sky that watches them drift.',
+ {n:'Not the mind',sh:'Mind',s:'thoughts drift; the sky stays',t:152,g:'You are not the thoughts. You are the sky that watches them drift.',
   draw:()=>`<div class="stage"><div class="sky" id="sky"><span class="lab"><span class="dotk"></span>the sky: never comes or goes</span></div>
   <div class="row" style="margin-top:10px"><button class="btn pri" id="think" aria-pressed="false">Let thoughts arise</button></div></div>`,
   txt:`<p>"The mind is like clouds drifting across the sky. Thoughts arise, thoughts dissolve. Yesterday you had thoughts that are gone today. Tomorrow you will have thoughts that do not exist yet."</p><p>"But consciousness, the vast sky in which these thoughts appear, does that ever come or go?" ${ts(152)}</p>`,
@@ -289,7 +327,7 @@ const T=[
      if(on)loop();else{clearTimeout(thoughtTimer);thoughtTimer=null;sky.querySelectorAll('.cloud').forEach(c=>{c.animate([{opacity:getComputedStyle(c).opacity},{opacity:0}],{duration:reduce?1:800,fill:'forwards'}).finished.then(()=>c.remove());});}
      btn.textContent=on?'Stop the thoughts':'Let thoughts arise';btn.setAttribute('aria-pressed',String(on));
    });}},
- {n:'Not an experience',s:'joy, pain, peace come and go',t:262,g:'All experiences come and go. The one who knows them has never come or gone.',
+ {n:'Not an experience',sh:'Experience',s:'joy, pain, peace come and go',t:262,g:'All experiences come and go. The one who knows them has never come or gone.',
   draw:()=>`<div class="stage"><div class="knower" id="kn"><div class="wit big"></div><span class="lab">the one who knows</span></div>
   <div class="row" style="margin-top:10px" id="eb"><button class="btn" data-e="joy">Joy</button><button class="btn" data-e="pain">Pain</button><button class="btn" data-e="peace">Peace</button></div></div>`,
   txt:`<p>"Joy arises and fades. Pain arrives and dissolves. Peace comes and leaves."</p><p>"But the one who knows these experiences, the one who is aware of joy, aware of pain, aware of peace, that one has never come or gone. That one is consciousness." ${ts(262)}</p><p class="small">Even peace comes and goes. So consciousness isn't a peaceful feeling to chase.</p>`,
@@ -298,14 +336,14 @@ const T=[
    kn.append(r,e);if(!reduce){e.addEventListener('animationend',()=>e.remove());r.addEventListener('animationend',()=>r.remove());}});}}
 ];
 const tabs=document.getElementById('tabs'),panel=document.getElementById('panel');
-tabs.innerHTML=T.map((t,i)=>`<button class="tab" role="tab" id="tab${i}" aria-controls="panel" aria-selected="false" tabindex="-1" data-i="${i}"><b>${t.n}</b><span>${t.s}</span></button>`).join('');
+tabs.innerHTML=T.map((t,i)=>`<button class="tab" role="tab" id="tab${i}" aria-controls="panel" aria-selected="false" tabindex="-1" data-i="${i}"><b>${t.n}</b><span>${t.s}</span><span class="sh">${t.sh}</span></button>`).join('');
 let cur=0;
 const drawTab=()=>{
   clearTimeout(thoughtTimer);thoughtTimer=null;clearTimeout(bodyTimer);bodyTimer=null;if(bodyObs){bodyObs.disconnect();bodyObs=null;}
   const t=T[cur];
   tabs.querySelectorAll('.tab').forEach(b=>{const on=+b.dataset.i===cur;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1;});
   panel.setAttribute('aria-labelledby','tab'+cur);
-  panel.innerHTML=`${t.draw()}<div><p class="gist">${t.g}</p>${t.txt}</div>`;
+  panel.innerHTML=`<div>${t.draw()}<p class="tsub small">${t.n}: ${t.s}.</p></div><div><p class="gist">${t.g}</p>${t.txt}</div>`;
   t.init();
   panel.classList.remove('fade');void panel.offsetWidth;panel.classList.add('fade');
 };
@@ -335,7 +373,7 @@ const drawInq=()=>{
   const named=D.slice(1,step+1).filter(x=>x.n);
   const last=step===D.length-1;
   namesEl.innerHTML=named.map((x,i)=>`<span class="name${(i<named.length-1||last)?' gone':''}">${x.n}</span>`).join('')
-    +`<div class="wit${last?' big':''}"></div><span class="lab">${last?'what remains when all names dissolve':'?'}</span>`;
+    +`<div class="wit${last?' big':''}"></div><span class="lab${last?' fin':''}">${last?'what remains when all names dissolve':'?'}</span>`;
   stepsEl.innerHTML=D.map((_,i)=>`<i class="${i<=step?'on':''}"></i>`).join('');
   dlg.innerHTML=(d.s?`<div class="line"><b>Seeker</b><p>"${d.s}"</p></div>`:'')+`<div class="line r" style="margin-top:12px"><b>Ramana</b><p>"${d.r}"</p></div><p class="small" style="margin-top:8px">${ts(d.t)}</p>`;
   dlg.classList.remove('fade');void dlg.offsetWidth;dlg.classList.add('fade');
