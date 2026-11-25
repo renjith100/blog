@@ -4,6 +4,12 @@ import { ListBlogPosts } from "app/components/list-blog-posts";
 import type { Metadata } from "next";
 
 /**
+ * Rebuild hourly, so the AI This Week card moves on each Monday even when
+ * nothing new is deployed (as /weekly does)
+ */
+export const revalidate = 3600;
+
+/**
  * Home Page Component
  * Serves as the landing page for the portfolio
  *

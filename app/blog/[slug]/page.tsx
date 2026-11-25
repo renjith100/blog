@@ -6,6 +6,12 @@ import { EXPLAINER_POST } from "app/weekly/week-view";
 import { notFound } from "next/navigation";
 
 /**
+ * Rebuild hourly, so the AI This Week card under each post moves on each
+ * Monday even when nothing new is deployed (as /weekly does)
+ */
+export const revalidate = 3600;
+
+/**
  * Generates static paths for all blog posts at build time
  * This is a Next.js function that pre-renders all blog post pages
  *

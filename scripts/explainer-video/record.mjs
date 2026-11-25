@@ -32,7 +32,11 @@ chrome.on("error", (err) => {
 	chromeError = err;
 });
 const pending = new Map();
+// Once Chrome or its connection is gone, remember why, so later requests
+// fail at once instead of waiting forever for an answer
+let closedReason = null;
 const failAll = (reason) => {
+	closedReason ??= reason;
 	for (const settle of pending.values()) settle({ error: reason });
 	pending.clear();
 };
@@ -41,6 +45,10 @@ let ws;
 let id = 0;
 const send = (method, params = {}) =>
 	new Promise((res, rej) => {
+		if (closedReason !== null) {
+			rej(new Error(closedReason));
+			return;
+		}
 		const i = ++id;
 		pending.set(i, (m) =>
 			m.error ? rej(new Error(JSON.stringify(m.error))) : res(m.result),

@@ -88,6 +88,25 @@ export function getCurrentWeekStart() {
 }
 
 /**
+ * Returns the week /weekly opens on: the current week once it has an
+ * update, otherwise the latest earlier week that has some, so the page
+ * never opens on an empty list early in the week or on a week staged ahead.
+ * The AI This Week promo card uses it too, so the card always describes
+ * the week its link opens.
+ */
+export function getDefaultWeekStart(contentDir = CONTENT_DIR) {
+	const current = getCurrentWeekStart();
+	if (getWeek(current, contentDir).updates.length > 0) {
+		return current;
+	}
+	return (
+		getWeeks(contentDir)
+			.filter((week) => week.start < current)
+			.at(-1)?.start ?? current
+	);
+}
+
+/**
  * Reads one update file and checks its frontmatter. Throws instead of
  * guessing, so a bad file fails the build rather than showing wrong data.
  */

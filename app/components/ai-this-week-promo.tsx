@@ -1,7 +1,7 @@
 import {
 	formatWeekRange,
-	getCurrentWeekStart,
-	getWeeks,
+	getDefaultWeekStart,
+	getWeek,
 } from "app/weekly/utils";
 import { EXPLAINER_POST } from "app/weekly/week-view";
 import Link from "next/link";
@@ -18,12 +18,9 @@ import Link from "next/link";
  * Renders nothing until the first week has content.
  */
 export function AiThisWeekPromo() {
-	// Skip weeks staged ahead of time, so the card matches what /weekly opens on
-	const current = getCurrentWeekStart();
-	const latest = getWeeks()
-		.filter((week) => week.start <= current)
-		.at(-1);
-	if (!latest) {
+	// The same week /weekly opens on, so the card matches where its link goes
+	const latest = getWeek(getDefaultWeekStart());
+	if (latest.updates.length === 0) {
 		return null;
 	}
 	const count = latest.updates.length;
