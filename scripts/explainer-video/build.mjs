@@ -12,13 +12,24 @@ const repo = path.resolve(here, "../..");
 const content = path.join(repo, "app/weekly/content");
 const POPUP_UPDATE = "2026-11-09/claude-meetings.mdx";
 
-const frontmatter = (raw) => {
-	const [, fm, body] = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+// Reads `key: value` frontmatter the way the site does: CRLF or LF line
+// endings, and surrounding quotes stripped from values.
+const frontmatter = (raw, file) => {
+	const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
+	if (!match) throw new Error(`${file}: no frontmatter`);
+	const [, fm, body] = match;
 	const meta = Object.fromEntries(
-		fm.split("\n").map((l) => {
-			const i = l.indexOf(":");
-			return [l.slice(0, i).trim(), l.slice(i + 1).trim()];
-		}),
+		fm
+			.split(/\r?\n/)
+			.filter((l) => l.includes(":"))
+			.map((l) => {
+				const i = l.indexOf(":");
+				const value = l
+					.slice(i + 1)
+					.trim()
+					.replace(/^(['"])(.*)\1$/, "$2");
+				return [l.slice(0, i).trim(), value];
+			}),
 	);
 	return { meta, body };
 };
@@ -31,15 +42,15 @@ const weeks = fs
 		const dir = path.join(content, start);
 		const weekFile = path.join(dir, "_week.mdx");
 		const summary = fs.existsSync(weekFile)
-			? (frontmatter(fs.readFileSync(weekFile, "utf8")).meta.summary ?? "")
+			? (frontmatter(fs.readFileSync(weekFile, "utf8"), weekFile).meta
+					.summary ?? "")
 			: "";
 		const updates = fs
 			.readdirSync(dir)
 			.filter((f) => f.endsWith(".mdx") && !f.startsWith("_"))
 			.map((f) => {
-				const { meta } = frontmatter(
-					fs.readFileSync(path.join(dir, f), "utf8"),
-				);
+				const file = path.join(dir, f);
+				const { meta } = frontmatter(fs.readFileSync(file, "utf8"), file);
 				return {
 					s: f.replace(/\.mdx$/, ""),
 					t: meta.title,
@@ -49,14 +60,17 @@ const weeks = fs
 			})
 			.sort((a, b) => b.d.localeCompare(a.d) || a.t.localeCompare(b.t)); // newest first, like the site
 		return { start, summary, updates };
-	});
+	})
+	.filter((week) => week.updates.length > 0); // the site leaves out empty weeks too
 
-const firstPara = frontmatter(
-	fs.readFileSync(path.join(content, POPUP_UPDATE), "utf8"),
-)
+const popupFile = path.join(content, POPUP_UPDATE);
+const firstPara = frontmatter(fs.readFileSync(popupFile, "utf8"), popupFile)
 	.body.trim()
-	.split(/\n\s*\n/)[0];
-const popupSummary = `${firstPara.split(". ").slice(0, 2).join(". ")}.`;
+	.split(/\r?\n\s*\r?\n/)[0];
+// First two whole sentences. A sentence ends at . ! or ? followed by a space
+// and a capital letter, so "U.S. and" or "e.g. a" don't end one.
+const sentences = firstPara.split(/(?<=[.!?])\s+(?=[A-Z])/);
+const popupSummary = sentences.slice(0, 2).join(" ");
 const escapeHtml = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
 
 fs.mkdirSync(path.join(here, "out"), { recursive: true });

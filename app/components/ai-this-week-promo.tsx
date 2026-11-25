@@ -1,4 +1,8 @@
-import { formatWeekRange, getWeeks } from "app/weekly/utils";
+import {
+	formatWeekRange,
+	getCurrentWeekStart,
+	getWeeks,
+} from "app/weekly/utils";
 import { EXPLAINER_POST } from "app/weekly/week-view";
 import Link from "next/link";
 
@@ -14,7 +18,11 @@ import Link from "next/link";
  * Renders nothing until the first week has content.
  */
 export function AiThisWeekPromo() {
-	const latest = getWeeks().at(-1);
+	// Skip weeks staged ahead of time, so the card matches what /weekly opens on
+	const current = getCurrentWeekStart();
+	const latest = getWeeks()
+		.filter((week) => week.start <= current)
+		.at(-1);
 	if (!latest) {
 		return null;
 	}

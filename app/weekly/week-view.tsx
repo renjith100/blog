@@ -12,7 +12,7 @@ import {
 import { WeekGrid } from "./week-grid";
 
 export const TAGLINE =
-	"The AI launches that mattered this week, in plain English.";
+	"The AI launches that mattered each week, in plain English.";
 
 /** The blog post that explains this page to first-time visitors */
 export const EXPLAINER_POST = "19-what-is-ai-this-week";

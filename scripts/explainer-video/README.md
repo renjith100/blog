@@ -45,10 +45,19 @@ The timeline is at the bottom of `scene.template.html`:
 - `CAM` holds the camera: at time t, zoom to this scale, centred on this element.
 - `DURATION` is the length in seconds.
 
-The weeks it clicks are hard-coded by date (`2026-11-09` for the pick,
-`2026-10-26` for the look back, and the `claude-meetings` update in the
-popup). `POPUP_UPDATE` in `build.mjs` also names that update. If you change
-which update it opens, change both, and the popup title in the template.
+These are hard-coded in `scene.template.html`. Update them when you change
+the story or want newer weeks in the video:
+
+- `2026-11-16`: the week the page opens on (in `showWeek(...)` inside `render`)
+- `2026-11-09`: the week the cursor picks (`T.pick`, `WAY`, `CAM`)
+- `2026-10-26`: the week it looks back at (`T.back`, `WAY`, `CAM`)
+- `ROWS`: the months and Mondays drawn in the calendar
+- `2026-11-23`: the "this week" dot in the calendar
+- the `claude-meetings` update the popup shows, plus its title in the popup's
+  HTML. `POPUP_UPDATE` in `build.mjs` names the same update.
+
+If one of those weeks has no updates in `app/weekly/content`, the recording
+stops with an error that names the week.
 
 ## Music
 

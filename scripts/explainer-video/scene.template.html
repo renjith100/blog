@@ -226,6 +226,7 @@ let shownWeek = null;
 function showWeek(s) {
   if (shownWeek === s) return; shownWeek = s;
   const w = byStart.get(s);
+  if (!w) throw new Error(`The scene shows week ${s}, but app/weekly/content has no updates for it`);
   const range = (a) => { const e = addDays(a, 6), f = (d, o) => new Date(`${d}T00:00:00Z`).toLocaleString("en-us", { timeZone: "UTC", ...o }); return `${f(a, { month: "short", day: "numeric" })} – ${f(e, a.slice(5, 7) === e.slice(5, 7) ? { day: "numeric" } : { month: "short", day: "numeric" })}`; };
   $("wkh").textContent = `Week of ${range(s)}`;
   $("wkm").textContent = w.updates.length + " updates";

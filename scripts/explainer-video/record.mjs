@@ -26,28 +26,19 @@ const chrome = spawn(
 	{ stdio: "ignore" },
 );
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-let targets;
-for (let i = 0; i < 50; i++) {
-	try {
-		targets = await (await fetch(`http://127.0.0.1:${port}/json`)).json();
-		break;
-	} catch {
-		await sleep(200);
-	}
-}
-const ws = new WebSocket(
-	targets.find((t) => t.type === "page").webSocketDebuggerUrl,
-);
-await new Promise((r) => ws.addEventListener("open", r));
-let id = 0;
-const pending = new Map();
-ws.addEventListener("message", (e) => {
-	const m = JSON.parse(e.data);
-	if (pending.has(m.id)) {
-		pending.get(m.id)(m);
-		pending.delete(m.id);
-	}
+// If Chrome is missing or dies, fail with a clear message instead of hanging
+let chromeError = null;
+chrome.on("error", (err) => {
+	chromeError = err;
 });
+const pending = new Map();
+const failAll = (reason) => {
+	for (const settle of pending.values()) settle({ error: reason });
+	pending.clear();
+};
+chrome.on("exit", () => failAll("Chrome exited"));
+let ws;
+let id = 0;
 const send = (method, params = {}) =>
 	new Promise((res, rej) => {
 		const i = ++id;
@@ -57,6 +48,33 @@ const send = (method, params = {}) =>
 		ws.send(JSON.stringify({ id: i, method, params }));
 	});
 try {
+	let targets;
+	for (let i = 0; i < 50 && !targets && !chromeError; i++) {
+		try {
+			targets = await (await fetch(`http://127.0.0.1:${port}/json`)).json();
+		} catch {
+			await sleep(200);
+		}
+	}
+	const page = targets?.find((t) => t.type === "page");
+	if (!page) {
+		throw new Error(
+			`Chrome didn't start${chromeError ? `: ${chromeError.message}` : ""}`,
+		);
+	}
+	ws = new WebSocket(page.webSocketDebuggerUrl);
+	await new Promise((res, rej) => {
+		ws.addEventListener("open", res);
+		ws.addEventListener("error", () => rej(new Error("Can't reach Chrome")));
+	});
+	ws.addEventListener("message", (e) => {
+		const m = JSON.parse(e.data);
+		if (pending.has(m.id)) {
+			pending.get(m.id)(m);
+			pending.delete(m.id);
+		}
+	});
+	ws.addEventListener("close", () => failAll("Chrome connection closed"));
 	await send("Emulation.setDeviceMetricsOverride", {
 		width: 1920,
 		height: 1080,
@@ -98,9 +116,12 @@ try {
 	}
 	console.log(`wrote ${times.length} frames`);
 } finally {
-	ws.close();
-	chrome.kill();
-	await new Promise((r) => chrome.once("exit", r));
+	ws?.close();
+	if (chrome.exitCode === null && chrome.signalCode === null && !chromeError) {
+		const exited = new Promise((r) => chrome.once("exit", r));
+		chrome.kill();
+		await exited;
+	}
 	await sleep(300);
 	try {
 		fs.rmSync(profile, { recursive: true, force: true });
