@@ -1,7 +1,15 @@
 import { formatDate, getBlogPosts } from "app/blog/utils";
+import { AiThisWeekPromo } from "app/components/ai-this-week-promo";
 import { CustomMDX } from "app/components/mdx";
 import { baseUrl } from "app/sitemap";
+import { EXPLAINER_POST } from "app/weekly/week-view";
 import { notFound } from "next/navigation";
+
+/**
+ * Rebuild hourly, so the AI This Week card under each post moves on each
+ * Monday even when nothing new is deployed (as /weekly does)
+ */
+export const revalidate = 3600;
 
 /**
  * Generates static paths for all blog posts at build time
@@ -128,6 +136,7 @@ export default async function Blog({ params }) {
 			<article className="blog-content">
 				<CustomMDX source={post.content} />
 			</article>
+			{post.slug !== EXPLAINER_POST && <AiThisWeekPromo />}
 		</section>
 	);
 }

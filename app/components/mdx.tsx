@@ -6,6 +6,7 @@ import { Tweet } from "react-tweet";
 import remarkGfm from "remark-gfm";
 import { highlight } from "sugar-high";
 import { Interactive } from "./interactive-embed";
+import { YouTube } from "./youtube-embed";
 
 /**
  * Custom Table component for MDX content
@@ -70,7 +71,11 @@ function CustomLink(props) {
  * @param props - Standard Next.js Image component props
  * @returns Styled Image component
  */
-function RoundedImage({ alt, caption, ...props }: React.ComponentProps<typeof Image> & { caption?: string }) {
+function RoundedImage({
+	alt,
+	caption,
+	...props
+}: React.ComponentProps<typeof Image> & { caption?: string }) {
 	return (
 		<figure className="my-8 flex flex-col items-center justify-center">
 			<Image alt={alt} className="rounded-lg" {...props} />
@@ -151,6 +156,8 @@ function createHeading(level) {
  *
  * Interactive embeds a self-contained HTML page from public/interactive/,
  * e.g. <Interactive src="/interactive/claude-expert-habits.html" title="…" />.
+ *
+ * YouTube embeds a video by id, e.g. <YouTube id="oJvmnOCSzQY" title="…" />.
  */
 const components = {
 	h1: createHeading(1),
@@ -165,6 +172,7 @@ const components = {
 	Table,
 	Tweet,
 	Interactive,
+	YouTube,
 };
 
 /**

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getCurrentWeekStart, getWeek, getWeeks } from "./utils";
+import { getDefaultWeekStart } from "./utils";
 import { TAGLINE, WeekView } from "./week-view";
 
 /**
@@ -9,22 +9,9 @@ import { TAGLINE, WeekView } from "./week-view";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-	title: "Weekly",
+	title: "AI This Week",
 	description: TAGLINE,
 };
-
-/**
- * Returns the week /weekly opens on: the current week once it has an
- * update, otherwise the latest week that has some, so the page never
- * opens on an empty list early in the week.
- */
-function getDefaultWeekStart() {
-	const current = getCurrentWeekStart();
-	if (getWeek(current).updates.length > 0) {
-		return current;
-	}
-	return getWeeks().at(-1)?.start ?? current;
-}
 
 /**
  * /weekly shows the current week, or the latest week with updates while
