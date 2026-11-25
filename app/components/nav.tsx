@@ -9,7 +9,7 @@ const navItems = {
 		name: "blog",
 	},
 	"/weekly": {
-		name: "weekly",
+		name: "ai this week",
 	},
 };
 

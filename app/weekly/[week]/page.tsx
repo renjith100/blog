@@ -33,7 +33,7 @@ export async function generateMetadata({
 	}
 
 	return {
-		title: `Week of ${formatWeekRange(week)} · Weekly`,
+		title: `Week of ${formatWeekRange(week)} · AI This Week`,
 		description: TAGLINE,
 	};
 }

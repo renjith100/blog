@@ -1,6 +1,8 @@
 import { formatDate, getBlogPosts } from "app/blog/utils";
+import { AiThisWeekPromo } from "app/components/ai-this-week-promo";
 import { CustomMDX } from "app/components/mdx";
 import { baseUrl } from "app/sitemap";
+import { EXPLAINER_POST } from "app/weekly/week-view";
 import { notFound } from "next/navigation";
 
 /**
@@ -128,6 +130,7 @@ export default async function Blog({ params }) {
 			<article className="blog-content">
 				<CustomMDX source={post.content} />
 			</article>
+			{post.slug !== EXPLAINER_POST && <AiThisWeekPromo />}
 		</section>
 	);
 }

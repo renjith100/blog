@@ -9,7 +9,7 @@ import { TAGLINE, WeekView } from "./week-view";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-	title: "Weekly",
+	title: "AI This Week",
 	description: TAGLINE,
 };
 

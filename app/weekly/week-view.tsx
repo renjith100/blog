@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Suspense } from "react";
 import { UpdateDialog } from "./update-dialog";
 import { UpdateList } from "./update-list";
@@ -10,7 +11,11 @@ import {
 } from "./utils";
 import { WeekGrid } from "./week-grid";
 
-export const TAGLINE = "What shipped in agents, week by week.";
+export const TAGLINE =
+	"The AI launches that mattered this week, in plain English.";
+
+/** The blog post that explains this page to first-time visitors */
+export const EXPLAINER_POST = "19-what-is-ai-this-week";
 
 /**
  * Formats a week as a full range for the date line.
@@ -57,9 +62,15 @@ export function WeekView({ start }: { start: string }) {
 
 	return (
 		<section>
-			<h1>Weekly</h1>
+			<h1>AI This Week</h1>
 			<p className="-mt-4 mb-8 text-lg text-neutral-600 dark:text-neutral-400">
-				{TAGLINE} Pick a week to see what happened.
+				{TAGLINE} Pick a week to see what happened.{" "}
+				<Link
+					href={`/blog/${EXPLAINER_POST}`}
+					className="whitespace-nowrap text-sky-600 underline underline-offset-4 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300"
+				>
+					New here? See how it works
+				</Link>
 			</p>
 
 			<WeekGrid
