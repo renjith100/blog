@@ -166,7 +166,7 @@ summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:
 <p class="lede">A tired seeker asks Ramana Maharshi, "What is the nature of consciousness?" Ramana doesn't answer. He asks a question back. Everything else here unfolds from that one question.</p>
 <p class="small">Notes on a video by One Timeless Witness · <a href="https://www.youtube.com/watch?v=nTLOOwjmZ4s">watch on YouTube</a> · my notes stop at 8:04, before the movie-screen part · any timestamp plays from there</p>
 </div>
-<div class="player"><iframe id="yt" title="Consciousness is not what you think: Ramana Maharshi" src="https://www.youtube.com/embed/nTLOOwjmZ4s?rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+<div class="player"><iframe id="yt" title="Consciousness is not what you think: Ramana Maharshi" src="https://www.youtube.com/embed/nTLOOwjmZ4s?rel=0&enablejsapi=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
 </div></header>
 
 <section class="band con" id="search"><div class="wrap">
@@ -246,7 +246,9 @@ const ts=s=>`<a class="ts" href="https://www.youtube.com/watch?v=${VID}&t=${s}s"
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const yt=document.getElementById('yt');
 const phone=matchMedia('(max-width:560px)');
-const src=s=>`https://www.youtube.com/embed/${VID}?start=${s}&autoplay=1&rel=0`;
+const src=s=>`https://www.youtube.com/embed/${VID}?start=${s}&autoplay=1&rel=0&enablejsapi=1`;
+// Pause the top player (enablejsapi=1 lets the page send it commands), so two clips never play at once
+const pauseTop=()=>yt.contentWindow?.postMessage(JSON.stringify({event:'command',func:'pauseVideo',args:[]}),'https://www.youtube.com');
 // Timestamps play in the page's own player. On a phone that player can be thousands of pixels up,
 // so the clip opens right under the line that was tapped instead, one at a time.
 let clip=null;
@@ -256,8 +258,10 @@ document.addEventListener('click',ev=>{
   const a=ev.target.closest('a.ts');if(!a)return;
   const s=+(new URL(a.href).searchParams.get('t')||'0').replace('s','');
   ev.preventDefault();
-  if(!phone.matches){yt.src=src(s);yt.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});return;}
+  // Either way, stop whatever else is playing first: an open inline clip, or the top player
   closeClip();
+  if(!phone.matches){yt.src=src(s);yt.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});return;}
+  pauseTop();
   clip=document.createElement('div');clip.className='clip';
   clip.innerHTML=`<div class="player"><iframe title="Video from ${fmt(s)}" src="${src(s)}" allow="autoplay; encrypted-media; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><button class="clip-close" type="button">Close video</button>`;
   (a.closest('figure,p')||a.parentElement).after(clip);
