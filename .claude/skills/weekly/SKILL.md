@@ -1,13 +1,19 @@
 ---
 name: weekly
-description: Add this week's agent news to the Weekly page (/weekly) on Renjith's blog. Use when he says "update weekly", "do this week's updates", "add to weekly", "weekly updates", or pastes an announcement or X link to add. Works any day of the week, not only Sundays.
+description: Add this week's AI launches to AI This Week (/weekly, formerly called Weekly) on Renjith's blog. Use when he says "update weekly", "update AI This Week", "do this week's updates", "add to weekly", "weekly updates", or pastes an announcement or X link to add. Works any day of the week, not only Sundays.
 ---
 
-# Weekly: add this week's agent updates
+# AI This Week: add this week's updates
 
-The Weekly page (`/weekly`) lists what shipped in AI agents, one week at a
-time. Each update is its own MDX file and opens as a popup with a short
-summary, embedded X posts and links. The code lives in `app/weekly/`.
+AI This Week (`/weekly`, shown as "ai this week" in the menu) lists the AI
+launches that mattered, one week at a time, in plain English, with a focus
+on AI agents. It used to be called "Weekly"; the address and the code folder
+kept that name. Each update is its own MDX file and opens as a popup with a
+short summary, embedded X posts and links. The code lives in `app/weekly/`.
+
+The AI This Week card on the home page and under every blog post shows the
+week `/weekly` opens on, with its `_week.mdx` summary and update count. It
+updates itself, so keep the week's summary sharp: readers see it everywhere.
 
 ## 1. Find the week
 
@@ -92,7 +98,8 @@ it matters. Plain and factual, no hype.
   agentnative.inc.
 
 **The week's summary:** keep `_week.mdx` up to date, a single sentence on the
-week's main stories:
+week's main stories. It also appears on the AI This Week card across the
+site:
 
 ```mdx
 ---
